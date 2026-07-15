@@ -1,0 +1,566 @@
+# RÈGLES PERMANENTES DE CODAGE — SMART-SEKOLY
+# Fichier : .cursor/rules
+# Projet : Smart-Sekoly — Logiciel de Gestion Scolaire
+# Développeur : Baia Creative Solutions
+# Date : Juillet 2026
+
+# =====================================================================
+# 1. ARCHITECTURE GÉNÉRALE
+# =====================================================================
+
+ARCHITECTURE :
+- PHP orienté objet (POO) strict
+- Séparation MVC : Modèle (classes métier) / Vue (templates) / Contrôleur (modules)
+- Structure de dossiers obligatoire :
+
+  smart-sekoly/
+  ├── index.php
+  ├── config/
+  │   ├── database.php
+  │   └── constants.php
+  ├── classes/
+  │   ├── Eleve.class.php
+  │   ├── Enseignant.class.php
+  │   └── ...
+  ├── controllers/
+  │   ├── Eleve.controller.php
+  │   └── ...
+  ├── modules/
+  │   ├── parametrage/
+  │   ├── eleves/
+  │   └── ...
+  ├── templates/
+  │   ├── layout/
+  │   │   ├── header.php
+  │   │   └── footer.php
+  │   └── partials/
+  │       └── _tableau.php
+  ├── assets/
+  │   ├── css/
+  │   ├── js/
+  │   └── images/
+  ├── database/
+  │   ├── migrations/
+  │   └── seeds/
+  ├── includes/
+  │   ├── fonctions.php
+  │   └── validation.php
+  ├── documents/
+  │   ├── eleves/
+  │   ├── enseignants/
+  │   └── etablissement/
+  └── logs/
+
+# =====================================================================
+# 2. CONVENTIONS DE NOMMAGE
+# =====================================================================
+
+CLASSES PHP :
+- PascalCase
+- Exemple : class Eleve, class Inscription, class ParametrageEtablissement
+- Fichier : NomClasse.class.php (ex: Eleve.class.php)
+
+CONTROLEURS :
+- PascalCase + suffixe "Controller"
+- Exemple : EleveController, InscriptionController
+- Fichier : NomControleur.controller.php (ex: Eleve.controller.php)
+
+MÉTHODES ET FONCTIONS :
+- snake_case
+- Exemple : getNomComplet(), calculerMoyenne(), verifierDoublonPaiement()
+- Verbe en premier : get, set, calculer, verifier, creer, modifier, supprimer
+
+VARIABLES :
+- snake_case
+- Exemple : $nom_eleve, $date_naissance, $montant_total
+- Éviter les abréviations incompréhensibles
+
+CONSTANTES :
+- MAJUSCULES_AVEC_SOULIGNES
+- Exemple : DB_HOST, CHEMIN_DOCUMENTS, SEUIL_ALERTE_ABSENCES
+
+CHAMPS SQL :
+- snake_case
+- Exemple : id_eleve, date_creation, statut_inscription
+- Toujours en français
+
+FICHIERS DE VUE :
+- snake_case + suffixe ".view.php"
+- Exemple : liste_eleves.view.php, formulaire_inscription.view.php
+- Partiels : _nom_partiel.php (ex: _header.php, _tableau.php)
+
+LANGUE :
+- Français exclusivement : noms de classes, méthodes, variables, champs SQL, commentaires, messages utilisateur
+- Aucun mot en anglais sauf termes techniques standards (ex: id, date, status)
+
+# =====================================================================
+# 3. BASE DE DONNÉES
+# =====================================================================
+
+MOTEUR :
+- InnoDB
+- Charset : utf8mb4
+- Collation : utf8mb4_unicode_ci
+
+RÈGLES OBLIGATOIRES :
+- Toute table métier porte date_creation et date_modification (DATETIME)
+- Toute table métier utilise des clés primaires INT UNSIGNED AUTO_INCREMENT
+- Suppression logique uniquement (statut 'annule' + date_annulation + id_utilisateur_annulation)
+- Aucune suppression physique sur : notes, paiements, inscriptions, factures
+- Aucune valeur métier codée en dur dans le code → toujours paramétrable via tables de configuration
+
+FORMAT DES DATES :
+- Base de données : DATETIME (pas TIMESTAMP)
+- PHP : DateTime et DateTimeImmutable
+- Interface utilisateur : d/m/Y H:i
+- Échanges internes : Y-m-d H:i:s
+
+FORMAT DES MONTANTS :
+- Base de données : DECIMAL(12,2)
+- PHP : float pour les calculs intermédiaires uniquement
+- Affichage : number_format($montant, 2, ',', ' ') → ex: 1 250,00
+
+INDEX OBLIGATOIRES :
+- Toute colonne utilisée dans une clause WHERE fréquente doit être indexée
+- Toute clé étrangère doit être indexée
+- Toute colonne de recherche (nom, matricule) doit être indexée
+
+# =====================================================================
+# 4. STRUCTURE D'UNE CLASSE PHP
+# =====================================================================
+
+STRUCTURE OBLIGATOIRE D'UNE CLASSE MÉTIER :
+
+<?php
+/**
+ * NomClasse — Description de la classe
+ *
+ * @package Smart-Sekoly
+ * @subpackage Classes
+ * @author Baia Creative Solutions
+ * @version 1.0
+ */
+class NomClasse
+{
+    // 1. Attributs privés
+    private $id;
+    private $nom;
+    private $date_creation;
+
+    // 2. Constantes de classe (si nécessaires)
+    const STATUT_ACTIF = 'actif';
+    const STATUT_INACTIF = 'inactif';
+
+    // 3. Constructeur
+    public function __construct($nom = null)
+    {
+        if ($nom !== null) {
+            $this->nom = $nom;
+        }
+    }
+
+    // 4. Getters et setters
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getNom()
+    {
+        return $this->nom;
+    }
+
+    public function setNom($nom)
+    {
+        $this->nom = $nom;
+        return $this;
+    }
+
+    // 5. Méthodes métier
+    /**
+     * Calculer la moyenne générale
+     *
+     * @param array $notes Tableau des notes
+     * @param array $coefficients Tableau des coefficients
+     * @return float|false Moyenne calculée ou false en cas d'erreur
+     */
+    public function calculerMoyenne($notes, $coefficients)
+    {
+        // Code ici
+    }
+
+    // 6. Méthodes CRUD (statiques ou non)
+    public static function findById($id)
+    {
+        // Récupérer un enregistrement
+    }
+
+    public function sauvegarder()
+    {
+        // Insérer ou mettre à jour
+    }
+
+    public function supprimer()
+    {
+        // Suppression logique uniquement
+    }
+}
+?>
+
+# =====================================================================
+# 5. GESTION DES ERREURS ET VALIDATION
+# =====================================================================
+
+VALIDATION :
+- Toute fonction de validation retourne un tableau structuré :
+  [
+      'valide' => true|false,
+      'erreurs' => ['champ' => 'message d\'erreur'],
+      'donnees' => [...] // Données validées et nettoyées
+  ]
+
+GESTION DES ERREURS :
+- Exception pour les erreurs critiques (base de données, fichier manquant)
+- Messages d'erreur clairs, en français, compréhensibles par l'utilisateur
+- Journalisation systématique des erreurs dans logs/erreurs.log
+
+# =====================================================================
+# 6. SÉCURITÉ ET AUTHENTIFICATION
+# =====================================================================
+
+AUTHENTIFICATION :
+- Session PHP avec $_SESSION
+- Structure de session obligatoire :
+  $_SESSION = [
+      'user_id' => int,
+      'user_roles' => array,
+      'user_permissions' => array,
+      'user_nom_complet' => string,
+      'derniere_activite' => timestamp
+  ]
+- Durée de session : 8 heures (configurable)
+- Régénération de l'ID de session après connexion
+
+MOTS DE PASSE :
+- Hashage systématique avec password_hash() (algorithme PASSWORD_DEFAULT)
+- Vérification avec password_verify()
+- Longueur minimale : paramétrable (défaut : 8 caractères)
+- Complexité : paramétrable (majuscule, minuscule, chiffre, spécial)
+
+SÉCURITÉ :
+- Protection CSRF : token sur tous les formulaires
+- Protection XSS : htmlspecialchars() sur toute sortie utilisateur
+- Protection SQL Injection : requêtes préparées (PDO)
+- Validation serveur obligatoire (ne jamais se fier au client)
+- Journal d'audit pour toute action sensible (modification, suppression, validation)
+
+PERMISSIONS :
+- Vérification systématique avant toute action
+- Rôles et permissions paramétrables en base de données
+- Pas de permissions codées en dur
+
+# =====================================================================
+# 7. INTERFACE UTILISATEUR
+# =====================================================================
+
+FRAMEWORKS :
+- Tailwind CSS (framework utilitaire principal)
+- Alpine.js pour l'interactivité légère
+- Chart.js pour les graphiques
+- DataTables / Grid.js pour les tableaux avancés
+
+THÈMES :
+- Variables CSS pour les couleurs (compatibles clair/sombre)
+- Thème par défaut : clair
+- Mémorisation du thème par utilisateur (localStorage)
+- Transition fluide entre les thèmes
+
+TABLEAUX STANDARDISÉS (Socle obligatoire) :
+- Recherche intelligente (insensible à la casse et aux accents)
+- Filtres contextuels par colonne
+- Tri par défaut pertinent
+- Pagination (20, 50, 100, tout)
+- Export Excel en un clic (coin supérieur droit)
+- Sélection multiple
+- Adaptatif au thème actif
+- Responsive
+
+RESPONSIVE :
+- Ordinateur (> 1024px) : affichage complet
+- Tablette (768px - 1024px) : disposition adaptée
+- Smartphone (< 768px) : version simplifiée, consultation uniquement
+- Cibles tactiles : taille minimale 44px
+
+ACCESSIBILITÉ :
+- Contraste suffisant (WCAG AA)
+- Taille de police ajustable
+- Navigation au clavier possible
+- Labels sur tous les champs de formulaire
+- Messages d'erreur clairs et positionnés
+
+# =====================================================================
+# 8. DOCUMENTATION ET COMMENTAIRES
+# =====================================================================
+
+NIVEAU EXIGÉ :
+- PHPDoc sur chaque classe (description, @package, @author)
+- PHPDoc sur chaque méthode publique (@param, @return, @throws)
+- PHPDoc sur les propriétés de classe (@var)
+- Commentaires en français sur toute logique complexe (> 5 lignes)
+- Commentaires sur les requêtes SQL complexes
+
+EXEMPLE DE PHPDoc :
+/**
+ * Gestion d'un élève
+ *
+ * Cette classe gère toutes les opérations liées à un élève :
+ * - Informations personnelles
+ * - Inscriptions
+ * - Notes et évaluations
+ *
+ * @package Smart-Sekoly
+ * @subpackage Classes
+ * @author Baia Creative Solutions
+ * @version 1.0
+ */
+class Eleve
+{
+    /** @var int Identifiant unique */
+    private $id;
+
+    /**
+     * Obtenir la moyenne générale de l'élève
+     *
+     * @param string $periode Période concernée (T1, T2, T3)
+     * @param int $id_classe Classe de l'élève
+     * @return float|false Moyenne ou false si non trouvée
+     * @throws Exception Si la période est invalide
+     */
+    public function getMoyenneGenerale($periode, $id_classe)
+    {
+        // Code ici
+    }
+}
+
+# =====================================================================
+# 9. GIT ET SUIVI DE PROJET
+# =====================================================================
+
+GIT :
+- Une branche = un module fonctionnel
+- Merge sur main uniquement après validation complète du module
+- Un commit = une tâche du backlog
+- Message de commit : [Module X] Description de la tâche
+- Exemple : [Module VII] Ajout table parametrage_etablissement
+
+BACKLOG :
+- Fichier BACKLOG.md à la racine
+- Mise à jour quotidienne
+- Colonnes : Module, Sous-tâche, Statut, Date début, Date fin, Commentaire
+- Statuts : ⏳ À faire | 🔄 En cours | ✅ Fait | ⚠️ Bloqué | ❌ Annulé
+
+CHANGELOG :
+- Fichier CHANGELOG.md à la racine
+- Toute décision technique non prévue dans le CDC doit y être notée
+- Date, décision, motif, impact
+
+# =====================================================================
+# 10. TESTS ET VALIDATION
+# =====================================================================
+
+TESTS UNITAIRES (PHPUnit) :
+- Priorité : calculs financiers et notes
+- Tests sur : calcul moyenne, calcul échéances, détection doublon paiement, génération matricule
+- Couverture minimale : 70% sur les classes critiques
+
+TESTS MANUELS :
+- Reprendre les scénarios de la section 23 du CDC
+- Cocher chaque scénario module par module
+- Documenter les résultats dans un fichier tests/TEST_REPORT.md
+
+CRITÈRE DE VALIDATION D'UN MODULE (CDC section 20) :
+- Toutes les fonctionnalités listées sont opérationnelles
+- Cas d'usage principaux testés et validés
+- Messages d'erreur clairs et explicites
+- Code documenté et commenté
+- Aucune erreur PHP/MySQL
+- Module responsive
+- Tableaux conformes au socle commun
+- Thèmes (clair/sombre) compatibles
+- Permissions correctement appliquées
+- Actions sensibles tracées dans journal_audit
+- Données validées côté serveur
+- Documentation utilisateur rédigée
+
+# =====================================================================
+# 11. ORDRE DE DÉVELOPPEMENT (CDC section 24)
+# =====================================================================
+
+PRIORITÉ 1 : Module VII — Paramétrage et configuration initiale
+PRIORITÉ 2 : Module II — Gestion des élèves + Module VIII — Import
+PRIORITÉ 3 : Module III — Gestion des enseignants
+PRIORITÉ 4 : Module IX — Vie scolaire et discipline
+PRIORITÉ 5 : Module IV — Gestion administrative et financière
+PRIORITÉ 6 : Module I — Tableau de bord + Module VI — Rapports
+PRIORITÉ 7 : Module X — Portails Élève et Parent
+PRIORITÉ 8 : Module V — Communication + Module XI — Bibliothèque
+
+Pour chaque module, l'ordre de développement est :
+1. Modèle/Données (table SQL + classe PHP)
+2. Logique métier (validations, calculs, règles)
+3. Vue (interface utilisateur)
+4. Tests (unitaires et manuels)
+5. Revue et validation
+
+# =====================================================================
+# 12. RÈGLES SPÉCIFIQUES PAR DOMAINE
+# =====================================================================
+
+MODULE FINANCIER :
+- Une facture ne peut pas être supprimée physiquement
+- Un paiement ne peut pas être supprimé physiquement
+- Numérotation séquentielle paramétrable par année (CDC décision #14)
+- Contrôle de doublon à la saisie (CDC décision #24)
+- Caisse : suivi quotidien obligatoire
+
+MODULE NOTES :
+- Une note ne peut pas être supprimée physiquement
+- Modification d'une note tracée dans journal_audit
+- Calcul des moyennes paramétrable (CDC section 10.3)
+- Appréciation possible en plus de la note
+
+MODULE ÉLÈVES :
+- Matricule format paramétrable (CDC décision #16)
+- Dossier documentaire par élève (CDC section 12.2)
+- Carnet de suivi obligatoire (CDC décision #43)
+- Inscription annuelle obligatoire
+
+MODULE ENSEIGNANTS :
+- Contrat obligatoire avant toute affectation
+- Congé bloque automatiquement les affectations
+- Heures supplémentaires suivies et validées
+
+MODULE VIE SCOLAIRE :
+- Sanction nécessite validation par responsable
+- Incident peut concerner plusieurs élèves
+- Billet d'entrée/sortie tracé dans carnet de suivi
+
+# =====================================================================
+# 13. PERFORMANCES ET OPTIMISATION
+# =====================================================================
+
+REQUÊTES SQL :
+- Utiliser des requêtes préparées (PDO)
+- Éviter N+1 requêtes : utiliser des JOIN
+- Limiter les résultats avec LIMIT
+- Indexer les colonnes de recherche
+- Expliquer les requêtes complexes en commentaire
+
+CHARGEMENT DES DONNÉES :
+- Pagination systématique sur les listes
+- Lazy loading des données lourdes
+- Cache des configurations (fichier cache/ ou session)
+
+TEMPS DE RÉPONSE :
+- Pages : < 2 secondes
+- Requêtes courantes : < 500 ms
+- Affichage tableaux : support 1000+ lignes
+
+# =====================================================================
+# 14. STRUCTURE DES REQUÊTES À CURSOR
+# =====================================================================
+
+FORMAT OBLIGATOIRE DES PROMPTS :
+
+CONTEXTE : [Référence au CDC — ex. "Module VII, section 14, décision #16"]
+OBJECTIF : [Une seule fonctionnalité précise]
+CONTRAINTES : [Rappel des règles pertinentes]
+LIVRABLE : [Fichiers exacts à créer/modifier]
+CRITÈRE D'ACCEPTATION : [Comment valider]
+NE PAS FAIRE : [Hors périmètre pour cette tâche]
+
+EXEMPLE :
+CONTEXTE : Module VII — Paramétrage (section 14 CDC). Décision #16 : format matricule paramétrable.
+OBJECTIF : Créer la table parametrage_etablissement et la classe ParametrageEtablissement.
+CONTRAINTES : POO, français, pas de valeur codée en dur.
+LIVRABLE : database/migrations/001_parametrage.sql, classes/ParametrageEtablissement.class.php
+CRITÈRE D'ACCEPTATION : Changer le format génère un matricule d'exemple sans toucher au code.
+NE PAS FAIRE : Ne pas créer l'interface d'inscription (module suivant).
+
+# =====================================================================
+# 15. LIVRAISON DES DOCUMENTS GÉNÉRÉS
+# =====================================================================
+
+DOCUMENTS OBLIGATOIRES POUR CHAQUE MODULE :
+- Code PHP documenté
+- Interface utilisateur conforme au design system
+- Documentation utilisateur (dans docs/module_X.md)
+- Tests unitaires (dans tests/ModuleXTest.php)
+- Script SQL si nouvelle table (dans database/migrations/)
+
+DOCUMENTS GÉNÉRÉS PAR L'APPLICATION (CDC section 21) :
+- Bulletin scolaire : PDF A4
+- Reçu de paiement : impression thermique 80mm ou PDF A4
+- Attestation de scolarité : PDF A4
+- Billet d'entrée/sortie : petit format 10x15cm
+- Autorisation de sortie : PDF A5
+- Certificat de scolarité : PDF A4
+
+FORMATS SUPPORTÉS POUR EXPORT :
+- PDF (via bibliothèque PHP)
+- Excel (via PhpSpreadsheet)
+- CSV (export simple)
+- Impression directe (via navigateur)
+
+# =====================================================================
+# 16. RÉFÉRENCES DES DÉCISIONS DE CADRAGE (CDC)
+# =====================================================================
+
+DÉCISIONS CLÉS À RESPECTER ABSOLUMENT :
+
+#1  Système de notation sur 20, appréciations qualitatives pour primaire
+#2  Un établissement par installation
+#3  Redoublement : proposition automatique, validation manuelle
+#4  Notifications internes uniquement (pas de SMS/email réel)
+#5  Mobile money : saisie manuelle uniquement
+#9  Import : téléchargement de modèle d'abord
+#11 Calendrier scolaire paramétrable par année
+#13 Remise paramétrable (pourcentage ou montant fixe)
+#14 Numérotation séquentielle paramétrable (REC-2026-000123)
+#16 Format matricule paramétrable ({PREFIXE}-{ANNEE}-{NUMERO})
+#18 Remplacement ponctuel : champ sur séance réelle
+#22 Portails : accès par matricule + code, pas de compte
+#23 Échéancier paramétrable par facture
+#24 Contrôle doublon paiement
+#26 Suppression logique uniquement + audit
+#30 Bibliothèque documents administratifs versionnée
+#31 Agenda partagé
+#39 Thème personnalisable (clair/sombre)
+#43 Carnet de suivi de l'élève
+
+# =====================================================================
+# 17. LISTE DE VÉRIFICATION AVANT COMMIT
+# =====================================================================
+
+AVANT CHAQUE COMMIT, VÉRIFIER :
+
+[ ] Code syntaxiquement correct (pas d'erreur PHP)
+[ ] Aucune donnée sensible en clair (mot de passe, token)
+[ ] Suppression logique utilisée (pas de DELETE physique)
+[ ] Commentaires présents (PHPDoc sur classes et méthodes publiques)
+[ ] Messages d'erreur en français
+[ ] Validation serveur effectuée (pas de confiance au client)
+[ ] Protection CSRF sur les formulaires
+[ ] Requêtes SQL préparées (PDO)
+[ ] Journal d'audit pour les actions sensibles
+[ ] Permissions vérifiées avant toute action
+[ ] Responsive testé (ordinateur, tablette, smartphone)
+[ ] Tableau conforme au socle commun (si applicable)
+[ ] Thèmes (clair/sombre) compatibles
+[ ] BACKLOG.md mis à jour
+[ ] CHANGELOG.md mis à jour si décision technique nouvelle
+[ ] Commit message au format : [Module X] Description
+
+# =====================================================================
+# FIN DES RÈGLES — SMART-SEKOLY
+# =====================================================================
