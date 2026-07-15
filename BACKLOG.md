@@ -19,8 +19,8 @@
 | Module | Sous-tâche | Statut | Date début | Date fin | Commentaire |
 |--------|-----------|--------|------------|----------|-------------|
 | Init | Création structure initiale | ✅ Fait | 2026-07-15 | 2026-07-15 | Point d'entrée, dossiers, configuration, autoloader, vue installation |
-| VII | Créer table parametrage_etablissement | ⏳ À faire | | | |
-| VII | Créer classe ParametrageEtablissement.class.php | ⏳ À faire | | | |
+| VII | Créer table parametrage_etablissement | ✅ Fait | 2026-07-15 | 2026-07-15 | Migration SQL créée dans database/migrations/001_parametrage.sql |
+| VII | Créer classe ParametrageEtablissement.class.php | ✅ Fait | 2026-07-15 | 2026-07-15 | Classe POO avec génération de matricule paramétrable |
 | VII | Créer table sequence_numerotation | ⏳ À faire | | | |
 | VII | Créer classe SequenceNumerotation.class.php | ⏳ À faire | | | |
 | VII | Créer table seuil_alerte | ⏳ À faire | | | |
