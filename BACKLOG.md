@@ -28,6 +28,7 @@
 | VII | Créer table modele_document | ⏳ À faire | | | |
 | VII | Créer classe ModeleDocument.class.php | ⏳ À faire | | | |
 | VII | Assistant de configuration initiale (vue + contrôleur) | ⏳ À faire | | | |
+| VII | Assistant de configuration initiale (vue + contrôleur) | ✅ Fait | 2026-07-15 | 2026-07-15 | Contrôleur de validation + vue d’assistant de paramétrage ajoutés |
 | VII | Écran de paramétrage courant (vue + contrôleur) | ⏳ À faire | | | |
 | VII | Interface de gestion des thèmes (clair/sombre) | ⏳ À faire | | | |
 | VII | Gestion des sauvegardes automatiques | ⏳ À faire | | | |
