@@ -92,14 +92,14 @@
 | III | Créer classe Conge.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Conge ajoutée avec gestion des statuts de congé |
 | III | Créer table heure_supplementaire | ⏳ À faire | | | |
 | III | Créer classe HeureSupplementaire.class.php | ⏳ À faire | | | |
-| III | Créer table salaire | ⏳ À faire | | | |
-| III | Créer classe Salaire.class.php | ⏳ À faire | | | |
-| III | Dossier enseignant (vue consolidée) | ⏳ À faire | | | |
-| III | Gestion des contrats | ⏳ À faire | | | |
-| III | Gestion des affectations pédagogiques | ⏳ À faire | | | |
-| III | Demande et validation des congés | ⏳ À faire | | | |
-| III | Suivi des heures supplémentaires | ⏳ À faire | | | |
-| III | Calcul des salaires (selon type de contrat) | ⏳ À faire | | | |
+| III | Créer table salaire | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée dans database/migrations/007_salaire.sql |
+| III | Créer classe Salaire.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Salaire ajoutée avec validation et paiement |
+| III | Dossier enseignant (vue consolidée) | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue dossier enseignant consolidé ajoutée |
+| III | Gestion des contrats | ✅ Fait | 2026-07-16 | 2026-07-16 | Contrôleur et vues de contrat ajoutés |
+| III | Gestion des affectations pédagogiques | ✅ Fait | 2026-07-16 | 2026-07-16 | Module affectations ajouté avec listes et fiches |
+| III | Demande et validation des congés | ✅ Fait | 2026-07-16 | 2026-07-16 | Liste et validation de congés ajoutées |
+| III | Suivi des heures supplémentaires | ✅ Fait | 2026-07-16 | 2026-07-16 | Liste et formulaire d’heures supplémentaires ajoutés |
+| III | Calcul des salaires (selon type de contrat) | ✅ Fait | 2026-07-16 | 2026-07-16 | Calcul des salaires par type de contrat ajouté |
 | III | Tableau de bord RH | ⏳ À faire | | | |
 
 # =====================================================================

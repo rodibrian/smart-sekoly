@@ -31,11 +31,19 @@ class EnseignantController
             'enseignant' => [
                 'nom' => $enseignant->get_nom(),
                 'prenom' => $enseignant->get_prenom(),
+                'nom_complet' => $enseignant->get_nom_complet(),
                 'email' => $enseignant->get_email(),
                 'matricule' => $enseignant->get_matricule(),
+                'telephone' => '032 12 345 67',
+                'fonction' => 'Enseignant de mathématiques',
+                'date_embauche' => '2024-01-15',
+            ],
+            'contrats' => [
+                ['periode' => '2026-09', 'type_contrat' => 'horaire', 'statut' => 'actif'],
+                ['periode' => '2025-09', 'type_contrat' => 'permanent', 'statut' => 'termine'],
             ],
         ];
 
-        require TEMPLATES_PATH . 'enseignants/fiche.view.php';
+        require TEMPLATES_PATH . 'enseignants/dossier.view.php';
     }
 }
