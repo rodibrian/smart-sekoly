@@ -49,6 +49,11 @@
             <p>Consultez le guide intégré pour comprendre l’utilisation de la bibliothèque documentaire.</p>
             <a class="lien" href="<?= e(BASE_URL . '/bibliotheque/manuel') ?>">Lire le manuel utilisateur</a>
         </div>
+        <div class="carte">
+            <h2>Tutoriels par rôle</h2>
+            <p>Accédez à des guides courts adaptés aux rôles administrateur, secrétaire et responsable qualité.</p>
+            <a class="lien" href="<?= e(BASE_URL . '/bibliotheque/tutoriels') ?>">Voir les tutoriels</a>
+        </div>
 
         <?php if (empty($data['documents'])): ?>
             <p>Aucun document administratif n'a encore été ajouté.</p>

@@ -240,7 +240,7 @@
 | XI | Bibliothèque de documents administratifs | ✅ Fait | 2026-07-16 | 2026-07-16 | Module Bibliothèque documentaire implémenté |
 | XI | Gestion des versions (historique) | ✅ Fait | 2026-07-16 | 2026-07-16 | Historique de versions documentaires ajoutée |
 | XI | Manuel utilisateur intégré | ✅ Fait | 2026-07-16 | 2026-07-16 | Manuel d'utilisation intégré accessible via /bibliotheque/manuel |
-| XI | Tutoriels par rôle | ⏳ À faire | | | |
+| XI | Tutoriels par rôle | ✅ Fait | 2026-07-16 | 2026-07-16 | Tutoriels par rôle accessibles via /bibliotheque/tutoriels |
 
 # =====================================================================
 # TACHES SUPPLÉMENTAIRES DE SUIVI ET QUALITÉ

@@ -24,6 +24,7 @@ class BibliothequeController
             'index' => $this->preparer_index(),
             'versions' => $this->preparer_versions(),
             'manuel' => $this->preparer_manuel(),
+            'tutoriels' => $this->preparer_tutoriels(),
             default => $this->preparer_index(),
         };
 
@@ -40,6 +41,7 @@ class BibliothequeController
         return match ($action) {
             'versions' => 'versions',
             'manuel' => 'manuel',
+            'tutoriels' => 'tutoriels',
             default => 'index',
         };
     }
@@ -86,6 +88,44 @@ class BibliothequeController
             'module' => $this->module,
             'action' => 'manuel',
             'token_csrf' => generer_token_csrf(),
+        ];
+    }
+
+    private function preparer_tutoriels(): array
+    {
+        return [
+            'module' => $this->module,
+            'action' => 'tutoriels',
+            'token_csrf' => generer_token_csrf(),
+            'tutoriels' => [
+                [
+                    'role' => 'Administrateur',
+                    'introduction' => 'Accédez et gérez les documents administratifs de l’établissement.',
+                    'etapes' => [
+                        'Ajouter ou modifier des documents dans la bibliothèque documentaire.',
+                        'Consulter l’historique des versions de chaque document.',
+                        'Utiliser le manuel intégré pour comprendre les bonnes pratiques.',
+                    ],
+                ],
+                [
+                    'role' => 'Secrétaire',
+                    'introduction' => 'Publiez et mettez à jour les notes de service et les circulaires.',
+                    'etapes' => [
+                        'Créer un document administratif avec un titre, une catégorie et une description.',
+                        'Consulter les versions antérieures pour suivre l’historique des modifications.',
+                        'Utiliser les tutoriels pour retrouver les opérations courantes.',
+                    ],
+                ],
+                [
+                    'role' => 'Responsable qualité',
+                    'introduction' => 'Vérifiez les versions et maintenez la conformité documentaire.',
+                    'etapes' => [
+                        'Consulter les documents et leurs versions créés par le service.',
+                        'Vérifier les commentaires de version pour comprendre les changements.',
+                        'S’assurer que les documents importants sont bien archivés.',
+                    ],
+                ],
+            ],
         ];
     }
 

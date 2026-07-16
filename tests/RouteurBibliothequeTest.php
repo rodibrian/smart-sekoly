@@ -11,6 +11,7 @@ $routes = [
     '/smart-sekoly/bibliotheque/index' => 'Bibliothèque documentaire',
     '/smart-sekoly/bibliotheque/versions/1' => 'Versions du document',
     '/smart-sekoly/bibliotheque/manuel' => 'Manuel utilisateur',
+    '/smart-sekoly/bibliotheque/tutoriels' => 'Tutoriels par rôle',
 ];
 
 foreach ($routes as $uri => $attendu) {
