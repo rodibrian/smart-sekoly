@@ -44,6 +44,11 @@
                 <button type="submit" style="margin-top:14px; padding:10px 16px; border:0; border-radius:8px; background:#4f46e5; color:#fff; cursor:pointer;">Ajouter</button>
             </form>
         </div>
+        <div class="carte">
+            <h2>Manuel utilisateur</h2>
+            <p>Consultez le guide intégré pour comprendre l’utilisation de la bibliothèque documentaire.</p>
+            <a class="lien" href="<?= e(BASE_URL . '/bibliotheque/manuel') ?>">Lire le manuel utilisateur</a>
+        </div>
 
         <?php if (empty($data['documents'])): ?>
             <p>Aucun document administratif n'a encore été ajouté.</p>
@@ -67,7 +72,9 @@
                             <td><?= e($document['categorie']) ?></td>
                             <td><?= e($document['description']) ?></td>
                             <td><?= e($document['date_creation']) ?></td>
-                            <td><a class="lien" href="<?= e(BASE_URL . '/bibliotheque/versions/' . $document['id']) ?>">Versions</a></td>
+                            <td>
+                        <a class="lien" href="<?= e(BASE_URL . '/bibliotheque/versions/' . $document['id']) ?>">Versions</a>
+                    </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

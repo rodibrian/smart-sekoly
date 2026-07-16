@@ -23,6 +23,7 @@ class BibliothequeController
         $data = match ($action) {
             'index' => $this->preparer_index(),
             'versions' => $this->preparer_versions(),
+            'manuel' => $this->preparer_manuel(),
             default => $this->preparer_index(),
         };
 
@@ -38,6 +39,7 @@ class BibliothequeController
     {
         return match ($action) {
             'versions' => 'versions',
+            'manuel' => 'manuel',
             default => 'index',
         };
     }
@@ -75,6 +77,15 @@ class BibliothequeController
             'token_csrf' => generer_token_csrf(),
             'document' => $document,
             'versions' => array_reverse($versions),
+        ];
+    }
+
+    private function preparer_manuel(): array
+    {
+        return [
+            'module' => $this->module,
+            'action' => 'manuel',
+            'token_csrf' => generer_token_csrf(),
         ];
     }
 

@@ -10,6 +10,7 @@ if (!is_dir($sessionPath)) {
 $routes = [
     '/smart-sekoly/bibliotheque/index' => 'Bibliothèque documentaire',
     '/smart-sekoly/bibliotheque/versions/1' => 'Versions du document',
+    '/smart-sekoly/bibliotheque/manuel' => 'Manuel utilisateur',
 ];
 
 foreach ($routes as $uri => $attendu) {
