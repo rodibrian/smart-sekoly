@@ -60,6 +60,8 @@
 | II | Changement de classe en cours d'année | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe ChangementClasse et vue de transition ajoutés |
 | II | Redoublement (proposition + validation) | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Redoublement et vue de décision ajoutés |
 | II | Transfert d'élève (départ/arrivée) | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe TransfertEleve et vue de transfert ajoutés |
+| II | Interface de consultation des absences | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Absence et vue de consultation ajoutés |
+| II | Gestion des sanctions (proposition/validation) | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Sanction et vue de consultation ajoutés |
 
 # =====================================================================
 # PRIORITÉ 2 — MODULE VIII : IMPORT ET MIGRATION DE DONNÉES

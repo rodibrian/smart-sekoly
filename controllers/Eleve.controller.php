@@ -56,6 +56,18 @@ class EleveController
             return;
         }
 
+        if ($this->action === 'absences') {
+            $donnees = $this->preparer_absences();
+            require TEMPLATES_PATH . 'eleves/absences.view.php';
+            return;
+        }
+
+        if ($this->action === 'sanctions') {
+            $donnees = $this->preparer_sanctions();
+            require TEMPLATES_PATH . 'eleves/sanctions.view.php';
+            return;
+        }
+
         $donnees = [
             'module' => $this->module,
             'action' => $this->action,
@@ -192,6 +204,52 @@ class EleveController
                 'destination' => $transfert->get_destination(),
                 'statut' => $transfert->get_statut(),
             ],
+            'module' => $this->module,
+            'action' => $this->action,
+            'token_csrf' => generer_token_csrf(),
+        ];
+    }
+
+    public function preparer_absences(): array
+    {
+        $id_eleve = (int) ($this->parametre ?? 0);
+        $absences = [
+            new Absence(['id_eleve' => $id_eleve, 'date_absence' => '2026-07-10', 'motif' => 'Maladie', 'statut' => 'valide']),
+            new Absence(['id_eleve' => $id_eleve, 'date_absence' => '2026-07-15', 'motif' => 'Rendez-vous médical', 'statut' => 'en_attente']),
+        ];
+
+        return [
+            'id_eleve' => $id_eleve,
+            'absences' => array_map(function (Absence $absence): array {
+                return [
+                    'date_absence' => $absence->get_date_absence(),
+                    'motif' => $absence->get_motif(),
+                    'statut' => $absence->get_statut(),
+                ];
+            }, $absences),
+            'module' => $this->module,
+            'action' => $this->action,
+            'token_csrf' => generer_token_csrf(),
+        ];
+    }
+
+    public function preparer_sanctions(): array
+    {
+        $id_eleve = (int) ($this->parametre ?? 0);
+        $sanctions = [
+            new Sanction(['id_eleve' => $id_eleve, 'type' => 'avertissement', 'description' => 'Retard répété', 'statut' => 'validee']),
+            new Sanction(['id_eleve' => $id_eleve, 'type' => 'blâme', 'description' => 'Comportement inapproprié', 'statut' => 'proposee']),
+        ];
+
+        return [
+            'id_eleve' => $id_eleve,
+            'sanctions' => array_map(function (Sanction $sanction): array {
+                return [
+                    'type' => $sanction->get_type(),
+                    'description' => $sanction->get_description(),
+                    'statut' => $sanction->get_statut(),
+                ];
+            }, $sanctions),
             'module' => $this->module,
             'action' => $this->action,
             'token_csrf' => generer_token_csrf(),
