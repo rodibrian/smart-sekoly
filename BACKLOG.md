@@ -75,7 +75,7 @@
 |--------|-----------|--------|------------|----------|-------------|
 | VIII | Créer structure d'import (modèle Excel/CSV) | ✅ Fait | 2026-07-16 | 2026-07-16 | Modèle CSV et contrôleur d’import ajoutés |
 | VIII | Importer les élèves existants | ✅ Fait | 2026-07-16 | 2026-07-16 | Import CSV valide et persistance en session des élèves ajoutées |
-| VIII | Importer les notes antérieures | ⏳ À faire | | | |
+| VIII | Importer les notes antérieures | ✅ Fait | 2026-07-16 | 2026-07-16 | Import CSV de notes ajouté avec persistance en session et modèle dédié |
 | VIII | Journal d'import (rapport des erreurs) | ✅ Fait | 2026-07-16 | 2026-07-16 | Rapport d’erreurs détaillé dans la vue d’import |
 
 # =====================================================================

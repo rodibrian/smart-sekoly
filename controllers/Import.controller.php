@@ -18,18 +18,22 @@ class ImportController
     public function executer(): void
     {
         $import = new ImportDonnees();
+        $type = $this->action === 'notes' ? 'notes' : 'eleves';
+
         $donnees = [
             'module' => $this->module,
             'action' => $this->action,
             'token_csrf' => generer_token_csrf(),
-            'modele_csv' => $import->generer_modele(),
+            'modele_csv' => $import->generer_modele($type),
+            'type_import' => $type,
+            'form_action' => BASE_URL . ($type === 'notes' ? '/import/notes' : '/import'),
             'resultat' => null,
         ];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $fichier = $_FILES['fichier_csv']['tmp_name'] ?? null;
             if ($fichier !== null && is_file($fichier)) {
-                $donnees['resultat'] = $import->importer($fichier);
+                $donnees['resultat'] = $import->importer($fichier, $type);
             } else {
                 $donnees['resultat'] = [
                     'total_lignes' => 0,

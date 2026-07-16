@@ -20,15 +20,24 @@
 </head>
 <body>
     <div class="conteneur">
-        <h1>Import de données élèves</h1>
-        <p>Téléchargez un fichier CSV contenant les élèves à importer.</p>
+        <h1><?= $donnees['type_import'] === 'notes' ? 'Import de notes antérieures' : 'Import de données élèves' ?></h1>
+        <p>
+            <?= $donnees['type_import'] === 'notes'
+                ? 'Téléchargez un fichier CSV contenant les notes à importer. Le matricule doit correspondre à un élève déjà présent en session.'
+                : 'Téléchargez un fichier CSV contenant les élèves à importer.' ?>
+        </p>
 
-        <form method="post" enctype="multipart/form-data" action="<?= e(BASE_URL . '/import') ?>">
+        <form method="post" enctype="multipart/form-data" action="<?= e($donnees['form_action']) ?>">
             <input type="hidden" name="csrf_token" value="<?= e($donnees['token_csrf']) ?>">
             <label for="fichier_csv">Fichier CSV</label>
             <input id="fichier_csv" name="fichier_csv" type="file" accept=".csv" required>
             <button type="submit">Importer</button>
         </form>
+
+        <p>
+            <a href="<?= e(BASE_URL . '/import') ?>">Importer des élèves</a> ·
+            <a href="<?= e(BASE_URL . '/import/notes') ?>">Importer des notes</a>
+        </p>
 
         <h2>Modèle CSV</h2>
         <pre><?= e($donnees['modele_csv']) ?></pre>

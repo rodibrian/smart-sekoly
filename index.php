@@ -83,7 +83,7 @@ class Routeur
                 return $segment !== '';
             }));
 
-            $module = $segments[0] ?? 'installation';
+            $module = $segments[0] ?? 'tableau-de-bord';
             $action = $segments[1] ?? 'index';
             $parametre = $segments[2] ?? null;
         } else {
