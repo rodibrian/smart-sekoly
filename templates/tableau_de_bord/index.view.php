@@ -60,12 +60,15 @@
         </div>
 
         <div class="actions">
-            <a href="/smart-sekoly/tableau-de-bord/agenda" class="bouton">Voir l'agenda</a>
-            <a href="/smart-sekoly/tableau-de-bord/actualites" class="bouton">Voir les actualités</a>
-            <a href="/smart-sekoly/eleves/liste" class="bouton">Gestion des élèves</a>
+            <a href="<?= e(BASE_URL . '/tableau-de-bord/agenda') ?>" class="bouton">Voir l'agenda</a>
+            <a href="<?= e(BASE_URL . '/tableau-de-bord/actualites') ?>" class="bouton">Voir les actualités</a>
+            <a href="<?= e(BASE_URL . '/eleves/liste') ?>" class="bouton">Gestion des élèves</a>
+            <a href="<?= e(BASE_URL . '/enseignants/liste') ?>" class="bouton">Gestion des enseignants</a>
             <a href="?module=rapports&action=index" class="bouton">Rapports et statistiques</a>
             <a href="?module=portails&action=index" class="bouton">Portails Élève / Parent</a>
-            <a href="?module=communication&action=index" class="bouton">Communication interne</a>            <a href="/smart-sekoly/bibliotheque/index" class="bouton">Bibliothèque documentaire</a>        </div>
+            <a href="?module=communication&action=index" class="bouton">Communication interne</a>
+            <a href="<?= e(BASE_URL . '/bibliotheque/index') ?>" class="bouton">Bibliothèque documentaire</a>
+        </div>
     </div>
 </body>
 </html>

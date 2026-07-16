@@ -73,8 +73,10 @@ class Routeur
             $base_url = rtrim(BASE_URL, '/');
             $chemin = $uri;
 
-            if ($base_url !== '' && strpos($chemin, $base_url) === 0) {
-                $chemin = substr($chemin, strlen($base_url));
+            if ($base_url !== '') {
+                while (strpos($chemin, $base_url) === 0) {
+                    $chemin = substr($chemin, strlen($base_url));
+                }
             }
 
             $segments = array_values(array_filter(explode('/', trim($chemin, '/')), function ($segment): bool {
@@ -102,8 +104,10 @@ class Routeur
         $fichiers_controleur = [
             CONTROLLERS_PATH . $nom_controleur . '.php',
             CONTROLLERS_PATH . $nom_controleur . '.controller.php',
+            CONTROLLERS_PATH . str_replace('Controller', '', $nom_controleur) . '.controller.php',
             CONTROLLERS_PATH . $nom_controleur_singulier . '.php',
             CONTROLLERS_PATH . $nom_controleur_singulier . '.controller.php',
+            CONTROLLERS_PATH . str_replace('Controller', '', $nom_controleur_singulier) . '.controller.php',
             CONTROLLERS_PATH . $nom_base . '.php',
             CONTROLLERS_PATH . $nom_base . '.controller.php',
         ];
@@ -132,7 +136,7 @@ class Routeur
             }
         }
 
-        if (class_exists($nom_controleur_singulier)) {
+        if (!class_exists($nom_controleur) && class_exists($nom_controleur_singulier)) {
             $nom_controleur = $nom_controleur_singulier;
         } elseif (!class_exists($nom_controleur)) {
             $nom_controleur = 'InstallationController';
