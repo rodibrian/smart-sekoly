@@ -24,6 +24,8 @@ class ParametrageController
             $vue = 'parametrage/themes.view.php';
         } elseif ($this->action === 'courant') {
             $vue = 'parametrage/courant.view.php';
+        } elseif ($this->action === 'sauvegardes') {
+            $vue = 'parametrage/sauvegardes.view.php';
         }
 
         $donnees = [
@@ -97,6 +99,47 @@ class ParametrageController
             'erreurs' => $erreurs,
             'donnees' => [
                 'theme' => $theme,
+            ],
+        ];
+    }
+
+    public function traiter_sauvegarde_formulaire(array $donnees_formulaire): array
+    {
+        $erreurs = [];
+        $frequence = nettoyer_chaine($donnees_formulaire['frequence'] ?? '');
+        $repertoire = nettoyer_chaine($donnees_formulaire['repertoire'] ?? '');
+        $retention = nettoyer_chaine($donnees_formulaire['retention'] ?? '');
+        $activer = !empty($donnees_formulaire['activer']) ? '1' : '0';
+
+        if (!in_array($frequence, ['quotidienne', 'hebdomadaire', 'mensuelle'], true)) {
+            $erreurs['frequence'] = 'La fréquence de sauvegarde est invalide.';
+        }
+
+        if ($repertoire === '') {
+            $erreurs['repertoire'] = 'Le répertoire de sauvegarde est obligatoire.';
+        }
+
+        if ($retention === '' || !is_numeric($retention)) {
+            $erreurs['retention'] = 'La rétention doit être numérique.';
+        }
+
+        if (empty($erreurs)) {
+            $_SESSION['sauvegarde_config'] = [
+                'frequence' => $frequence,
+                'repertoire' => $repertoire,
+                'retention' => $retention,
+                'activer' => $activer,
+            ];
+        }
+
+        return [
+            'valide' => empty($erreurs),
+            'erreurs' => $erreurs,
+            'donnees' => [
+                'frequence' => $frequence,
+                'repertoire' => $repertoire,
+                'retention' => $retention,
+                'activer' => $activer,
             ],
         ];
     }
