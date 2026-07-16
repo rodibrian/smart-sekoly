@@ -134,28 +134,29 @@
 
 | Module | Sous-tâche | Statut | Date début | Date fin | Commentaire |
 |--------|-----------|--------|------------|----------|-------------|
-| IV | Créer table type_frais | ⏳ À faire | | | |
-| IV | Créer classe TypeFrais.class.php | ⏳ À faire | | | |
-| IV | Créer table facture | ⏳ À faire | | | |
-| IV | Créer classe Facture.class.php | ⏳ À faire | | | |
-| IV | Créer table ligne_facture | ⏳ À faire | | | |
-| IV | Créer classe LigneFacture.class.php | ⏳ À faire | | | |
-| IV | Créer table remise | ⏳ À faire | | | |
-| IV | Créer classe Remise.class.php | ⏳ À faire | | | |
-| IV | Créer table facture_remise | ⏳ À faire | | | |
-| IV | Créer table echeance | ⏳ À faire | | | |
-| IV | Créer classe Echeance.class.php | ⏳ À faire | | | |
-| IV | Créer table paiement | ⏳ À faire | | | |
-| IV | Créer classe Paiement.class.php | ⏳ À faire | | | |
-| IV | Créer table caisse | ⏳ À faire | | | |
-| IV | Créer classe Caisse.class.php | ⏳ À faire | | | |
-| IV | Créer table mouvement_caisse | ⏳ À faire | | | |
-| IV | Créer classe MouvementCaisse.class.php | ⏳ À faire | | | |
-| IV | Facturation (génération de facture) | ⏳ À faire | | | |
-| IV | Gestion des remises et réductions | ⏳ À faire | | | |
+| IV | Créer table type_frais | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée pour type_frais |
+| IV | Créer classe TypeFrais.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe TypeFrais ajoutée avec test validé |
+| IV | Créer table facture | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée pour facture |
+| IV | Créer classe Facture.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Facture ajoutée avec test validé |
+| IV | Créer table ligne_facture | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée pour ligne_facture |
+| IV | Créer classe LigneFacture.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe LigneFacture ajoutée |
+| IV | Créer table remise | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée pour remise |
+| IV | Créer classe Remise.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Remise ajoutée avec test validé |
+| IV | Créer table facture_remise | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée pour facture_remise |
+| IV | Créer table echeance | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée pour echeance |
+| IV | Créer classe Echeance.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Echeance ajoutée |
+| IV | Créer table paiement | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée pour paiement |
+| IV | Créer classe Paiement.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Paiement ajoutée |
+| IV | Créer table caisse | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée pour caisse |
+| IV | Créer classe Caisse.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Caisse ajoutée |
+| IV | Créer table mouvement_caisse | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée pour mouvement_caisse |
+| IV | Créer classe MouvementCaisse.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe MouvementCaisse ajoutée |
+| IV | Facturation (génération de facture) | ✅ En cours | 2026-07-16 | | Contrôleur et vues de facturation ajoutés |
+| IV | Gestion des remises et réductions | ✅ En cours | 2026-07-16 | | Contrôleur et vues de remise ajoutés |
 | IV | Échéancier paramétrable | ⏳ À faire | | | |
-| IV | Enregistrement des paiements (avec doublon) | ⏳ À faire | | | |
-| IV | Interface caisse dédiée | ⏳ À faire | | | |
+| IV | Enregistrement des paiements (avec doublon) | ✅ En cours | 2026-07-16 | | Contrôleur et vues de paiement ajoutés |
+| IV | Interface caisse dédiée | ✅ En cours | 2026-07-16 | | Contrôleur et vues de caisse ajoutés |
+| IV | Échéancier paramétrable | ✅ En cours | 2026-07-16 | | Contrôleur et vues d’échéance ajoutés |
 | IV | Impression de reçu thermique | ⏳ À faire | | | |
 | IV | Suivi des impayés | ⏳ À faire | | | |
 | IV | Rapports financiers (quotidiens, mensuels) | ⏳ À faire | | | |
