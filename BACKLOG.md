@@ -30,7 +30,7 @@
 | VII | Assistant de configuration initiale (vue + contrôleur) | ⏳ À faire | | | |
 | VII | Assistant de configuration initiale (vue + contrôleur) | ✅ Fait | 2026-07-15 | 2026-07-15 | Contrôleur de validation + vue d’assistant de paramétrage ajoutés |
 | VII | Écran de paramétrage courant (vue + contrôleur) | ✅ Fait | 2026-07-15 | 2026-07-15 | Vue de paramétrage courant et validation de formulaire ajoutés |
-| VII | Interface de gestion des thèmes (clair/sombre) | ⏳ À faire | | | |
+| VII | Interface de gestion des thèmes (clair/sombre) | ✅ Fait | 2026-07-16 | 2026-07-16 | Thème clair/sombre configurable via vue et session |
 | VII | Gestion des sauvegardes automatiques | ⏳ À faire | | | |
 
 # =====================================================================

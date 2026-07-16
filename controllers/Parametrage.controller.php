@@ -18,13 +18,22 @@ class ParametrageController
 
     public function executer(): void
     {
+        $vue = 'parametrage/assistant.view.php';
+
+        if ($this->action === 'themes') {
+            $vue = 'parametrage/themes.view.php';
+        } elseif ($this->action === 'courant') {
+            $vue = 'parametrage/courant.view.php';
+        }
+
         $donnees = [
             'module' => $this->module,
             'action' => $this->action,
             'token_csrf' => generer_token_csrf(),
+            'theme_actuel' => $_SESSION['theme_app'] ?? 'clair',
         ];
 
-        require TEMPLATES_PATH . 'parametrage/assistant.view.php';
+        require TEMPLATES_PATH . $vue;
     }
 
     public function traiter_formulaire(array $donnees_formulaire): array
@@ -60,6 +69,34 @@ class ParametrageController
                 'format_matricule' => $format_matricule,
                 'prefixe_matricule' => $prefixe_matricule,
                 'annee_courante' => $annee_courante,
+            ],
+        ];
+    }
+
+    public function traiter_theme_formulaire(array $donnees_formulaire): array
+    {
+        $erreurs = [];
+        $theme = nettoyer_chaine($donnees_formulaire['theme'] ?? '');
+
+        if (!in_array($theme, ['clair', 'sombre'], true)) {
+            $erreurs['theme'] = 'Le thème sélectionné est invalide.';
+        }
+
+        if (empty($donnees_formulaire['csrf_token'] ?? '')) {
+            $erreurs['csrf_token'] = 'Le jeton CSRF est absent.';
+        } elseif (!verifier_token_csrf((string) $donnees_formulaire['csrf_token'])) {
+            $erreurs['csrf_token'] = 'Le jeton CSRF est invalide.';
+        }
+
+        if (empty($erreurs)) {
+            $_SESSION['theme_app'] = $theme;
+        }
+
+        return [
+            'valide' => empty($erreurs),
+            'erreurs' => $erreurs,
+            'donnees' => [
+                'theme' => $theme,
             ],
         ];
     }
