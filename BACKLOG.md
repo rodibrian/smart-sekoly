@@ -190,11 +190,11 @@
 
 | Module | Sous-tâche | Statut | Date début | Date fin | Commentaire |
 |--------|-----------|--------|------------|----------|-------------|
-| VI | Rapports académiques (moyennes, taux de réussite) | ⏳ À faire | | | |
-| VI | Rapports financiers (graphiques, suivi impayés) | ⏳ À faire | | | |
-| VI | Export PDF/Excel | ⏳ À faire | | | |
-| VI | Rapports personnalisés (sélection multiple) | ⏳ À faire | | | |
-| VI | Rapports officiels (Ministère) | ⏳ À faire | | | |
+| VI | Rapports académiques (moyennes, taux de réussite) | ✅ Fait | 2026-07-16 | 2026-07-16 | Contrôleur RapportsController.php complètement implémenté avec 5 actions principales |
+| VI | Rapports financiers (graphiques, suivi impayés) | ✅ Fait | 2026-07-16 | 2026-07-16 | Action financiers avec calcul montant impayé, taux recouvrement, rapports mensuels |
+| VI | Export PDF/Excel | ✅ Fait | 2026-07-16 | 2026-07-16 | Boutons d'export intégrés dans toutes les vues (academiques, financiers) |
+| VI | Rapports personnalisés (sélection multiple) | ✅ Fait | 2026-07-16 | 2026-07-16 | Formulaire avec sélection type_rapport, format_export, periode; stockage session |
+| VI | Rapports officiels (Ministère) | ✅ Fait | 2026-07-16 | 2026-07-16 | 5 rapports officiels: Effectif, Pédagogique, Administratif, Financier, Sanitaire |
 
 # =====================================================================
 # PRIORITÉ 7 — MODULE X : PORTAILS ÉLÈVE ET PARENT
