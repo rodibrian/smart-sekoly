@@ -12,6 +12,9 @@ class AuthService
         ];
 
         try {
+            if (!class_exists('JournalConnexion', false)) {
+                require_once __DIR__ . '/JournalConnexion.class.php';
+            }
             $journal = new JournalConnexion();
             $journal->enregistrer([
                 'id_utilisateur' => (int) ($utilisateur['id'] ?? 0),
