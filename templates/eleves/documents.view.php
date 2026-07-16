@@ -25,22 +25,31 @@
         <h1>Documents obligatoires</h1>
         <p>Suivi des pièces à fournir pour l’élève n°<?= e($donnees['id_eleve']) ?>.</p>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Document</th>
-                    <th>Statut</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($donnees['documents'] as $document): ?>
+        <form method="post" action="<?= e(BASE_URL . '/eleves/documents-post/' . $donnees['id_eleve']) ?>">
+            <input type="hidden" name="csrf_token" value="<?= e($donnees['token_csrf']) ?>">
+            <table>
+                <thead>
                     <tr>
-                        <td><?= e($document['nom']) ?></td>
-                        <td><span class="badge <?= e($document['statut'] === 'manquant' ? 'manquant' : '') ?>"><?= e($document['statut']) ?></span></td>
+                        <th>Document</th>
+                        <th>Statut</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($donnees['documents'] as $document): ?>
+                        <tr>
+                            <td><?= e($document['nom']) ?></td>
+                            <td>
+                                <select name="documents[<?= e($document['nom']) ?>]">
+                                    <option value="recu" <?= $document['statut'] === 'recu' ? 'selected' : '' ?>>Reçu</option>
+                                    <option value="manquant" <?= $document['statut'] === 'manquant' ? 'selected' : '' ?>>Manquant</option>
+                                </select>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <button type="submit" style="margin-top: 16px; padding: 10px 16px; border: 0; border-radius: 8px; background: #2563eb; color: #fff; cursor: pointer;">Enregistrer le suivi</button>
+        </form>
     </div>
 </body>
 </html>

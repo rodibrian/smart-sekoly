@@ -53,9 +53,11 @@
 | II | Formulaire d'inscription élève | ✅ Fait | 2026-07-16 | 2026-07-16 | Contrôleur et vue de formulaire d’inscription ajoutés |
 | II | Soumission POST de l'inscription élève | ✅ Fait | 2026-07-16 | 2026-07-16 | Traitement POST, validation, persistance en session et redirection vers le dossier élève ajoutés |
 | II | Liste des élèves | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue de liste, recherche par nom/prénom/matricule et route /eleves/liste ajoutées |
-| II | Dossier élève unique (vue consolidée) | ✅ Fait | 2026-07-16 | 2026-07-16 | Contrôleur et vue de dossier élève ajoutés |
+| II | Dossier élève unique (vue consolidée) | ✅ Fait | 2026-07-16 | 2026-07-16 | Contrôleur, vue de dossier élève, actions rapides et édition de profil ajoutés |
+| II | Édition du profil élève | ✅ Fait | 2026-07-16 | 2026-07-16 | Formulaire d’édition et mise à jour en session/DAO ajoutés |
+| II | Persistance réelle des élèves | 🔄 En cours | 2026-07-16 | | Intégration du DAO élèves avec fallback session et premières opérations CRUD |
 | II | Génération automatique de matricule | ✅ Fait | 2026-07-16 | 2026-07-16 | Fonction utilitaire de génération de matricule ajoutée et utilisée dans l’inscription |
-| II | Gestion des documents obligatoires élèves | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe DocumentObligatoire et vue de suivi des pièces ajoutés |
+| II | Gestion des documents obligatoires élèves | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe DocumentObligatoire, vue de suivi des pièces et formulaire de mise à jour ajoutés |
 | II | Carnet de suivi (table carnet_suivi) | ✅ Fait | 2026-07-16 | 2026-07-16 | Structure de suivi ajoutée dans le module élève |
 | II | Carnet de suivi (classe CarnetSuivi.class.php) | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe CarnetSuivi avec ajout d’événements |
 | II | Carnet de suivi (vue + interface) | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue de carnet de suivi accessible via la route locale |
@@ -71,10 +73,10 @@
 
 | Module | Sous-tâche | Statut | Date début | Date fin | Commentaire |
 |--------|-----------|--------|------------|----------|-------------|
-| VIII | Créer structure d'import (modèle Excel/CSV) | ⏳ À faire | | | |
-| VIII | Importer les élèves existants | ⏳ À faire | | | Dépend de Module II |
+| VIII | Créer structure d'import (modèle Excel/CSV) | ✅ Fait | 2026-07-16 | 2026-07-16 | Modèle CSV et contrôleur d’import ajoutés |
+| VIII | Importer les élèves existants | ✅ Fait | 2026-07-16 | 2026-07-16 | Import CSV valide et persistance en session des élèves ajoutées |
 | VIII | Importer les notes antérieures | ⏳ À faire | | | |
-| VIII | Journal d'import (rapport des erreurs) | ⏳ À faire | | | |
+| VIII | Journal d'import (rapport des erreurs) | ✅ Fait | 2026-07-16 | 2026-07-16 | Rapport d’erreurs détaillé dans la vue d’import |
 
 # =====================================================================
 # PRIORITÉ 3 — MODULE III : GESTION DES ENSEIGNANTS

@@ -46,6 +46,12 @@ class EleveController
             return;
         }
 
+        if ($this->action === 'edition') {
+            $donnees = $this->preparer_formulaire_edition();
+            require TEMPLATES_PATH . 'eleves/edition.view.php';
+            return;
+        }
+
         if ($this->action === 'dossier') {
             $donnees = $this->preparer_donnees_dossier();
             require TEMPLATES_PATH . 'eleves/dossier.view.php';
@@ -55,6 +61,12 @@ class EleveController
         if ($this->action === 'documents') {
             $donnees = $this->preparer_documents_obligatoires();
             require TEMPLATES_PATH . 'eleves/documents.view.php';
+            return;
+        }
+
+        if ($this->action === 'documents-post') {
+            $this->traiter_documents_obligatoires();
+            header('Location: ' . BASE_URL . '/eleves/documents/' . ($this->parametre ?? 1));
             return;
         }
 
@@ -105,31 +117,70 @@ class EleveController
 
     private function enregistrer_inscription(array $donnees): void
     {
-        $eleves = $_SESSION['eleves'] ?? [];
-        $id_eleve = generer_identifiant($eleves, 'id');
-
-        $eleve = [
-            'id' => $id_eleve,
+        $dao = new EleveDAO();
+        $id_eleve = $dao->creerEleve([
             'nom' => $donnees['nom'],
             'prenom' => $donnees['prenom'],
             'email' => $donnees['email'],
             'date_naissance' => $donnees['date_naissance'],
             'matricule' => $donnees['matricule'],
+            'statut_scolaire' => 'actif',
+        ]);
+
+        $_SESSION['dernier_id_eleve'] = $id_eleve;
+    }
+
+    private function preparer_formulaire_edition(): array
+    {
+        $id_eleve = (int) ($this->parametre ?? 0);
+        $dao = new EleveDAO();
+        $eleve = $dao->trouverParId($id_eleve) ?? [
+            'id' => $id_eleve,
+            'nom' => 'Andriamihaja',
+            'prenom' => 'Lova',
+            'email' => 'lova@example.com',
+            'date_naissance' => '2015-03-05',
+            'matricule' => 'EL-2026-001',
             'statut' => 'Actif',
-            'date_creation' => date('Y-m-d H:i:s'),
         ];
 
-        $eleves[$id_eleve] = $eleve;
-        $_SESSION['eleves'] = $eleves;
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $eleve['nom'] = nettoyer_chaine($_POST['nom'] ?? $eleve['nom']);
+            $eleve['prenom'] = nettoyer_chaine($_POST['prenom'] ?? $eleve['prenom']);
+            $eleve['email'] = nettoyer_chaine($_POST['email'] ?? $eleve['email']);
+            $eleve['date_naissance'] = nettoyer_chaine($_POST['date_naissance'] ?? $eleve['date_naissance']);
+            $eleve['matricule'] = nettoyer_chaine($_POST['matricule'] ?? $eleve['matricule']);
+            $dao->mettreAJour($id_eleve, [
+                'nom' => $eleve['nom'],
+                'prenom' => $eleve['prenom'],
+                'email' => $eleve['email'],
+                'date_naissance' => $eleve['date_naissance'],
+                'matricule' => $eleve['matricule'],
+                'statut_scolaire' => 'actif',
+            ]);
+            $_SESSION['messages']['eleve'] = 'Profil mis à jour.';
+        }
+
+        return [
+            'id_eleve' => $id_eleve,
+            'eleve' => $eleve,
+            'module' => $this->module,
+            'action' => $this->action,
+            'token_csrf' => generer_token_csrf(),
+        ];
     }
 
     public function preparer_liste_eleves(): array
     {
-        $eleves = $_SESSION['eleves'] ?? [];
+        $dao = new EleveDAO();
+        $eleves = $dao->listerEleves();
         $recherche = nettoyer_chaine($_GET['q'] ?? '');
         $liste = [];
 
         foreach ($eleves as $eleve) {
+            if (!is_array($eleve)) {
+                continue;
+            }
             $nom = $eleve['nom'] ?? '';
             $prenom = $eleve['prenom'] ?? '';
             $matricule = $eleve['matricule'] ?? '';
@@ -172,8 +223,8 @@ class EleveController
     {
         $id_eleve = (int) ($this->parametre ?? 0);
 
-        $eleves = $_SESSION['eleves'] ?? [];
-        $eleve_sauvegarde = $eleves[$id_eleve] ?? null;
+        $dao = new EleveDAO();
+        $eleve_sauvegarde = $dao->trouverParId($id_eleve);
 
         $eleve = [
             'id' => $id_eleve,
@@ -211,25 +262,49 @@ class EleveController
     {
         $id_eleve = (int) ($this->parametre ?? 0);
 
-        $documents = [
-            new DocumentObligatoire(['nom' => 'CNI', 'statut' => 'recu']),
-            new DocumentObligatoire(['nom' => 'Certificat de naissance', 'statut' => 'recu']),
-            new DocumentObligatoire(['nom' => 'Photo d’identité', 'statut' => 'manquant']),
-            new DocumentObligatoire(['nom' => 'Bulletin précédent', 'statut' => 'manquant']),
+        $documents = $_SESSION['documents_eleves'][$id_eleve] ?? [
+            ['nom' => 'CNI', 'statut' => 'recu'],
+            ['nom' => 'Certificat de naissance', 'statut' => 'recu'],
+            ['nom' => 'Photo d’identité', 'statut' => 'manquant'],
+            ['nom' => 'Bulletin précédent', 'statut' => 'manquant'],
         ];
 
         return [
             'id_eleve' => $id_eleve,
-            'documents' => array_map(function (DocumentObligatoire $document): array {
+            'documents' => array_map(function (array $document): array {
                 return [
-                    'nom' => $document->get_nom(),
-                    'statut' => $document->get_statut(),
+                    'nom' => $document['nom'] ?? '',
+                    'statut' => $document['statut'] ?? 'manquant',
                 ];
             }, $documents),
             'module' => $this->module,
             'action' => $this->action,
             'token_csrf' => generer_token_csrf(),
         ];
+    }
+
+    private function traiter_documents_obligatoires(): void
+    {
+        $id_eleve = (int) ($this->parametre ?? 0);
+        $documents = [];
+
+        foreach ($_POST['documents'] ?? [] as $nom => $statut) {
+            $documents[] = [
+                'nom' => nettoyer_chaine($nom),
+                'statut' => nettoyer_chaine($statut),
+            ];
+        }
+
+        if (empty($documents)) {
+            $documents = [
+                ['nom' => 'CNI', 'statut' => 'recu'],
+                ['nom' => 'Certificat de naissance', 'statut' => 'recu'],
+                ['nom' => 'Photo d’identité', 'statut' => 'manquant'],
+                ['nom' => 'Bulletin précédent', 'statut' => 'manquant'],
+            ];
+        }
+
+        $_SESSION['documents_eleves'][$id_eleve] = $documents;
     }
 
     public function preparer_carnet_suivi(): array

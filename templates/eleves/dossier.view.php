@@ -31,6 +31,22 @@
             <p><strong>Email :</strong> <?= e($donnees['eleve']['email']) ?></p>
             <p><strong>Statut :</strong> <span class="badge"><?= e($donnees['eleve']['statut']) ?></span></p>
             <p><strong>Date de naissance :</strong> <?= e($donnees['eleve']['date_naissance']) ?></p>
+            <p><strong>Classe actuelle :</strong> <?= e($donnees['eleve']['inscriptions'][0]['classe'] ?? 'À définir') ?></p>
+            <p><strong>Année scolaire :</strong> <?= e($donnees['eleve']['inscriptions'][0]['annee'] ?? 'À définir') ?></p>
+        </div>
+
+        <div class="carte">
+            <h3>Actions rapides</h3>
+            <p>
+                <a href="<?= e(BASE_URL . '/eleves/documents/' . $donnees['id_eleve']) ?>">Documents</a> |
+                <a href="<?= e(BASE_URL . '/eleves/carnet/' . $donnees['id_eleve']) ?>">Carnet de suivi</a> |
+                <a href="<?= e(BASE_URL . '/eleves/absences/' . $donnees['id_eleve']) ?>">Absences</a>
+            </p>
+        </div>
+
+        <div class="carte">
+            <h3>Notes de suivi</h3>
+            <p>Élève actif avec dossier complet à mettre à jour à chaque nouvelle rentrée ou changement de situation.</p>
         </div>
 
         <div class="carte">

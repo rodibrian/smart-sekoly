@@ -33,6 +33,7 @@ class ImportDonnees
         $total = 0;
         $validees = 0;
         $erreurs = [];
+        $importes = 0;
 
         foreach (array_slice($lignes, 1) as $ligne) {
             $total++;
@@ -64,12 +65,27 @@ class ImportDonnees
             }
 
             $validees++;
+            $importes++;
+
+            $eleves = $_SESSION['eleves'] ?? [];
+            $id = generer_identifiant($eleves, 'id');
+            $eleves[$id] = [
+                'id' => $id,
+                'nom' => $nom,
+                'prenom' => $prenom,
+                'email' => $email,
+                'date_naissance' => $date_naissance,
+                'matricule' => $matricule,
+                'statut' => 'Actif',
+            ];
+            $_SESSION['eleves'] = $eleves;
         }
 
         return [
             'total_lignes' => $total,
             'lignes_validees' => $validees,
             'lignes_erreur' => count($erreurs),
+            'importes' => $importes,
             'erreurs' => $erreurs,
         ];
     }

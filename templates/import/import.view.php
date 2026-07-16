@@ -38,6 +38,7 @@
                 <strong>Résultat :</strong><br>
                 Lignes traitées : <?= e($donnees['resultat']['total_lignes']) ?><br>
                 Lignes validées : <?= e($donnees['resultat']['lignes_validees']) ?><br>
+                Élèves importés : <?= e($donnees['resultat']['importes'] ?? 0) ?><br>
                 Erreurs : <?= e($donnees['resultat']['lignes_erreur']) ?>
                 <?php if (!empty($donnees['resultat']['erreurs'])): ?>
                     <pre><?= e(implode("\n", $donnees['resultat']['erreurs'])) ?></pre>
