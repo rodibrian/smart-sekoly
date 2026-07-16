@@ -100,7 +100,7 @@
 | III | Demande et validation des congés | ✅ Fait | 2026-07-16 | 2026-07-16 | Liste et validation de congés ajoutées |
 | III | Suivi des heures supplémentaires | ✅ Fait | 2026-07-16 | 2026-07-16 | Liste et formulaire d’heures supplémentaires ajoutés |
 | III | Calcul des salaires (selon type de contrat) | ✅ Fait | 2026-07-16 | 2026-07-16 | Calcul des salaires par type de contrat ajouté |
-| III | Tableau de bord RH | ⏳ À faire | | | |
+| III | Tableau de bord RH | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue tableau de bord RH ajoutée |
 
 # =====================================================================
 # PRIORITÉ 4 — MODULE IX : VIE SCOLAIRE ET DISCIPLINE
