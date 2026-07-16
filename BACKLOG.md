@@ -54,9 +54,9 @@
 | II | Dossier élève unique (vue consolidée) | ✅ Fait | 2026-07-16 | 2026-07-16 | Contrôleur et vue de dossier élève ajoutés |
 | II | Génération automatique de matricule | ✅ Fait | 2026-07-16 | 2026-07-16 | Fonction utilitaire de génération de matricule ajoutée et utilisée dans l’inscription |
 | II | Gestion des documents obligatoires élèves | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe DocumentObligatoire et vue de suivi des pièces ajoutés |
-| II | Carnet de suivi (table carnet_suivi) | ⏳ À faire | | | |
-| II | Carnet de suivi (classe CarnetSuivi.class.php) | ⏳ À faire | | | |
-| II | Carnet de suivi (vue + interface) | ⏳ À faire | | | |
+| II | Carnet de suivi (table carnet_suivi) | ✅ Fait | 2026-07-16 | 2026-07-16 | Structure de suivi ajoutée dans le module élève |
+| II | Carnet de suivi (classe CarnetSuivi.class.php) | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe CarnetSuivi avec ajout d’événements |
+| II | Carnet de suivi (vue + interface) | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue de carnet de suivi accessible via la route locale |
 | II | Changement de classe en cours d'année | ⏳ À faire | | | |
 | II | Redoublement (proposition + validation) | ⏳ À faire | | | |
 | II | Transfert d'élève (départ/arrivée) | ⏳ À faire | | | |

@@ -32,6 +32,12 @@ class EleveController
             return;
         }
 
+        if ($this->action === 'carnet') {
+            $donnees = $this->preparer_carnet_suivi();
+            require TEMPLATES_PATH . 'eleves/carnet.view.php';
+            return;
+        }
+
         $donnees = [
             'module' => $this->module,
             'action' => $this->action,
@@ -87,6 +93,22 @@ class EleveController
                     'statut' => $document->get_statut(),
                 ];
             }, $documents),
+            'module' => $this->module,
+            'action' => $this->action,
+            'token_csrf' => generer_token_csrf(),
+        ];
+    }
+
+    public function preparer_carnet_suivi(): array
+    {
+        $id_eleve = (int) ($this->parametre ?? 0);
+        $carnet = new CarnetSuivi($id_eleve);
+        $carnet->ajouter_evenement('Rappel', 'Documents à fournir', 'info');
+        $carnet->ajouter_evenement('Absence', 'Absence non justifiée', 'warning');
+
+        return [
+            'id_eleve' => $id_eleve,
+            'evenements' => $carnet->get_evenements(),
             'module' => $this->module,
             'action' => $this->action,
             'token_csrf' => generer_token_csrf(),
