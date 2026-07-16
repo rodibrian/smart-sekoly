@@ -23,6 +23,10 @@
         <h1>Échéances</h1>
         <p>Suivi des échéances de paiement liées aux factures.</p>
 
+        <?php if (!empty($donnees['message'])): ?>
+            <div class="message"><?= e($donnees['message']) ?></div>
+        <?php endif; ?>
+
         <table>
             <thead>
                 <tr>

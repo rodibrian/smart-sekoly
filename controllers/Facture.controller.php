@@ -17,6 +17,21 @@ class FactureController
 
     public function executer(): void
     {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $resultat = $this->traiter_formulaire($_POST);
+
+            if ($resultat['valide']) {
+                $this->enregistrer_facture($resultat['donnees']);
+                $donnees = $this->preparer_liste(['message' => 'Facture créée avec succès.']);
+                require TEMPLATES_PATH . 'factures/liste.view.php';
+                return;
+            }
+
+            $donnees = $this->preparer_formulaire($resultat);
+            require TEMPLATES_PATH . 'factures/formulaire.view.php';
+            return;
+        }
+
         if ($this->action === 'fiche') {
             $donnees = $this->preparer_fiche();
             require TEMPLATES_PATH . 'factures/fiche.view.php';
@@ -33,9 +48,9 @@ class FactureController
         require TEMPLATES_PATH . 'factures/liste.view.php';
     }
 
-    private function preparer_formulaire(): array
+    private function preparer_formulaire(array $resultat = []): array
     {
-        return [
+        return array_merge([
             'module' => $this->module,
             'action' => $this->action,
             'token_csrf' => generer_token_csrf(),
@@ -43,45 +58,98 @@ class FactureController
                 ['id' => 1, 'nom' => 'Rajaonarivony Mira'],
                 ['id' => 2, 'nom' => 'Rakoto Jean'],
             ],
-        ];
+        ], $resultat);
     }
 
-    private function preparer_liste(): array
+    private function preparer_liste(array $resultat = []): array
     {
-        $factures = [
-            new Facture([
-                'id_facture' => 1,
-                'id_eleve' => 1,
-                'numero_sequentiel' => 'FAC-2026-001',
-                'date_emission' => '2026-09-01',
-                'montant_total' => 210000.00,
-                'statut' => 'active',
-            ]),
-            new Facture([
-                'id_facture' => 2,
-                'id_eleve' => 2,
-                'numero_sequentiel' => 'FAC-2026-002',
-                'date_emission' => '2026-09-05',
-                'montant_total' => 175000.00,
-                'statut' => 'annulee',
-            ]),
-        ];
+        $factures = $this->recuperer_factures();
 
-        $liste = array_map(function (Facture $facture): array {
+        $liste = array_map(function (array $facture): array {
             return [
-                'id' => $facture->get_id_facture(),
-                'numero' => $facture->get_numero_sequentiel(),
-                'date' => $facture->get_date_emission(),
-                'montant_total' => number_format($facture->get_montant_total(), 0, ',', ' '),
-                'statut' => $facture->get_statut(),
+                'id' => $facture['id_facture'],
+                'numero' => $facture['numero_sequentiel'],
+                'date' => $facture['date_emission'],
+                'montant_total' => number_format((float) $facture['montant_total'], 0, ',', ' '),
+                'statut' => $facture['statut'],
             ];
         }, $factures);
 
-        return [
+        return array_merge([
             'module' => $this->module,
             'action' => $this->action,
             'token_csrf' => generer_token_csrf(),
             'factures' => $liste,
+        ], $resultat);
+    }
+
+    private function recuperer_factures(): array
+    {
+        if (!empty($_SESSION['factures']) && is_array($_SESSION['factures'])) {
+            return $_SESSION['factures'];
+        }
+
+        return [
+            ['id_facture' => 1, 'id_eleve' => 1, 'numero_sequentiel' => 'FAC-2026-001', 'date_emission' => '2026-09-01', 'montant_total' => 210000.00, 'statut' => 'active'],
+            ['id_facture' => 2, 'id_eleve' => 2, 'numero_sequentiel' => 'FAC-2026-002', 'date_emission' => '2026-09-05', 'montant_total' => 175000.00, 'statut' => 'annulee'],
+        ];
+    }
+
+    private function enregistrer_facture(array $donnees): void
+    {
+        if (!isset($_SESSION['factures']) || !is_array($_SESSION['factures'])) {
+            $_SESSION['factures'] = [];
+        }
+
+        $_SESSION['factures'][] = [
+            'id_facture' => generer_identifiant($_SESSION['factures'], 'id_facture'),
+            'id_eleve' => $donnees['id_eleve'],
+            'numero_sequentiel' => $donnees['numero'],
+            'date_emission' => $donnees['date_emission'],
+            'montant_total' => $donnees['montant_total'],
+            'statut' => 'active',
+        ];
+    }
+
+    private function traiter_formulaire(array $donnees): array
+    {
+        $erreurs = [];
+        $id_eleve = isset($donnees['eleve']) ? (int) $donnees['eleve'] : null;
+        $numero = nettoyer_chaine($donnees['numero'] ?? '');
+        $date_emission = nettoyer_chaine($donnees['date_emission'] ?? '');
+        $montant_total = $donnees['montant_total'] ?? null;
+
+        if ($id_eleve === null || $id_eleve <= 0) {
+            $erreurs['eleve'] = 'L’élève est requis.';
+        }
+
+        if ($numero === '') {
+            $erreurs['numero'] = 'Le numéro de facture est requis.';
+        }
+
+        if ($date_emission === '') {
+            $erreurs['date_emission'] = 'La date d’émission est requise.';
+        }
+
+        if ($montant_total === null || $montant_total === '' || !is_numeric($montant_total)) {
+            $erreurs['montant_total'] = 'Le montant total doit être un nombre valide.';
+        } else {
+            $montant_total = (float) $montant_total;
+        }
+
+        if (empty($donnees['token_csrf']) || !verifier_token_csrf((string) $donnees['token_csrf'])) {
+            $erreurs['token_csrf'] = 'Jeton CSRF invalide ou manquant.';
+        }
+
+        return [
+            'valide' => empty($erreurs),
+            'erreurs' => $erreurs,
+            'donnees' => [
+                'id_eleve' => $id_eleve,
+                'numero' => $numero,
+                'date_emission' => $date_emission,
+                'montant_total' => $montant_total,
+            ],
         ];
     }
 

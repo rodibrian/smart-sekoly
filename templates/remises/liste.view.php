@@ -23,6 +23,10 @@
         <h1>Remises</h1>
         <p>Liste des remises validées et appliquées aux factures.</p>
 
+        <?php if (!empty($donnees['message'])): ?>
+            <div class="message"><?= e($donnees['message']) ?></div>
+        <?php endif; ?>
+
         <table>
             <thead>
                 <tr>

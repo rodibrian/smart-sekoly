@@ -23,11 +23,14 @@
         <form method="post" action="<?= e(BASE_URL . '/paiements') ?>">
             <input type="hidden" name="token_csrf" value="<?= e($donnees['token_csrf']) ?>">
 
+            <label for="id_echeance">Échéance</label>
+            <input id="id_echeance" name="id_echeance" type="number" min="1" value="<?= e($donnees['donnees']['id_echeance'] ?? '') ?>" required>
+
             <label for="numero_recu">Numéro de reçu</label>
-            <input id="numero_recu" name="numero_recu" type="text" required>
+            <input id="numero_recu" name="numero_recu" type="text" value="<?= e($donnees['donnees']['numero_recu'] ?? '') ?>" required>
 
             <label for="date_paiement">Date et heure</label>
-            <input id="date_paiement" name="date_paiement" type="datetime-local" value="<?= e(date('Y-m-d\TH:i')) ?>" required>
+            <input id="date_paiement" name="date_paiement" type="datetime-local" value="<?= e($donnees['donnees']['date_paiement'] ?? date('Y-m-d\TH:i')) ?>" required>
 
             <label for="montant">Montant</label>
             <input id="montant" name="montant" type="number" step="0.01" required>

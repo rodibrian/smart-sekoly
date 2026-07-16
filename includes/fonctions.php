@@ -101,6 +101,27 @@ function verifier_token_csrf(string $token): bool
 }
 
 /**
+ * Génère un identifiant auto-incrémenté simple pour une collection stockée en session.
+ *
+ * @param array $collection
+ * @param string $cle_id
+ * @return int
+ */
+function generer_identifiant(array $collection, string $cle_id): int
+{
+    $max = 0;
+
+    foreach ($collection as $element) {
+        $identifiant = $element[$cle_id] ?? 0;
+        if (is_numeric($identifiant) && (int) $identifiant > $max) {
+            $max = (int) $identifiant;
+        }
+    }
+
+    return $max + 1;
+}
+
+/**
  * Echappe une valeur pour l'affichage HTML.
  *
  * @param mixed $valeur

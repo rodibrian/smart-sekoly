@@ -23,6 +23,10 @@
         <h1>Paiements</h1>
         <p>Liste des paiements enregistrés pour les échéances.</p>
 
+        <?php if (!empty($donnees['message'])): ?>
+            <div class="message"><?= e($donnees['message']) ?></div>
+        <?php endif; ?>
+
         <table>
             <thead>
                 <tr>

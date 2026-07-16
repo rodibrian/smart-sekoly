@@ -23,6 +23,10 @@
         <h1>Caisses</h1>
         <p>Annuaire des caisses journalières et leur fond de caisse.</p>
 
+        <?php if (!empty($donnees['message'])): ?>
+            <div class="message"><?= e($donnees['message']) ?></div>
+        <?php endif; ?>
+
         <table>
             <thead>
                 <tr>

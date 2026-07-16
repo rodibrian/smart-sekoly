@@ -157,6 +157,7 @@
 | IV | Enregistrement des paiements (avec doublon) | ✅ En cours | 2026-07-16 | | Contrôleur, vues et formulaire de paiement ajoutés |
 | IV | Interface caisse dédiée | ✅ En cours | 2026-07-16 | | Contrôleur, vues et formulaire de caisse ajoutés |
 | IV | Échéancier paramétrable | ✅ En cours | 2026-07-16 | | Contrôleur et vues d’échéance ajoutés |
+| IV | Persistance de session pour finance | ✅ En cours | 2026-07-16 | | Ajout des POST de formulaire et stockage en session pour caisses, remises, paiements, échéances, factures |
 | IV | Impression de reçu thermique | ⏳ À faire | | | |
 | IV | Suivi des impayés | ⏳ À faire | | | |
 | IV | Rapports financiers (quotidiens, mensuels) | ⏳ À faire | | | |
