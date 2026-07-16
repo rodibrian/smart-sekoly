@@ -218,13 +218,13 @@
 
 | Module | Sous-tâche | Statut | Date début | Date fin | Commentaire |
 |--------|-----------|--------|------------|----------|-------------|
-| V | Table message | ⏳ À faire | | | |
-| V | Créer classe Message.class.php | ⏳ À faire | | | |
-| V | Table annonce | ⏳ À faire | | | |
-| V | Créer classe Annonce.class.php | ⏳ À faire | | | |
-| V | Table annonce_evenement_carnet | ⏳ À faire | | | |
-| V | Messagerie interne | ⏳ À faire | | | |
-| V | Publication d'annonces collectives | ⏳ À faire | | | |
+| V | Table message | ✅ Fait | 2026-07-16 | 2026-07-16 | Module de messagerie interne ajouté et persistance session créée |
+| V | Créer classe Message.class.php | ⏳ À faire | | | | 
+| V | Table annonce | ✅ Fait | 2026-07-16 | 2026-07-16 | Table annonces implémentée avec stockage session |
+| V | Créer classe Annonce.class.php | ⏳ À faire | | | | 
+| V | Table annonce_evenement_carnet | ⏳ À faire | | | | 
+| V | Messagerie interne | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue messages et enregistrement POST implémentés |
+| V | Publication d'annonces collectives | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue annonces et publication POST implémentés |
 | V | Annonces tracées dans les carnets | ⏳ À faire | | | |
 
 # =====================================================================
