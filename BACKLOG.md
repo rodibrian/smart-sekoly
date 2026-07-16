@@ -81,9 +81,9 @@
 | Module | Sous-tâche | Statut | Date début | Date fin | Commentaire |
 |--------|-----------|--------|------------|----------|-------------|
 | III | Créer table enseignant | ⏳ À faire | | | |
-| III | Créer classe Enseignant.class.php | ⏳ À faire | | | |
-| III | Créer table personnel_administratif | ⏳ À faire | | | |
-| III | Créer classe PersonnelAdministratif.class.php | ⏳ À faire | | | |
+| III | Créer classe Enseignant.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Enseignant ajoutée avec génération de matricule et route /enseignants |
+| III | Créer table personnel_administratif | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée dans database/migrations/002_personnel_administratif.sql |
+| III | Créer classe PersonnelAdministratif.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe PersonnelAdministratif ajoutée et test unitaire validé |
 | III | Créer table contrat | ⏳ À faire | | | |
 | III | Créer classe Contrat.class.php | ⏳ À faire | | | |
 | III | Créer table affectation | ⏳ À faire | | | |
