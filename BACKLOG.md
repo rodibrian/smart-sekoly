@@ -159,7 +159,8 @@
 | IV | Échéancier paramétrable | ✅ En cours | 2026-07-16 | | Contrôleur et vues d’échéance ajoutés |
 | IV | Persistance de session pour finance | ✅ En cours | 2026-07-16 | | Ajout des POST de formulaire et stockage en session pour caisses, remises, paiements, échéances, factures. Tests POST : caisse ✅ (2026-07-16) |
 | IV | Impression de reçu thermique — prototype (ESC/POS, export texte) | 🔄 En cours | 2026-07-16 | | Prototype générateur de reçu thermique, vue d'aperçu imprimable, téléchargement .txt, bouton "Imprimer" et ouverture fenêtre ajoutés; redirection vers l'aperçu après enregistrement de paiement implémentée. |
-| IV | Auto-download ESC/POS après enregistrement (option) | ⏳ À faire | | | Option pour déclencher automatiquement le téléchargement du fichier .escpos après POST de paiement |
+| IV | Auto-download ESC/POS après enregistrement (option) | ✅ Fait | 2026-07-16 | | Option pour déclencher automatiquement le téléchargement du fichier .escpos après POST de paiement (configurable) |
+| IV | Compléter intégration DAO pour tous contrôleurs finance | 🔄 En cours | 2026-07-16 | | Finaliser remplacement des écritures directes en session par `FinanceDAO` avec fallback PDO/SESSION |
 | IV | Persistance DB prototype pour Finance | 🔄 En cours | 2026-07-16 | | Concevoir schéma minimal (factures, paiements, caisses, remises) et DAO prototype |
 | IV | Suivi des impayés — détection & relance | ⏳ À faire | | | Détecter échéances impayées, marquer statut, préparer relances automatiques |
 | IV | Rapports financiers (quotidiens, mensuels) — spécification & prototype | ⏳ À faire | | | Spécifier indicateurs, implémenter agrégations et export CSV/HTML |

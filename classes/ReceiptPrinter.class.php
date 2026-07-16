@@ -36,6 +36,9 @@ class ReceiptPrinter
         $out .= 'Mode: ' . ($data['mode_paiement'] ?? ($data['mode'] ?? '')) . $newline;
         $out .= $newline . $newline;
         $out .= "--- Merci ---" . $newline;
+        // Feed a few lines and cut (GS V 0x00)
+        $out .= str_repeat($newline, 3);
+        $out .= "\x1D\x56\x00";
 
         return $out;
     }

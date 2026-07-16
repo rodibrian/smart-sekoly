@@ -23,7 +23,12 @@ class FactureController
             $resultat = $this->traiter_formulaire($_POST);
 
             if ($resultat['valide']) {
-                $this->enregistrer_facture($resultat['donnees']);
+                $insertedId = $this->enregistrer_facture($resultat['donnees']);
+                if (!headers_sent() && $insertedId) {
+                    header('Location: ' . BASE_URL . '/factures/fiche/' . $insertedId);
+                    exit;
+                }
+
                 $donnees = $this->preparer_liste(['message' => 'Facture créée avec succès.']);
                 require TEMPLATES_PATH . 'factures/liste.view.php';
                 return;
@@ -105,31 +110,33 @@ class FactureController
         ];
     }
 
-    private function enregistrer_facture(array $donnees): void
+    private function enregistrer_facture(array $donnees): int
     {
         if ($this->dao instanceof FinanceDAO) {
-            $this->dao->insertFacture([
+            return $this->dao->insertFacture([
                 'id_eleve' => $donnees['id_eleve'],
-                'numero_sequentiel' => $donnees['numero'],
+                'numero' => $donnees['numero'],
                 'date_emission' => $donnees['date_emission'],
                 'montant_total' => $donnees['montant_total'],
                 'statut' => 'active',
             ]);
-            return;
         }
 
         if (!isset($_SESSION['factures']) || !is_array($_SESSION['factures'])) {
             $_SESSION['factures'] = [];
         }
 
+        $id = generer_identifiant($_SESSION['factures'], 'id_facture');
         $_SESSION['factures'][] = [
-            'id_facture' => generer_identifiant($_SESSION['factures'], 'id_facture'),
+            'id_facture' => $id,
             'id_eleve' => $donnees['id_eleve'],
             'numero_sequentiel' => $donnees['numero'],
             'date_emission' => $donnees['date_emission'],
             'montant_total' => $donnees['montant_total'],
             'statut' => 'active',
         ];
+
+        return $id;
     }
 
     private function traiter_formulaire(array $donnees): array

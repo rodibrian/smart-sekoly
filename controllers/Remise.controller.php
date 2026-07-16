@@ -23,7 +23,12 @@ class RemiseController
             $resultat = $this->traiter_formulaire($_POST);
 
             if ($resultat['valide']) {
-                $this->enregistrer_remise($resultat['donnees']);
+                $insertedId = $this->enregistrer_remise($resultat['donnees']);
+                if (!headers_sent() && $insertedId) {
+                    header('Location: ' . BASE_URL . '/remises/fiche/' . $insertedId);
+                    exit;
+                }
+
                 $donnees = $this->preparer_liste(['message' => 'Remise créée avec succès.']);
                 require TEMPLATES_PATH . 'remises/liste.view.php';
                 return;
@@ -102,24 +107,21 @@ class RemiseController
         ];
     }
 
-    private function enregistrer_remise(array $donnees): void
+    private function enregistrer_remise(array $donnees): int
     {
+        $payload = array_merge($donnees, ['id_utilisateur_validation' => 1]);
         if ($this->dao instanceof FinanceDAO) {
-            $this->dao->insertRemise(array_merge($donnees, ['id_utilisateur_validation' => 1]));
-            return;
+            return $this->dao->insertRemise($payload);
         }
 
         if (!isset($_SESSION['remises']) || !is_array($_SESSION['remises'])) {
             $_SESSION['remises'] = [];
         }
 
-        $_SESSION['remises'][] = [
-            'id_remise' => generer_identifiant($_SESSION['remises'], 'id_remise'),
-            'type_remise' => $donnees['type_remise'],
-            'valeur_remise' => $donnees['valeur_remise'],
-            'motif' => $donnees['motif'],
-            'id_utilisateur_validation' => 1,
-        ];
+        $id = generer_identifiant($_SESSION['remises'], 'id_remise');
+        $_SESSION['remises'][] = array_merge(['id_remise' => $id], $payload);
+
+        return $id;
     }
 
     private function traiter_formulaire(array $donnees): array

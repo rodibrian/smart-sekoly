@@ -23,7 +23,12 @@ class EcheanceController
             $resultat = $this->traiter_formulaire($_POST);
 
             if ($resultat['valide']) {
-                $this->enregistrer_echeance($resultat['donnees']);
+                $insertedId = $this->enregistrer_echeance($resultat['donnees']);
+                if (!headers_sent() && $insertedId) {
+                    header('Location: ' . BASE_URL . '/echeances/fiche/' . $insertedId);
+                    exit;
+                }
+
                 $donnees = $this->preparer_liste(['message' => 'Échéance créée avec succès.']);
                 require TEMPLATES_PATH . 'echeances/liste.view.php';
                 return;
@@ -100,24 +105,26 @@ class EcheanceController
         ];
     }
 
-    private function enregistrer_echeance(array $donnees): void
+    private function enregistrer_echeance(array $donnees): int
     {
         if ($this->dao instanceof FinanceDAO) {
-            $this->dao->insertEcheance($donnees);
-            return;
+            return $this->dao->insertEcheance($donnees);
         }
 
         if (!isset($_SESSION['echeances']) || !is_array($_SESSION['echeances'])) {
             $_SESSION['echeances'] = [];
         }
 
+        $id = generer_identifiant($_SESSION['echeances'], 'id_echeance');
         $_SESSION['echeances'][] = [
-            'id_echeance' => generer_identifiant($_SESSION['echeances'], 'id_echeance'),
+            'id_echeance' => $id,
             'id_facture' => $donnees['id_facture'],
             'date_echeance' => $donnees['date_echeance'],
             'montant_prevu' => $donnees['montant_prevu'],
             'statut_echeance' => $donnees['statut_echeance'],
         ];
+
+        return $id;
     }
 
     private function traiter_formulaire(array $donnees): array

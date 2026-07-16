@@ -23,7 +23,11 @@ class CaisseController
             $resultat = $this->traiter_formulaire($_POST);
 
             if ($resultat['valide']) {
-                $this->enregistrer_caisse($resultat['donnees']);
+                $insertedId = $this->enregistrer_caisse($resultat['donnees']);
+                if (!headers_sent() && $insertedId) {
+                    header('Location: ' . BASE_URL . '/caisses/fiche/' . $insertedId);
+                    exit;
+                }
 
                 $donnees = $this->preparer_liste([
                     'message' => 'Caisse créée avec succès.',
@@ -100,25 +104,27 @@ class CaisseController
         ];
     }
 
-    private function enregistrer_caisse(array $donnees): void
+    private function enregistrer_caisse(array $donnees): int
     {
         if ($this->dao instanceof FinanceDAO) {
-            $this->dao->insertCaisse([
+            return $this->dao->insertCaisse([
                 'date_caisse' => $donnees['date_caisse'],
                 'fond_de_caisse' => $donnees['fond_de_caisse'],
             ]);
-            return;
         }
 
         if (!isset($_SESSION['caisses']) || !is_array($_SESSION['caisses'])) {
             $_SESSION['caisses'] = [];
         }
 
+        $id = generer_identifiant($_SESSION['caisses'], 'id_caisse');
         $_SESSION['caisses'][] = [
-            'id_caisse' => generer_identifiant($_SESSION['caisses'], 'id_caisse'),
+            'id_caisse' => $id,
             'date_caisse' => $donnees['date_caisse'],
             'fond_de_caisse' => $donnees['fond_de_caisse'],
         ];
+
+        return $id;
     }
 
     private function traiter_formulaire(array $donnees): array
