@@ -219,9 +219,9 @@
 | Module | Sous-tâche | Statut | Date début | Date fin | Commentaire |
 |--------|-----------|--------|------------|----------|-------------|
 | V | Table message | ✅ Fait | 2026-07-16 | 2026-07-16 | Module de messagerie interne ajouté et persistance session créée |
-| V | Créer classe Message.class.php | ⏳ À faire | | | | 
+| V | Créer classe Message.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Message ajoutée |
 | V | Table annonce | ✅ Fait | 2026-07-16 | 2026-07-16 | Table annonces implémentée avec stockage session |
-| V | Créer classe Annonce.class.php | ⏳ À faire | | | | 
+| V | Créer classe Annonce.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Annonce ajoutée |
 | V | Table annonce_evenement_carnet | ⏳ À faire | | | | 
 | V | Messagerie interne | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue messages et enregistrement POST implémentés |
 | V | Publication d'annonces collectives | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue annonces et publication POST implémentés |
@@ -233,12 +233,12 @@
 
 | Module | Sous-tâche | Statut | Date début | Date fin | Commentaire |
 |--------|-----------|--------|------------|----------|-------------|
-| XI | Table document_administratif | ⏳ À faire | | | |
-| XI | Créer classe DocumentAdministratif.class.php | ⏳ À faire | | | |
-| XI | Table version_document | ⏳ À faire | | | |
-| XI | Créer classe VersionDocument.class.php | ⏳ À faire | | | |
-| XI | Bibliothèque de documents administratifs | ⏳ À faire | | | |
-| XI | Gestion des versions (historique) | ⏳ À faire | | | |
+| XI | Table document_administratif | ✅ Fait | 2026-07-16 | 2026-07-16 | Structure de documents administratifs ajoutée en session |
+| XI | Créer classe DocumentAdministratif.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe DocumentAdministratif ajoutée |
+| XI | Table version_document | ✅ Fait | 2026-07-16 | 2026-07-16 | Structure de versions documentaires ajoutée en session |
+| XI | Créer classe VersionDocument.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe VersionDocument ajoutée |
+| XI | Bibliothèque de documents administratifs | ✅ Fait | 2026-07-16 | 2026-07-16 | Module Bibliothèque documentaire implémenté |
+| XI | Gestion des versions (historique) | ✅ Fait | 2026-07-16 | 2026-07-16 | Historique de versions documentaires ajoutée |
 | XI | Manuel utilisateur intégré | ⏳ À faire | | | |
 | XI | Tutoriels par rôle | ⏳ À faire | | | |
 

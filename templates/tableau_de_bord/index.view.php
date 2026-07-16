@@ -65,8 +65,7 @@
             <a href="/smart-sekoly/eleves/liste" class="bouton">Gestion des élèves</a>
             <a href="?module=rapports&action=index" class="bouton">Rapports et statistiques</a>
             <a href="?module=portails&action=index" class="bouton">Portails Élève / Parent</a>
-            <a href="?module=communication&action=index" class="bouton">Communication interne</a>
-        </div>
+            <a href="?module=communication&action=index" class="bouton">Communication interne</a>            <a href="/smart-sekoly/bibliotheque/index" class="bouton">Bibliothèque documentaire</a>        </div>
     </div>
 </body>
 </html>
