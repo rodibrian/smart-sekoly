@@ -110,3 +110,18 @@ function e($valeur): string
 {
     return htmlspecialchars((string) $valeur, ENT_QUOTES, 'UTF-8');
 }
+
+/**
+ * Génère un matricule au format EL-ANNEE-XXXX.
+ *
+ * @param string $prefixe
+ * @param int|null $annee
+ * @return string
+ */
+function generer_matricule(string $prefixe = 'EL', ?int $annee = null): string
+{
+    $annee_utilisee = $annee ?? (int) date('Y');
+    $suffixe = substr(strtoupper(uniqid('', false)), 0, 6);
+
+    return strtoupper($prefixe) . '-' . $annee_utilisee . '-' . $suffixe;
+}

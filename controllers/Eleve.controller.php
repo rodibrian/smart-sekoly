@@ -26,6 +26,12 @@ class EleveController
             return;
         }
 
+        if ($this->action === 'documents') {
+            $donnees = $this->preparer_documents_obligatoires();
+            require TEMPLATES_PATH . 'eleves/documents.view.php';
+            return;
+        }
+
         $donnees = [
             'module' => $this->module,
             'action' => $this->action,
@@ -62,6 +68,31 @@ class EleveController
         ];
     }
 
+    public function preparer_documents_obligatoires(): array
+    {
+        $id_eleve = (int) ($this->parametre ?? 0);
+
+        $documents = [
+            new DocumentObligatoire(['nom' => 'CNI', 'statut' => 'recu']),
+            new DocumentObligatoire(['nom' => 'Certificat de naissance', 'statut' => 'recu']),
+            new DocumentObligatoire(['nom' => 'Photo d’identité', 'statut' => 'manquant']),
+            new DocumentObligatoire(['nom' => 'Bulletin précédent', 'statut' => 'manquant']),
+        ];
+
+        return [
+            'id_eleve' => $id_eleve,
+            'documents' => array_map(function (DocumentObligatoire $document): array {
+                return [
+                    'nom' => $document->get_nom(),
+                    'statut' => $document->get_statut(),
+                ];
+            }, $documents),
+            'module' => $this->module,
+            'action' => $this->action,
+            'token_csrf' => generer_token_csrf(),
+        ];
+    }
+
     public function traiter_formulaire(array $donnees_formulaire): array
     {
         $erreurs = [];
@@ -71,6 +102,10 @@ class EleveController
         $email = nettoyer_chaine($donnees_formulaire['email'] ?? '');
         $date_naissance = nettoyer_chaine($donnees_formulaire['date_naissance'] ?? '');
         $matricule = nettoyer_chaine($donnees_formulaire['matricule'] ?? '');
+
+        if ($matricule === '') {
+            $matricule = generer_matricule();
+        }
 
         if ($nom === '') {
             $erreurs['nom'] = 'Le nom est obligatoire.';

@@ -52,8 +52,8 @@
 | II | Créer classe Transfert.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Transfert avec validation de statut |
 | II | Formulaire d'inscription élève | ✅ Fait | 2026-07-16 | 2026-07-16 | Contrôleur et vue de formulaire d’inscription ajoutés |
 | II | Dossier élève unique (vue consolidée) | ✅ Fait | 2026-07-16 | 2026-07-16 | Contrôleur et vue de dossier élève ajoutés |
-| II | Génération automatique de matricule | ⏳ À faire | | | |
-| II | Gestion des documents obligatoires élèves | ⏳ À faire | | | |
+| II | Génération automatique de matricule | ✅ Fait | 2026-07-16 | 2026-07-16 | Fonction utilitaire de génération de matricule ajoutée et utilisée dans l’inscription |
+| II | Gestion des documents obligatoires élèves | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe DocumentObligatoire et vue de suivi des pièces ajoutés |
 | II | Carnet de suivi (table carnet_suivi) | ⏳ À faire | | | |
 | II | Carnet de suivi (classe CarnetSuivi.class.php) | ⏳ À faire | | | |
 | II | Carnet de suivi (vue + interface) | ⏳ À faire | | | |
