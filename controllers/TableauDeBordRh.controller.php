@@ -17,8 +17,9 @@ class TableauDeBordRhController
 
     public function executer(): void
     {
+        $templateBase = defined('TEMPLATES_PATH') ? TEMPLATES_PATH : __DIR__ . '/../templates/';
         $donnees = $this->preparer_donnees();
-        require TEMPLATES_PATH . 'tableau_de_bord_rh/dashboard.view.php';
+        require $templateBase . 'tableau_de_bord_rh/dashboard.view.php';
     }
 
     private function preparer_donnees(): array

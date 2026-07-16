@@ -17,6 +17,13 @@ class HeureSupplementaireController
 
     public function executer(): void
     {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $this->action === 'nouvelle') {
+            $this->enregistrer_demande();
+            $baseUrl = defined('BASE_URL') ? BASE_URL : '/smart-sekoly';
+            header('Location: ' . $baseUrl . '/heures-supplementaires/liste');
+            return;
+        }
+
         if ($this->action === 'liste') {
             $donnees = $this->preparer_liste();
             require TEMPLATES_PATH . 'heures_supplementaires/liste.view.php';
@@ -33,43 +40,68 @@ class HeureSupplementaireController
         require TEMPLATES_PATH . 'heures_supplementaires/fiche.view.php';
     }
 
+    private function enregistrer_demande(): void
+    {
+        $donnees = [
+            'id' => generer_identifiant($_SESSION['heures_supplementaires'] ?? [], 'id'),
+            'enseignant' => nettoyer_chaine($_POST['enseignant'] ?? ''),
+            'classe' => nettoyer_chaine($_POST['classe'] ?? ''),
+            'matiere' => nettoyer_chaine($_POST['matiere'] ?? ''),
+            'date' => nettoyer_chaine($_POST['date_heure'] ?? ''),
+            'nombre_heures' => (float) ($_POST['nombre_heures'] ?? 0),
+            'taux' => (float) ($_POST['taux'] ?? 0),
+            'montant' => ((float) ($_POST['nombre_heures'] ?? 0)) * ((float) ($_POST['taux'] ?? 0)),
+            'statut' => 'en attente',
+        ];
+
+        $heures = $_SESSION['heures_supplementaires'] ?? [];
+        $heures[$donnees['id']] = $donnees;
+        $_SESSION['heures_supplementaires'] = $heures;
+
+        $journal = new JournalSuivi();
+        $journal->ajouter('rh', 'Nouvelle demande d’heures supplémentaires enregistrée pour ' . $donnees['enseignant']);
+    }
+
     private function preparer_liste(): array
     {
-        $heures = [
-            [
-                'id' => 1,
-                'enseignant' => 'Rakoto Jean',
-                'classe' => '6e A',
-                'matiere' => 'Mathématiques',
-                'date' => '2026-09-15',
-                'nombre_heures' => 4.5,
-                'taux' => 15000,
-                'montant' => 67500,
-                'statut' => 'en attente',
-            ],
-            [
-                'id' => 2,
-                'enseignant' => 'Randrianarisoa Fara',
-                'classe' => '5e B',
-                'matiere' => 'Physique',
-                'date' => '2026-09-12',
-                'nombre_heures' => 3,
-                'taux' => 15000,
-                'montant' => 45000,
-                'statut' => 'validé',
-            ],
-            [
-                'id' => 3,
-                'enseignant' => 'Rajaonarivony Mira',
-                'classe' => '4e C',
-                'matiere' => 'Français',
-                'date' => '2026-09-18',
-                'nombre_heures' => 2.5,
-                'taux' => 15000,
-                'montant' => 37500,
-                'statut' => 'refusé',
-            ],
-        ];
+        $heures = array_values($_SESSION['heures_supplementaires'] ?? []);
+        if (empty($heures)) {
+            $heures = [
+                [
+                    'id' => 1,
+                    'enseignant' => 'Rakoto Jean',
+                    'classe' => '6e A',
+                    'matiere' => 'Mathématiques',
+                    'date' => '2026-09-15',
+                    'nombre_heures' => 4.5,
+                    'taux' => 15000,
+                    'montant' => 67500,
+                    'statut' => 'en attente',
+                ],
+                [
+                    'id' => 2,
+                    'enseignant' => 'Randrianarisoa Fara',
+                    'classe' => '5e B',
+                    'matiere' => 'Physique',
+                    'date' => '2026-09-12',
+                    'nombre_heures' => 3,
+                    'taux' => 15000,
+                    'montant' => 45000,
+                    'statut' => 'validé',
+                ],
+                [
+                    'id' => 3,
+                    'enseignant' => 'Rajaonarivony Mira',
+                    'classe' => '4e C',
+                    'matiere' => 'Français',
+                    'date' => '2026-09-18',
+                    'nombre_heures' => 2.5,
+                    'taux' => 15000,
+                    'montant' => 37500,
+                    'statut' => 'refusé',
+                ],
+            ];
+        }
 
         return [
             'module' => $this->module,

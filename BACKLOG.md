@@ -102,9 +102,9 @@
 | III | Gestion des contrats | ✅ Fait | 2026-07-16 | 2026-07-16 | Contrôleur et vues de contrat ajoutés |
 | III | Gestion des affectations pédagogiques | ✅ Fait | 2026-07-16 | 2026-07-16 | Module affectations ajouté avec listes et fiches |
 | III | Demande et validation des congés | ✅ Fait | 2026-07-16 | 2026-07-16 | Liste et validation de congés ajoutées |
-| III | Suivi des heures supplémentaires | ✅ Fait | 2026-07-16 | 2026-07-16 | Liste et formulaire d’heures supplémentaires ajoutés |
-| III | Calcul des salaires (selon type de contrat) | ✅ Fait | 2026-07-16 | 2026-07-16 | Calcul des salaires par type de contrat ajouté |
-| III | Tableau de bord RH | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue tableau de bord RH ajoutée |
+| III | Suivi des heures supplémentaires | ✅ Fait | 2026-07-16 | 2026-07-16 | Liste, formulaire et enregistrement POST des demandes d’heures supplémentaires ajoutés |
+| III | Calcul des salaires (selon type de contrat) | ✅ Fait | 2026-07-16 | 2026-07-16 | Calcul des salaires par type de contrat, vue de calcul et test de flux ajoutés |
+| III | Tableau de bord RH | ✅ Fait | 2026-07-16 | 2026-07-16 | Contrôleur, vue, indicateurs RH et test de validation ajoutés |
 
 # =====================================================================
 # PRIORITÉ 4 — MODULE IX : VIE SCOLAIRE ET DISCIPLINE
@@ -243,11 +243,24 @@
 | XI | Tutoriels par rôle | ⏳ À faire | | | |
 
 # =====================================================================
-# MODULES TRANSVERSAUX (DÉPENDANCES)
+# TACHES SUPPLÉMENTAIRES DE SUIVI ET QUALITÉ
 # =====================================================================
 
 | Module | Sous-tâche | Statut | Date début | Date fin | Commentaire |
 |--------|-----------|--------|------------|----------|-------------|
+| QA | Journal de suivi opérationnel | ✅ Fait | 2026-07-16 | 2026-07-16 | Journal de suivi ajouté dans logs/journal_suivi.log |
+| QA | Résumé automatique du backlog | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe SuiviProjet ajoutée pour synthétiser les statuts |
+| QA | Tests de validation par module | ✅ Fait | 2026-07-16 | 2026-07-16 | Tests unitaires ajoutés pour import, élèves, suivi et backlog |
+| QA | Documentation de déploiement local | ⏳ À faire | | | |
+| QA | Checklist de validation avant livraison | ⏳ À faire | | | |
+| QA | Rapport d’avancement hebdomadaire | ⏳ À faire | | | |
+
+# =====================================================================
+# MODULES TRANSVERSAUX (DÉPENDANCES)
+# =====================================================================
+
+| Module | Sous-tâche | Statut | Date début | Date fin | Commentaire |
+|--------|-----------|--------|----------|----------|-------------|
 | - | Table utilisateur | ✅ Fait | 2026-07-16 | | Base de classe Utilisateur implémentée avec hachage et vérification de mot de passe |
 | - | Créer classe Utilisateur.class.php | ✅ Fait | 2026-07-16 | | Classe Utilisateur ajoutée avec hachage et vérification du mot de passe |
 | - | Table permission | ✅ Fait | 2026-07-16 | | Classe Permission ajoutée pour la gestion simple des permissions |

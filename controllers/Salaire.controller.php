@@ -17,20 +17,22 @@ class SalaireController
 
     public function executer(): void
     {
+        $templateBase = defined('TEMPLATES_PATH') ? TEMPLATES_PATH : __DIR__ . '/../templates/';
+
         if ($this->action === 'index') {
             $donnees = $this->preparer_liste();
-            require TEMPLATES_PATH . 'salaires/liste.view.php';
+            require $templateBase . 'salaires/liste.view.php';
             return;
         }
 
         if ($this->action === 'contrat') {
             $donnees = $this->preparer_calcul();
-            require TEMPLATES_PATH . 'salaires/calcul.view.php';
+            require $templateBase . 'salaires/calcul.view.php';
             return;
         }
 
         $donnees = $this->preparer_fiche();
-        require TEMPLATES_PATH . 'salaires/fiche.view.php';
+        require $templateBase . 'salaires/fiche.view.php';
     }
 
     private function preparer_liste(): array

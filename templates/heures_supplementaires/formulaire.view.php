@@ -20,7 +20,7 @@
 <body>
     <div class="conteneur">
         <h1>Nouvelle heure supplémentaire</h1>
-        <form method="post" action="<?= e(BASE_URL . '/heures-supplementaires') ?>">
+        <form method="post" action="<?= e(BASE_URL . '/heures-supplementaires/nouvelle') ?>">
             <input type="hidden" name="token_csrf" value="<?= e($donnees['token_csrf']) ?>">
 
             <label for="enseignant">Enseignant</label>
