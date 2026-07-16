@@ -63,6 +63,7 @@
             <a href="/smart-sekoly/tableau-de-bord/agenda" class="bouton">Voir l'agenda</a>
             <a href="/smart-sekoly/tableau-de-bord/actualites" class="bouton">Voir les actualités</a>
             <a href="/smart-sekoly/eleves/liste" class="bouton">Gestion des élèves</a>
+            <a href="?module=rapports&action=index" class="bouton">Rapports et statistiques</a>
         </div>
     </div>
 </body>
