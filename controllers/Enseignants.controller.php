@@ -95,7 +95,21 @@ class EnseignantsController
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $resultat = $this->traiterInscription($_POST);
                 if ($resultat['valide']) {
+                    $ancien_enseignant = $dao->trouverParId($id);
                     $dao->mettreAJour($id, $resultat['donnees']);
+                    try {
+                        $journal = new JournalAudit();
+                        $journal->enregistrer([
+                            'id_utilisateur' => $_SESSION['auth_utilisateur']['id'] ?? 0,
+                            'type_action' => 'modification',
+                            'table_concernee' => 'enseignant',
+                            'id_enregistrement_concerne' => $id,
+                            'ancienne_valeur' => $ancien_enseignant,
+                            'nouvelle_valeur' => $resultat['donnees'],
+                        ]);
+                    } catch (Throwable $exception) {
+                        error_log('JournalAudit logging failed: ' . $exception->getMessage());
+                    }
                     $_SESSION['messages']['enseignant'] = 'Profil enseignant mis à jour.';
                     header('Location: ' . BASE_URL . '/enseignants/fiche/' . $id);
                     return;

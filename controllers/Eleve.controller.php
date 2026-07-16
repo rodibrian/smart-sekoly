@@ -135,6 +135,24 @@ class EleveController
             'statut_scolaire' => 'actif',
         ]);
 
+        try {
+            $journal = new JournalAudit();
+            $journal->enregistrer([
+                'id_utilisateur' => $_SESSION['auth_utilisateur']['id'] ?? 0,
+                'type_action' => 'creation',
+                'table_concernee' => 'eleve',
+                'id_enregistrement_concerne' => $id_eleve,
+                'nouvelle_valeur' => [
+                    'nom' => $donnees['nom'],
+                    'prenom' => $donnees['prenom'],
+                    'email' => $donnees['email'],
+                    'matricule' => $donnees['matricule'],
+                ],
+            ]);
+        } catch (Throwable $exception) {
+            error_log('JournalAudit logging failed: ' . $exception->getMessage());
+        }
+
         if (!empty($donnees['role_id'])) {
             $roleDao = new RoleDAO();
             $roleDao->assignerRoleAPersonne($id_eleve, (int) $donnees['role_id']);

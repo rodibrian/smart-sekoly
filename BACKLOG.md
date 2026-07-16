@@ -268,11 +268,11 @@
 | - | Table role_permission | ✅ Fait | 2026-07-16 | | Classe Role ajoutée avec vérification de permissions |
 | - | Système d'authentification (login/logout) | ✅ Fait | 2026-07-16 | | Flux de connexion/déconnexion et vérification des permissions de base implémenté |
 | - | Gestion des permissions (CRUD) | 🔄 En cours | 2026-07-16 | | Gestion des permissions de base ajoutée via classes; CRUD à compléter |
-| - | Table journal_audit | ⏳ À faire | | | |
-| - | Créer classe JournalAudit.class.php | ⏳ À faire | | | |
-| - | Table journal_connexion | ⏳ À faire | | | |
-| - | Créer classe JournalConnexion.class.php | ⏳ À faire | | | |
-| - | Journalisation des actions sensibles | ⏳ À faire | | | |
+| - | Table journal_audit | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration et table de journal d’audit ajoutées |
+| - | Créer classe JournalAudit.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe JournalAudit ajoutée |
+| - | Table journal_connexion | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration et table de journal de connexion ajoutées |
+| - | Créer classe JournalConnexion.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe JournalConnexion ajoutée |
+| - | Journalisation des actions sensibles | ✅ Fait | 2026-07-16 | 2026-07-16 | Audit d’inscription, modification et demandes RH ajouté |
 | - | Politique de sécurité (mots de passe, verrouillage) | ⏳ À faire | | | |
 
 # =====================================================================

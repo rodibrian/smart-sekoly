@@ -60,6 +60,19 @@ class HeureSupplementaireController
 
         $journal = new JournalSuivi();
         $journal->ajouter('rh', 'Nouvelle demande d’heures supplémentaires enregistrée pour ' . $donnees['enseignant']);
+
+        try {
+            $journalAudit = new JournalAudit();
+            $journalAudit->enregistrer([
+                'id_utilisateur' => $_SESSION['auth_utilisateur']['id'] ?? 0,
+                'type_action' => 'creation',
+                'table_concernee' => 'heure_supplementaire',
+                'id_enregistrement_concerne' => $donnees['id'],
+                'nouvelle_valeur' => $donnees,
+            ]);
+        } catch (Throwable $exception) {
+            error_log('JournalAudit logging failed: ' . $exception->getMessage());
+        }
     }
 
     private function preparer_liste(): array

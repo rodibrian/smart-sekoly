@@ -10,6 +10,17 @@ class AuthService
             'email' => (string) ($utilisateur['email'] ?? ''),
             'role' => (string) ($utilisateur['role'] ?? 'admin'),
         ];
+
+        try {
+            $journal = new JournalConnexion();
+            $journal->enregistrer([
+                'id_utilisateur' => (int) ($utilisateur['id'] ?? 0),
+                'adresse_ip' => nettoyer_chaine($_SERVER['REMOTE_ADDR'] ?? '127.0.0.1'),
+                'navigateur' => nettoyer_chaine($_SERVER['HTTP_USER_AGENT'] ?? ''),
+            ]);
+        } catch (Throwable $exception) {
+            error_log('JournalConnexion logging failed: ' . $exception->getMessage());
+        }
     }
 
     public function deconnecter(): void
