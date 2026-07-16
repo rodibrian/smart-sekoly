@@ -7,12 +7,14 @@ class PaiementController
     private $module;
     private $action;
     private $parametre;
+    private $dao;
 
     public function __construct($module = 'paiements', $action = 'index', $parametre = null)
     {
         $this->module = $module;
         $this->action = $action;
         $this->parametre = $parametre;
+        $this->dao = new FinanceDAO();
     }
 
     public function executer(): void
@@ -21,7 +23,18 @@ class PaiementController
             $resultat = $this->traiter_formulaire($_POST);
 
             if ($resultat['valide']) {
-                $this->enregistrer_paiement($resultat['donnees']);
+                $insertedId = $this->enregistrer_paiement($resultat['donnees']);
+                // Redirect to ESC/POS download if requested, otherwise to receipt preview
+                if (!headers_sent() && $insertedId) {
+                    if (!empty($resultat['donnees']['auto_download_escpos'])) {
+                        header('Location: ' . BASE_URL . '/paiements/recu/' . $insertedId . '?format=escpos');
+                        exit;
+                    }
+
+                    header('Location: ' . BASE_URL . '/paiements/recu/' . $insertedId);
+                    exit;
+                }
+
                 $donnees = $this->preparer_liste(['message' => 'Paiement enregistré avec succès.']);
                 require TEMPLATES_PATH . 'paiements/liste.view.php';
                 return;
@@ -35,6 +48,32 @@ class PaiementController
         if ($this->action === 'fiche') {
             $donnees = $this->preparer_fiche();
             require TEMPLATES_PATH . 'paiements/fiche.view.php';
+            return;
+        }
+
+        if ($this->action === 'recu') {
+            $donnees = $this->preparer_recu();
+            // download as text if requested
+            if (isset($_GET['download']) && $_GET['download'] == '1') {
+                $printer = new ReceiptPrinter();
+                $text = $printer->generateTextReceipt($donnees['paiement_raw']);
+                header('Content-Type: text/plain; charset=utf-8');
+                header('Content-Disposition: attachment; filename="recu-' . ($donnees['paiement']['recu'] ?? 'recu') . '.txt"');
+                echo $text;
+                return;
+            }
+
+            // download ESC/POS binary if requested
+            if (isset($_GET['format']) && $_GET['format'] === 'escpos') {
+                $printer = new ReceiptPrinter();
+                $payload = $printer->generateEscPos($donnees['paiement_raw']);
+                header('Content-Type: application/octet-stream');
+                header('Content-Disposition: attachment; filename="recu-' . ($donnees['paiement']['recu'] ?? 'recu') . '.escpos"');
+                echo $payload;
+                return;
+            }
+
+            require TEMPLATES_PATH . 'paiements/recu_preview.view.php';
             return;
         }
 
@@ -68,12 +107,12 @@ class PaiementController
             'token_csrf' => generer_token_csrf(),
             'paiements' => array_map(function (array $paiement): array {
                 return [
-                    'id' => $paiement['id_paiement'],
-                    'recu' => $paiement['numero_recu'],
-                    'date' => $paiement['date_paiement'],
-                    'montant' => number_format((float) $paiement['montant'], 0, ',', ' '),
-                    'mode' => $paiement['mode_paiement'],
-                    'statut' => $paiement['statut'],
+                    'id' => $paiement['id_paiement'] ?? $paiement['id'] ?? null,
+                    'recu' => $paiement['numero_recu'] ?? $paiement['recu'] ?? '',
+                    'date' => $paiement['date_paiement'] ?? $paiement['date'] ?? '',
+                    'montant' => number_format((float) ($paiement['montant'] ?? 0), 0, ',', ' '),
+                    'mode' => $paiement['mode_paiement'] ?? $paiement['mode'] ?? '',
+                    'statut' => $paiement['statut'] ?? '',
                 ];
             }, $paiements),
         ], $resultat);
@@ -81,6 +120,14 @@ class PaiementController
 
     private function recuperer_paiements(): array
     {
+        // Prefer DAO (DB) when available
+        if ($this->dao instanceof FinanceDAO) {
+            $paiements = $this->dao->all('paiements');
+            if (!empty($paiements)) {
+                return $paiements;
+            }
+        }
+
         if (!empty($_SESSION['paiements']) && is_array($_SESSION['paiements'])) {
             return $_SESSION['paiements'];
         }
@@ -91,14 +138,26 @@ class PaiementController
         ];
     }
 
-    private function enregistrer_paiement(array $donnees): void
+    private function enregistrer_paiement(array $donnees): int
     {
+        if ($this->dao instanceof FinanceDAO) {
+            return $this->dao->insertPaiement([
+                'id_echeance' => $donnees['id_echeance'],
+                'numero_recu' => $donnees['numero_recu'],
+                'date_paiement' => $donnees['date_paiement'],
+                'montant' => $donnees['montant'],
+                'mode_paiement' => $donnees['mode_paiement'],
+                'statut' => 'actif',
+            ]);
+        }
+
         if (!isset($_SESSION['paiements']) || !is_array($_SESSION['paiements'])) {
             $_SESSION['paiements'] = [];
         }
 
+        $id = generer_identifiant($_SESSION['paiements'], 'id_paiement');
         $_SESSION['paiements'][] = [
-            'id_paiement' => generer_identifiant($_SESSION['paiements'], 'id_paiement'),
+            'id_paiement' => $id,
             'id_echeance' => $donnees['id_echeance'],
             'numero_recu' => $donnees['numero_recu'],
             'date_paiement' => $donnees['date_paiement'],
@@ -106,6 +165,8 @@ class PaiementController
             'mode_paiement' => $donnees['mode_paiement'],
             'statut' => 'actif',
         ];
+
+        return $id;
     }
 
     private function traiter_formulaire(array $donnees): array
@@ -152,6 +213,7 @@ class PaiementController
                 'date_paiement' => $date_paiement,
                 'montant' => $montant,
                 'mode_paiement' => $mode_paiement,
+                'auto_download_escpos' => !empty($donnees['auto_download_escpos']),
             ],
         ];
     }
@@ -181,6 +243,45 @@ class PaiementController
                 'mode' => $paiement->get_mode_paiement(),
                 'statut' => $paiement->get_statut(),
             ],
+        ];
+    }
+
+    private function preparer_recu(): array
+    {
+        $id = (int) ($this->parametre ?? 0);
+
+        // find paiement raw data
+        $paiements = $this->recuperer_paiements();
+        $paiement = null;
+        foreach ($paiements as $p) {
+            $pid = (int) ($p['id_paiement'] ?? $p['id'] ?? 0);
+            if ($pid === $id) {
+                $paiement = $p;
+                break;
+            }
+        }
+
+        if ($paiement === null) {
+            // fallback to first
+            $paiement = $paiements[0] ?? [];
+        }
+
+        $printer = new ReceiptPrinter();
+        $text = $printer->generateTextReceipt($paiement);
+
+        return [
+            'module' => $this->module,
+            'action' => $this->action,
+            'token_csrf' => generer_token_csrf(),
+            'paiement_raw' => $paiement,
+            'paiement' => [
+                'id' => $paiement['id_paiement'] ?? $paiement['id'] ?? null,
+                'recu' => $paiement['numero_recu'] ?? $paiement['recu'] ?? '',
+                'date' => $paiement['date_paiement'] ?? $paiement['date'] ?? '',
+                'montant' => number_format((float) ($paiement['montant'] ?? 0), 0, ',', ' '),
+                'mode' => $paiement['mode_paiement'] ?? $paiement['mode'] ?? '',
+            ],
+            'recu_text' => $text,
         ];
     }
 }

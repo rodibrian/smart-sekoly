@@ -7,12 +7,14 @@ class CaisseController
     private $module;
     private $action;
     private $parametre;
+    private $dao;
 
     public function __construct($module = 'caisses', $action = 'index', $parametre = null)
     {
         $this->module = $module;
         $this->action = $action;
         $this->parametre = $parametre;
+        $this->dao = new FinanceDAO();
     }
 
     public function executer(): void
@@ -80,6 +82,14 @@ class CaisseController
 
     private function recuperer_caisses(): array
     {
+        // Prefer DAO (DB) when available, otherwise fallback to session or sample data
+        if ($this->dao instanceof FinanceDAO) {
+            $caisses = $this->dao->all('caisses');
+            if (!empty($caisses)) {
+                return $caisses;
+            }
+        }
+
         if (!empty($_SESSION['caisses']) && is_array($_SESSION['caisses'])) {
             return $_SESSION['caisses'];
         }
@@ -92,6 +102,14 @@ class CaisseController
 
     private function enregistrer_caisse(array $donnees): void
     {
+        if ($this->dao instanceof FinanceDAO) {
+            $this->dao->insertCaisse([
+                'date_caisse' => $donnees['date_caisse'],
+                'fond_de_caisse' => $donnees['fond_de_caisse'],
+            ]);
+            return;
+        }
+
         if (!isset($_SESSION['caisses']) || !is_array($_SESSION['caisses'])) {
             $_SESSION['caisses'] = [];
         }

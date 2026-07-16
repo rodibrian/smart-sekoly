@@ -7,12 +7,14 @@ class RemiseController
     private $module;
     private $action;
     private $parametre;
+    private $dao;
 
     public function __construct($module = 'remises', $action = 'index', $parametre = null)
     {
         $this->module = $module;
         $this->action = $action;
         $this->parametre = $parametre;
+        $this->dao = new FinanceDAO();
     }
 
     public function executer(): void
@@ -82,6 +84,14 @@ class RemiseController
 
     private function recuperer_remises(): array
     {
+        // Prefer DAO when available
+        if ($this->dao instanceof FinanceDAO) {
+            $rows = $this->dao->all('remises');
+            if (!empty($rows)) {
+                return $rows;
+            }
+        }
+
         if (!empty($_SESSION['remises']) && is_array($_SESSION['remises'])) {
             return $_SESSION['remises'];
         }
@@ -94,6 +104,11 @@ class RemiseController
 
     private function enregistrer_remise(array $donnees): void
     {
+        if ($this->dao instanceof FinanceDAO) {
+            $this->dao->insertRemise(array_merge($donnees, ['id_utilisateur_validation' => 1]));
+            return;
+        }
+
         if (!isset($_SESSION['remises']) || !is_array($_SESSION['remises'])) {
             $_SESSION['remises'] = [];
         }

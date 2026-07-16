@@ -49,7 +49,11 @@
                         <td><?= e($paiement['montant']) ?> MGA</td>
                         <td><?= e(ucfirst($paiement['mode'])) ?></td>
                         <td><?= e(ucfirst($paiement['statut'])) ?></td>
-                        <td><a href="<?= e(BASE_URL . '/paiements/fiche/' . $paiement['id']) ?>">Voir</a></td>
+                        <td>
+                            <a href="<?= e(BASE_URL . '/paiements/fiche/' . $paiement['id']) ?>">Voir</a>
+                            &nbsp;|&nbsp;
+                            <a href="<?= e(BASE_URL . '/paiements/recu/' . $paiement['id']) ?>" target="_blank">Reçu</a>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

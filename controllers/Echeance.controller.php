@@ -7,12 +7,14 @@ class EcheanceController
     private $module;
     private $action;
     private $parametre;
+    private $dao;
 
     public function __construct($module = 'echeances', $action = 'index', $parametre = null)
     {
         $this->module = $module;
         $this->action = $action;
         $this->parametre = $parametre;
+        $this->dao = new FinanceDAO();
     }
 
     public function executer(): void
@@ -80,6 +82,14 @@ class EcheanceController
 
     private function recuperer_echeances(): array
     {
+        // Prefer DAO when available
+        if ($this->dao instanceof FinanceDAO) {
+            $rows = $this->dao->all('echeances');
+            if (!empty($rows)) {
+                return $rows;
+            }
+        }
+
         if (!empty($_SESSION['echeances']) && is_array($_SESSION['echeances'])) {
             return $_SESSION['echeances'];
         }
@@ -92,6 +102,11 @@ class EcheanceController
 
     private function enregistrer_echeance(array $donnees): void
     {
+        if ($this->dao instanceof FinanceDAO) {
+            $this->dao->insertEcheance($donnees);
+            return;
+        }
+
         if (!isset($_SESSION['echeances']) || !is_array($_SESSION['echeances'])) {
             $_SESSION['echeances'] = [];
         }

@@ -7,12 +7,14 @@ class FactureController
     private $module;
     private $action;
     private $parametre;
+    private $dao;
 
     public function __construct($module = 'factures', $action = 'index', $parametre = null)
     {
         $this->module = $module;
         $this->action = $action;
         $this->parametre = $parametre;
+        $this->dao = new FinanceDAO();
     }
 
     public function executer(): void
@@ -67,11 +69,11 @@ class FactureController
 
         $liste = array_map(function (array $facture): array {
             return [
-                'id' => $facture['id_facture'],
-                'numero' => $facture['numero_sequentiel'],
-                'date' => $facture['date_emission'],
-                'montant_total' => number_format((float) $facture['montant_total'], 0, ',', ' '),
-                'statut' => $facture['statut'],
+                'id' => $facture['id_facture'] ?? $facture['id'] ?? null,
+                'numero' => $facture['numero_sequentiel'] ?? $facture['numero'] ?? '',
+                'date' => $facture['date_emission'] ?? $facture['date'] ?? '',
+                'montant_total' => number_format((float) ($facture['montant_total'] ?? 0), 0, ',', ' '),
+                'statut' => $facture['statut'] ?? '',
             ];
         }, $factures);
 
@@ -85,6 +87,14 @@ class FactureController
 
     private function recuperer_factures(): array
     {
+        // Prefer DAO (DB) when available
+        if ($this->dao instanceof FinanceDAO) {
+            $factures = $this->dao->all('factures');
+            if (!empty($factures)) {
+                return $factures;
+            }
+        }
+
         if (!empty($_SESSION['factures']) && is_array($_SESSION['factures'])) {
             return $_SESSION['factures'];
         }
@@ -97,6 +107,17 @@ class FactureController
 
     private function enregistrer_facture(array $donnees): void
     {
+        if ($this->dao instanceof FinanceDAO) {
+            $this->dao->insertFacture([
+                'id_eleve' => $donnees['id_eleve'],
+                'numero_sequentiel' => $donnees['numero'],
+                'date_emission' => $donnees['date_emission'],
+                'montant_total' => $donnees['montant_total'],
+                'statut' => 'active',
+            ]);
+            return;
+        }
+
         if (!isset($_SESSION['factures']) || !is_array($_SESSION['factures'])) {
             $_SESSION['factures'] = [];
         }
@@ -157,13 +178,29 @@ class FactureController
     {
         $id = (int) ($this->parametre ?? 1);
 
-        $facture = new Facture([
-            'id_facture' => $id,
-            'id_eleve' => 1,
-            'numero_sequentiel' => 'FAC-2026-001',
-            'date_emission' => '2026-09-01',
-            'statut' => 'active',
-        ]);
+        // Try to get facture from DAO first
+        if ($this->dao instanceof FinanceDAO) {
+            $f = $this->dao->getFacture($id);
+            if (!empty($f)) {
+                $facture = new Facture([
+                    'id_facture' => $f['id_facture'] ?? $f['id'] ?? $id,
+                    'id_eleve' => $f['id_eleve'] ?? 1,
+                    'numero_sequentiel' => $f['numero_sequentiel'] ?? ($f['numero'] ?? 'FAC-000'),
+                    'date_emission' => $f['date_emission'] ?? '',
+                    'statut' => $f['statut'] ?? 'active',
+                ]);
+            }
+        }
+
+        if (!isset($facture)) {
+            $facture = new Facture([
+                'id_facture' => $id,
+                'id_eleve' => 1,
+                'numero_sequentiel' => 'FAC-2026-001',
+                'date_emission' => '2026-09-01',
+                'statut' => 'active',
+            ]);
+        }
 
         $facture->ajouter_ligne(new LigneFacture([
             'id_ligne_facture' => 1,

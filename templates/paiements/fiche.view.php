@@ -22,7 +22,13 @@
         <div class="bloc"><strong>Montant :</strong> <?= e($donnees['paiement']['montant']) ?> MGA</div>
         <div class="bloc"><strong>Mode :</strong> <?= e(ucfirst($donnees['paiement']['mode'])) ?></div>
         <div class="bloc"><strong>Statut :</strong> <?= e(ucfirst($donnees['paiement']['statut'])) ?></div>
-        <p><a href="<?= e(BASE_URL . '/paiements') ?>">Retour à la liste des paiements</a></p>
+        <p>
+            <a href="<?= e(BASE_URL . '/paiements') ?>">Retour à la liste des paiements</a>
+            &nbsp;|&nbsp;
+            <a href="<?= e(BASE_URL . '/paiements/recu/' . ($donnees['paiement']['id'] ?? '')) ?>" target="_blank">Aperçu reçu</a>
+            &nbsp;|&nbsp;
+            <a href="<?= e(BASE_URL . '/paiements/recu/' . ($donnees['paiement']['id'] ?? '') . '?download=1') ?>">Télécharger reçu (.txt)</a>
+        </p>
     </div>
 </body>
 </html>
