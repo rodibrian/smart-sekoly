@@ -23,8 +23,27 @@ class RemiseController
             return;
         }
 
+        if ($this->action === 'nouvelle') {
+            $donnees = $this->preparer_formulaire();
+            require TEMPLATES_PATH . 'remises/formulaire.view.php';
+            return;
+        }
+
         $donnees = $this->preparer_liste();
         require TEMPLATES_PATH . 'remises/liste.view.php';
+    }
+
+    private function preparer_formulaire(): array
+    {
+        return [
+            'module' => $this->module,
+            'action' => $this->action,
+            'token_csrf' => generer_token_csrf(),
+            'types' => [
+                'pourcentage' => 'Pourcentage',
+                'montant_fixe' => 'Montant fixe',
+            ],
+        ];
     }
 
     private function preparer_liste(): array

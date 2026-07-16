@@ -151,11 +151,11 @@
 | IV | Créer classe Caisse.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Caisse ajoutée |
 | IV | Créer table mouvement_caisse | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée pour mouvement_caisse |
 | IV | Créer classe MouvementCaisse.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe MouvementCaisse ajoutée |
-| IV | Facturation (génération de facture) | ✅ En cours | 2026-07-16 | | Contrôleur et vues de facturation ajoutés |
-| IV | Gestion des remises et réductions | ✅ En cours | 2026-07-16 | | Contrôleur et vues de remise ajoutés |
-| IV | Échéancier paramétrable | ⏳ À faire | | | |
-| IV | Enregistrement des paiements (avec doublon) | ✅ En cours | 2026-07-16 | | Contrôleur et vues de paiement ajoutés |
-| IV | Interface caisse dédiée | ✅ En cours | 2026-07-16 | | Contrôleur et vues de caisse ajoutés |
+| IV | Facturation (génération de facture) | ✅ En cours | 2026-07-16 | | Contrôleur, vues et formulaire de facture ajoutés |
+| IV | Gestion des remises et réductions | ✅ En cours | 2026-07-16 | | Contrôleur, vues et formulaire de remise ajoutés |
+| IV | Échéancier paramétrable | ✅ En cours | 2026-07-16 | | Contrôleur, vues et formulaire d’échéance ajoutés |
+| IV | Enregistrement des paiements (avec doublon) | ✅ En cours | 2026-07-16 | | Contrôleur, vues et formulaire de paiement ajoutés |
+| IV | Interface caisse dédiée | ✅ En cours | 2026-07-16 | | Contrôleur, vues et formulaire de caisse ajoutés |
 | IV | Échéancier paramétrable | ✅ En cours | 2026-07-16 | | Contrôleur et vues d’échéance ajoutés |
 | IV | Impression de reçu thermique | ⏳ À faire | | | |
 | IV | Suivi des impayés | ⏳ À faire | | | |

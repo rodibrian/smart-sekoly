@@ -24,6 +24,30 @@
         <div class="bloc"><strong>Montant net après remises :</strong> <?= e($donnees['facture']['montant_net']) ?> MGA</div>
         <div class="bloc"><strong>Statut :</strong> <?= e(ucfirst($donnees['facture']['statut'])) ?></div>
 
+        <h2>Lignes de facture</h2>
+        <?php if (empty($donnees['facture']['lignes'])): ?>
+            <p>Aucune ligne de facture saisie.</p>
+        <?php else: ?>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Type de frais</th>
+                        <th>Montant</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($donnees['facture']['lignes'] as $ligne): ?>
+                        <tr>
+                            <td><?= e($ligne['id']) ?></td>
+                            <td><?= e($ligne['type_frais']) ?></td>
+                            <td><?= e($ligne['montant']) ?> MGA</td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+
         <h2>Remises appliquées</h2>
         <?php if (empty($donnees['facture']['remises'])): ?>
             <p>Aucune remise enregistrée pour cette facture.</p>

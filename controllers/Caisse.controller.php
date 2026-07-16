@@ -23,8 +23,23 @@ class CaisseController
             return;
         }
 
+        if ($this->action === 'nouvelle') {
+            $donnees = $this->preparer_formulaire();
+            require TEMPLATES_PATH . 'caisses/formulaire.view.php';
+            return;
+        }
+
         $donnees = $this->preparer_liste();
         require TEMPLATES_PATH . 'caisses/liste.view.php';
+    }
+
+    private function preparer_formulaire(): array
+    {
+        return [
+            'module' => $this->module,
+            'action' => $this->action,
+            'token_csrf' => generer_token_csrf(),
+        ];
     }
 
     private function preparer_liste(): array

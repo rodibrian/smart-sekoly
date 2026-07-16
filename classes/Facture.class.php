@@ -12,6 +12,8 @@ class Facture
     private $statut;
     private $date_annulation;
     private $id_utilisateur_annulation;
+    private $lignes;
+    private $remises;
 
     public function __construct(array $donnees = [])
     {
@@ -23,6 +25,8 @@ class Facture
         $this->statut = $donnees['statut'] ?? 'active';
         $this->date_annulation = $donnees['date_annulation'] ?? null;
         $this->id_utilisateur_annulation = $donnees['id_utilisateur_annulation'] ?? null;
+        $this->lignes = $donnees['lignes'] ?? [];
+        $this->remises = $donnees['remises'] ?? [];
     }
 
     public function get_id_facture()
@@ -65,6 +69,16 @@ class Facture
         return $this->id_utilisateur_annulation;
     }
 
+    public function get_lignes(): array
+    {
+        return $this->lignes;
+    }
+
+    public function get_remises(): array
+    {
+        return $this->remises;
+    }
+
     public function annuler(int $idUtilisateurAnnulation = null): self
     {
         $this->statut = 'annulee';
@@ -83,17 +97,38 @@ class Facture
         return $this->statut === 'annulee';
     }
 
+    public function ajouter_ligne(LigneFacture $ligne): self
+    {
+        $this->lignes[] = $ligne;
+        $this->actualiser_montant_total();
+        return $this;
+    }
+
+    public function ajouter_remise(Remise $remise): self
+    {
+        $this->remises[] = $remise;
+        return $this;
+    }
+
+    public function actualiser_montant_total(): self
+    {
+        $this->montant_total = array_reduce($this->lignes, function ($carry, LigneFacture $ligne) {
+            return $carry + $ligne->get_montant_ligne();
+        }, 0.0);
+
+        return $this;
+    }
+
     /**
      * Calcule le montant net de la facture après application des remises.
      *
-     * @param Remise[] $remises
      * @return float
      */
-    public function calculer_montant_net(array $remises = []): float
+    public function calculer_montant_net(): float
     {
         $montant_net = $this->montant_total;
 
-        foreach ($remises as $remise) {
+        foreach ($this->remises as $remise) {
             if ($remise instanceof Remise) {
                 $montant_net -= $remise->calcule_montant_remise($this->montant_total);
             }

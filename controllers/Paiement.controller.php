@@ -23,8 +23,24 @@ class PaiementController
             return;
         }
 
+        if ($this->action === 'nouveau') {
+            $donnees = $this->preparer_formulaire();
+            require TEMPLATES_PATH . 'paiements/formulaire.view.php';
+            return;
+        }
+
         $donnees = $this->preparer_liste();
         require TEMPLATES_PATH . 'paiements/liste.view.php';
+    }
+
+    private function preparer_formulaire(): array
+    {
+        return [
+            'module' => $this->module,
+            'action' => $this->action,
+            'token_csrf' => generer_token_csrf(),
+            'modes' => ['espece' => 'Espèce', 'banque' => 'Banque', 'mobile_money' => 'Mobile money'],
+        ];
     }
 
     private function preparer_liste(): array
