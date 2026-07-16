@@ -54,7 +54,7 @@
             </select>
 
             <label>
-                <input type="checkbox" name="auto_download_escpos" value="1"> Télécharger le reçu thermique (.escpos) après enregistrement
+                <input type="checkbox" name="auto_download_escpos" value="1" <?= !empty($donnees['donnees']['auto_download_escpos']) ? 'checked' : '' ?>> Télécharger le reçu thermique (.escpos) après enregistrement
             </label>
 
             <button type="submit">Enregistrer le paiement</button>

@@ -89,12 +89,23 @@ class PaiementController
 
     private function preparer_formulaire(array $resultat = []): array
     {
-        return array_merge([
+        // Determine default for auto-download: session override, else constant
+        $defaultAuto = DEFAULT_AUTO_DOWNLOAD_ESC_POS;
+        if (!empty($_SESSION['parametrage']['auto_download_escpos'])) {
+            $defaultAuto = (bool) $_SESSION['parametrage']['auto_download_escpos'];
+        }
+
+        $defaults = [
             'module' => $this->module,
             'action' => $this->action,
             'token_csrf' => generer_token_csrf(),
             'modes' => ['espece' => 'Espèce', 'banque' => 'Banque', 'mobile_money' => 'Mobile money'],
-        ], $resultat);
+            'donnees' => [
+                'auto_download_escpos' => $defaultAuto,
+            ],
+        ];
+
+        return array_merge($defaults, $resultat);
     }
 
     private function preparer_liste(array $resultat = []): array

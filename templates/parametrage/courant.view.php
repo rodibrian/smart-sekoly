@@ -30,27 +30,32 @@
             <div class="grille">
                 <div>
                     <label for="nom_etablissement">Nom de l’établissement</label>
-                    <input id="nom_etablissement" name="nom_etablissement" value="Collège d’Excellence">
+                    <input id="nom_etablissement" name="nom_etablissement" value="<?= e($donnees['parametrage']['nom_etablissement'] ?? 'Collège') ?>">
                 </div>
                 <div>
                     <label for="monnaie">Monnaie</label>
-                    <input id="monnaie" name="monnaie" value="MGA">
+                    <input id="monnaie" name="monnaie" value="<?= e($donnees['parametrage']['monnaie'] ?? 'MGA') ?>">
                 </div>
                 <div>
                     <label for="langue_par_defaut">Langue par défaut</label>
-                    <input id="langue_par_defaut" name="langue_par_defaut" value="fr">
+                    <input id="langue_par_defaut" name="langue_par_defaut" value="<?= e($donnees['parametrage']['langue_par_defaut'] ?? 'fr') ?>">
                 </div>
                 <div>
                     <label for="theme_par_defaut">Thème par défaut</label>
-                    <input id="theme_par_defaut" name="theme_par_defaut" value="clair">
+                    <input id="theme_par_defaut" name="theme_par_defaut" value="<?= e($donnees['parametrage']['theme_par_defaut'] ?? 'clair') ?>">
                 </div>
                 <div>
                     <label for="format_matricule">Format du matricule</label>
-                    <input id="format_matricule" name="format_matricule" value="{PREFIXE}-{ANNEE}-{NUMERO_SEQUENTIEL}">
+                    <input id="format_matricule" name="format_matricule" value="<?= e($donnees['parametrage']['format_matricule'] ?? '{PREFIXE}-{ANNEE}-{NUMERO_SEQUENTIEL}') ?>">
                 </div>
                 <div>
                     <label for="prefixe_matricule">Préfixe du matricule</label>
-                    <input id="prefixe_matricule" name="prefixe_matricule" value="CE">
+                    <input id="prefixe_matricule" name="prefixe_matricule" value="<?= e($donnees['parametrage']['prefixe_matricule'] ?? 'CE') ?>">
+                </div>
+                <div style="grid-column: 1 / -1;">
+                    <label>
+                        <input type="checkbox" name="auto_download_escpos" value="1" <?= !empty($donnees['parametrage']['auto_download_escpos']) ? 'checked' : '' ?>> Activer le téléchargement automatique du reçu thermique (.escpos) après enregistrement d'un paiement
+                    </label>
                 </div>
             </div>
             <button type="submit">Enregistrer</button>

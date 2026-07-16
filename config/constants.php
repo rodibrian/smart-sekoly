@@ -13,3 +13,5 @@ define('APP_LOCALE', 'fr_FR');
 define('BASE_URL', '/smart-sekoly');
 define('SEUIL_ALERTE_ABSENCES', 3);
 define('CHEMIN_DOCUMENTS', DOCUMENTS_PATH);
+// Default behaviour for auto-downloading ESC/POS after payment submission
+define('DEFAULT_AUTO_DOWNLOAD_ESC_POS', true);

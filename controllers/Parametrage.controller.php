@@ -28,11 +28,24 @@ class ParametrageController
             $vue = 'parametrage/sauvegardes.view.php';
         }
 
+        // Load current parametrage from session or defaults
+        $paramSession = $_SESSION['parametrage'] ?? [];
+        $defaultsObj = new ParametrageEtablissement();
+
         $donnees = [
             'module' => $this->module,
             'action' => $this->action,
             'token_csrf' => generer_token_csrf(),
             'theme_actuel' => $_SESSION['theme_app'] ?? 'clair',
+            'parametrage' => [
+                'nom_etablissement' => $paramSession['nom_etablissement'] ?? $defaultsObj->get_nom_etablissement(),
+                'monnaie' => $paramSession['monnaie'] ?? $defaultsObj->monnaie ?? 'MGA',
+                'langue_par_defaut' => $paramSession['langue_par_defaut'] ?? $defaultsObj->langue_par_defaut ?? 'fr',
+                'theme_par_defaut' => $paramSession['theme_par_defaut'] ?? $defaultsObj->theme_par_defaut ?? 'clair',
+                'format_matricule' => $paramSession['format_matricule'] ?? $defaultsObj->get_format_matricule(),
+                'prefixe_matricule' => $paramSession['prefixe_matricule'] ?? $defaultsObj->get_prefixe_matricule(),
+                'auto_download_escpos' => isset($paramSession['auto_download_escpos']) ? (bool) $paramSession['auto_download_escpos'] : DEFAULT_AUTO_DOWNLOAD_ESC_POS,
+            ],
         ];
 
         require TEMPLATES_PATH . $vue;
@@ -43,9 +56,13 @@ class ParametrageController
         $erreurs = [];
 
         $nom_etablissement = nettoyer_chaine($donnees_formulaire['nom_etablissement'] ?? '');
+        $monnaie = nettoyer_chaine($donnees_formulaire['monnaie'] ?? '');
+        $langue_par_defaut = nettoyer_chaine($donnees_formulaire['langue_par_defaut'] ?? '');
+        $theme_par_defaut = nettoyer_chaine($donnees_formulaire['theme_par_defaut'] ?? '');
         $format_matricule = nettoyer_chaine($donnees_formulaire['format_matricule'] ?? '');
         $prefixe_matricule = nettoyer_chaine($donnees_formulaire['prefixe_matricule'] ?? '');
         $annee_courante = nettoyer_chaine($donnees_formulaire['annee_courante'] ?? '');
+        $auto_download = !empty($donnees_formulaire['auto_download_escpos']) ? '1' : '0';
 
         if ($nom_etablissement === '') {
             $erreurs['nom_etablissement'] = 'Le nom de l’établissement est obligatoire.';
@@ -63,6 +80,29 @@ class ParametrageController
             $erreurs['annee_courante'] = 'L’année scolaire doit être numérique.';
         }
 
+        if ($monnaie === '') {
+            $erreurs['monnaie'] = 'La monnaie est obligatoire.';
+        }
+
+        if (!in_array($theme_par_defaut, ['clair', 'sombre'], true)) {
+            $erreurs['theme_par_defaut'] = 'Le thème sélectionné est invalide.';
+        }
+
+        if (empty($erreurs)) {
+            $_SESSION['theme_app'] = $theme_par_defaut;
+            // persist parametrage in session for now
+            $_SESSION['parametrage'] = [
+                'nom_etablissement' => $nom_etablissement,
+                'monnaie' => $monnaie,
+                'langue_par_defaut' => $langue_par_defaut,
+                'theme_par_defaut' => $theme_par_defaut,
+                'format_matricule' => $format_matricule,
+                'prefixe_matricule' => $prefixe_matricule,
+                'annee_courante' => $annee_courante,
+                'auto_download_escpos' => $auto_download,
+            ];
+        }
+
         return [
             'valide' => empty($erreurs),
             'erreurs' => $erreurs,
@@ -71,6 +111,10 @@ class ParametrageController
                 'format_matricule' => $format_matricule,
                 'prefixe_matricule' => $prefixe_matricule,
                 'annee_courante' => $annee_courante,
+                'monnaie' => $monnaie,
+                'langue_par_defaut' => $langue_par_defaut,
+                'theme_par_defaut' => $theme_par_defaut,
+                'auto_download_escpos' => $auto_download,
             ],
         ];
     }
