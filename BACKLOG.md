@@ -51,6 +51,8 @@
 | II | Créer table transfert | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée pour le suivi des transferts |
 | II | Créer classe Transfert.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Transfert avec validation de statut |
 | II | Formulaire d'inscription élève | ✅ Fait | 2026-07-16 | 2026-07-16 | Contrôleur et vue de formulaire d’inscription ajoutés |
+| II | Soumission POST de l'inscription élève | ✅ Fait | 2026-07-16 | 2026-07-16 | Traitement POST, validation, persistance en session et redirection vers le dossier élève ajoutés |
+| II | Liste des élèves | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue de liste, recherche par nom/prénom/matricule et route /eleves/liste ajoutées |
 | II | Dossier élève unique (vue consolidée) | ✅ Fait | 2026-07-16 | 2026-07-16 | Contrôleur et vue de dossier élève ajoutés |
 | II | Génération automatique de matricule | ✅ Fait | 2026-07-16 | 2026-07-16 | Fonction utilitaire de génération de matricule ajoutée et utilisée dans l’inscription |
 | II | Gestion des documents obligatoires élèves | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe DocumentObligatoire et vue de suivi des pièces ajoutés |

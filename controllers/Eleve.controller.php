@@ -20,6 +20,32 @@ class EleveController
 
     public function executer(): void
     {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && $this->action === 'inscription') {
+            $resultat = $this->traiter_formulaire($_POST);
+            if ($resultat['valide']) {
+                $this->enregistrer_inscription($resultat['donnees']);
+                $_SESSION['messages']['eleve'] = 'Inscription enregistrée avec succès.';
+                header('Location: ' . BASE_URL . '/eleves/dossier/1');
+                return;
+            }
+
+            $donnees = [
+                'module' => $this->module,
+                'action' => $this->action,
+                'token_csrf' => generer_token_csrf(),
+                'erreurs' => $resultat['erreurs'],
+                'valeurs' => $resultat['donnees'],
+            ];
+            require TEMPLATES_PATH . 'eleves/formulaire_inscription.view.php';
+            return;
+        }
+
+        if ($this->action === 'liste') {
+            $donnees = $this->preparer_liste_eleves();
+            require TEMPLATES_PATH . 'eleves/liste.view.php';
+            return;
+        }
+
         if ($this->action === 'dossier') {
             $donnees = $this->preparer_donnees_dossier();
             require TEMPLATES_PATH . 'eleves/dossier.view.php';
@@ -77,9 +103,77 @@ class EleveController
         require TEMPLATES_PATH . 'eleves/formulaire_inscription.view.php';
     }
 
+    private function enregistrer_inscription(array $donnees): void
+    {
+        $eleves = $_SESSION['eleves'] ?? [];
+        $id_eleve = generer_identifiant($eleves, 'id');
+
+        $eleve = [
+            'id' => $id_eleve,
+            'nom' => $donnees['nom'],
+            'prenom' => $donnees['prenom'],
+            'email' => $donnees['email'],
+            'date_naissance' => $donnees['date_naissance'],
+            'matricule' => $donnees['matricule'],
+            'statut' => 'Actif',
+            'date_creation' => date('Y-m-d H:i:s'),
+        ];
+
+        $eleves[$id_eleve] = $eleve;
+        $_SESSION['eleves'] = $eleves;
+    }
+
+    public function preparer_liste_eleves(): array
+    {
+        $eleves = $_SESSION['eleves'] ?? [];
+        $recherche = nettoyer_chaine($_GET['q'] ?? '');
+        $liste = [];
+
+        foreach ($eleves as $eleve) {
+            $nom = $eleve['nom'] ?? '';
+            $prenom = $eleve['prenom'] ?? '';
+            $matricule = $eleve['matricule'] ?? '';
+            $texte_recherche = strtolower($recherche);
+            $correspond = $recherche === '' || strpos(strtolower($nom), $texte_recherche) !== false || strpos(strtolower($prenom), $texte_recherche) !== false || strpos(strtolower($matricule), $texte_recherche) !== false;
+
+            if ($correspond) {
+                $liste[] = [
+                    'id' => $eleve['id'] ?? 0,
+                    'nom' => $nom,
+                    'prenom' => $prenom,
+                    'matricule' => $matricule,
+                    'email' => $eleve['email'] ?? '',
+                    'statut' => $eleve['statut'] ?? 'Actif',
+                ];
+            }
+        }
+
+        if (empty($liste)) {
+            $liste[] = [
+                'id' => 1,
+                'nom' => 'Andriamihaja',
+                'prenom' => 'Lova',
+                'matricule' => 'EL-2026-001',
+                'email' => 'lova@example.com',
+                'statut' => 'Actif',
+            ];
+        }
+
+        return [
+            'eleves' => $liste,
+            'recherche' => $recherche,
+            'module' => $this->module,
+            'action' => $this->action,
+            'token_csrf' => generer_token_csrf(),
+        ];
+    }
+
     public function preparer_donnees_dossier(): array
     {
         $id_eleve = (int) ($this->parametre ?? 0);
+
+        $eleves = $_SESSION['eleves'] ?? [];
+        $eleve_sauvegarde = $eleves[$id_eleve] ?? null;
 
         $eleve = [
             'id' => $id_eleve,
@@ -94,6 +188,15 @@ class EleveController
                 ['annee' => '2024-2025', 'classe' => '5e B', 'statut' => 'Terminé'],
             ],
         ];
+
+        if ($eleve_sauvegarde !== null) {
+            $eleve['nom'] = $eleve_sauvegarde['nom'] ?? $eleve['nom'];
+            $eleve['prenom'] = $eleve_sauvegarde['prenom'] ?? $eleve['prenom'];
+            $eleve['email'] = $eleve_sauvegarde['email'] ?? $eleve['email'];
+            $eleve['matricule'] = $eleve_sauvegarde['matricule'] ?? $eleve['matricule'];
+            $eleve['date_naissance'] = $eleve_sauvegarde['date_naissance'] ?? $eleve['date_naissance'];
+            $eleve['statut'] = $eleve_sauvegarde['statut'] ?? $eleve['statut'];
+        }
 
         return [
             'id_eleve' => $id_eleve,

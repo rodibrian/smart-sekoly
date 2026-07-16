@@ -25,29 +25,46 @@
         <h1>Formulaire d’inscription élève</h1>
         <p>Enregistrez les informations de base d’un nouvel élève.</p>
 
+        <?php if (!empty($_SESSION['messages']['eleve'])): ?>
+            <div class="message" style="background:#ecfdf3;color:#166534;">
+                <?= e($_SESSION['messages']['eleve']) ?>
+            </div>
+        <?php endif; ?>
+
         <form method="post" action="<?= e(BASE_URL . '/eleves/inscription') ?>">
             <input type="hidden" name="csrf_token" value="<?= e($donnees['token_csrf']) ?>">
 
             <label for="nom">Nom</label>
-            <input id="nom" name="nom" required>
+            <input id="nom" name="nom" value="<?= e($donnees['valeurs']['nom'] ?? '') ?>" required>
 
             <label for="prenom">Prénom</label>
-            <input id="prenom" name="prenom" required>
+            <input id="prenom" name="prenom" value="<?= e($donnees['valeurs']['prenom'] ?? '') ?>" required>
 
             <label for="email">Email</label>
-            <input id="email" name="email" type="email" required>
+            <input id="email" name="email" type="email" value="<?= e($donnees['valeurs']['email'] ?? '') ?>" required>
 
             <label for="date_naissance">Date de naissance</label>
-            <input id="date_naissance" name="date_naissance" type="date" required>
+            <input id="date_naissance" name="date_naissance" type="date" value="<?= e($donnees['valeurs']['date_naissance'] ?? '') ?>" required>
 
             <label for="matricule">Matricule</label>
-            <input id="matricule" name="matricule" required>
+            <input id="matricule" name="matricule" value="<?= e($donnees['valeurs']['matricule'] ?? '') ?>" required>
 
             <button type="submit">Enregistrer</button>
         </form>
 
+        <?php if (!empty($donnees['erreurs'])): ?>
+            <div class="message" style="background:#fef2f2;color:#991b1b;">
+                <strong>Erreurs :</strong>
+                <ul>
+                    <?php foreach ($donnees['erreurs'] as $champ => $message): ?>
+                        <li><?= e($message) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
         <div class="message">
-            Ce formulaire prépare l’inscription réelle et la génération du matricule à l’étape suivante.
+            Ce formulaire prépare désormais une inscription réelle et la redirige vers le dossier élève.
         </div>
     </div>
 </body>
