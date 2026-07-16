@@ -48,10 +48,13 @@ class AuthService
             return false;
         }
 
-        $role = $utilisateur['role'] ?? 'admin';
+        $role = strtolower($utilisateur['role'] ?? 'admin');
+        if ($role === 'admin') {
+            return true;
+        }
+
         $rolesPermissions = [
-            'admin' => ['users.read', 'users.write', 'eleves.read', 'eleves.write', 'finance.read', 'finance.write'],
-            'directeur' => ['eleves.read', 'finance.read', 'reports.read'],
+            'directeur' => ['eleves.read', 'finance.read', 'reports.read', 'permissions.read'],
             'enseignant' => ['eleves.read'],
         ];
 
