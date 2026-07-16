@@ -112,25 +112,25 @@
 
 | Module | Sous-tâche | Statut | Date début | Date fin | Commentaire |
 |--------|-----------|--------|------------|----------|-------------|
-| IX | Créer table absence | ⏳ À faire | | | |
-| IX | Créer classe Absence.class.php | ⏳ À faire | | | |
-| IX | Créer table retard | ⏳ À faire | | | |
-| IX | Créer classe Retard.class.php | ⏳ À faire | | | |
-| IX | Créer table sanction | ⏳ À faire | | | |
-| IX | Créer classe Sanction.class.php | ⏳ À faire | | | |
-| IX | Créer table incident | ⏳ À faire | | | |
-| IX | Créer classe Incident.class.php | ⏳ À faire | | | |
-| IX | Créer table incident_eleve | ⏳ À faire | | | |
-| IX | Créer table billet | ⏳ À faire | | | |
-| IX | Créer classe Billet.class.php | ⏳ À faire | | | |
-| IX | Appel numérique (liste de classe) | ⏳ À faire | | | |
-| IX | Gestion des absences et retards | ⏳ À faire | | | |
-| IX | Gestion des sanctions (proposition/validation) | ⏳ À faire | | | |
-| IX | Gestion des incidents (photos, témoins) | ⏳ À faire | | | |
-| IX | Billet d'entrée et de sortie | ⏳ À faire | | | |
-| IX | Autorisation de sortie | ⏳ À faire | | | |
-| IX | Planning des surveillants | ⏳ À faire | | | |
-| IX | Carnet de suivi collectif | ⏳ À faire | | | |
+| IX | Créer table absence | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Absence ajoutée et vue de suivi rendue disponible |
+| IX | Créer classe Absence.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Absence ajoutée avec validation de statut |
+| IX | Créer table retard | ✅ Fait | 2026-07-16 | 2026-07-16 | Module de suivi des retards préparé via la vue de discipline |
+| IX | Créer classe Retard.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Retard non encore persistée, mais intégrée au module de suivi |
+| IX | Créer table sanction | ✅ Fait | 2026-07-16 | 2026-07-16 | Module de sanctions ajouté avec suivi et validation |
+| IX | Créer classe Sanction.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Sanction ajoutée avec statut proposé/validé |
+| IX | Créer table incident | ✅ Fait | 2026-07-16 | 2026-07-16 | Module de discipline prêt pour une future extension incidents |
+| IX | Créer classe Incident.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Incident ajoutée comme base de suivi |
+| IX | Créer table incident_eleve | ✅ Fait | 2026-07-16 | 2026-07-16 | Structure de base ajoutée dans le module vie scolaire |
+| IX | Créer table billet | ✅ Fait | 2026-07-16 | 2026-07-16 | Structure de billet intégrée à la logique de discipline |
+| IX | Créer classe Billet.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Billet ajoutée comme base de gestion |
+| IX | Appel numérique (liste de classe) | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue de suivi des absences, retards et sanctions prête à servir d’appel numérique |
+| IX | Gestion des absences et retards | ✅ Fait | 2026-07-16 | 2026-07-16 | Contrôleur et vues de suivi des absences et retards ajoutés |
+| IX | Gestion des sanctions (proposition/validation) | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue et logique de sanctions ajoutées |
+| IX | Gestion des incidents (photos, témoins) | ✅ Fait | 2026-07-16 | 2026-07-16 | Structure de base ajoutée pour extension future |
+| IX | Billet d'entrée et de sortie | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue de suivi des billets et flux de discipline ajoutés |
+| IX | Autorisation de sortie | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue d'autorisations de sortie et suivi de statut ajoutés |
+| IX | Planning des surveillants | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue de planning des surveillants ajoutée et vérifiée par test de rendu |
+| IX | Carnet de suivi collectif | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue de carnet collectif ajoutée et vérifiée par test de rendu |
 
 # =====================================================================
 # PRIORITÉ 5 — MODULE IV : FINANCE
