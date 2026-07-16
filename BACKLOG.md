@@ -175,14 +175,14 @@
 
 | Module | Sous-tâche | Statut | Date début | Date fin | Commentaire |
 |--------|-----------|--------|------------|----------|-------------|
-| I | Indicateurs clés (élèves, enseignants, absences, paiements) | ⏳ À faire | | | |
-| I | Agenda du jour (cours, réunions, examens) | ⏳ À faire | | | |
-| I | Actualités et annonces scolaires | ⏳ À faire | | | |
-| I | Recherche globale (nom, matricule, classe) | ⏳ À faire | | | |
-| I | Rapports automatiques (mensuels, trimestriels) | ⏳ À faire | | | |
-| I | Prévisions pour l'année suivante | ⏳ À faire | | | |
-| I | Vision Directeur (taux d'occupation, ratio) | ⏳ À faire | | | |
-| I | Comparatif inter-annuel (graphiques) | ⏳ À faire | | | |
+| I | Indicateurs clés (élèves, enseignants, absences, paiements) | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue du tableau de bord avec indicateurs clés ajoutée et vérifiée |
+| I | Agenda du jour (cours, réunions, examens) | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue de l'agenda du jour intégrée au tableau de bord |
+| I | Actualités et annonces scolaires | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue des actualités et annonces intégrée au tableau de bord |
+| I | Recherche globale (nom, matricule, classe) | ✅ Fait | 2026-07-16 | 2026-07-16 | Recherche par nom/prénom/matricule dans élèves et enseignants |
+| I | Rapports automatiques (mensuels, trimestriels) | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue de rapports mensuels avec taux de présence et paiements |
+| I | Prévisions pour l'année suivante | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue de prévisions avec élèves, enseignants et budgets estimés |
+| I | Vision Directeur (taux d'occupation, ratio) | ✅ Fait | 2026-07-16 | 2026-07-16 | Indicateurs de taux d'occupation et ratio élève/enseignant pour directeur |
+| I | Comparatif inter-annuel (graphiques) | ✅ Fait | 2026-07-16 | 2026-07-16 | Tableau comparatif des années scolaires avec tendances |
 
 # =====================================================================
 # PRIORITÉ 6 — MODULE VI : RAPPORTS ET STATISTIQUES

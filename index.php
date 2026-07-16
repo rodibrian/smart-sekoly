@@ -61,22 +61,33 @@ class Routeur
 {
     public static function traiter(): void
     {
-        $uri = $_SERVER['REQUEST_URI'] ?? '/';
-        $uri = strtok($uri, '?');
-        $base_url = rtrim(BASE_URL, '/');
-        $chemin = $uri;
+        // Vérifier d'abord les paramètres GET
+        $module = $_GET['module'] ?? null;
+        $action = $_GET['action'] ?? null;
+        $parametre = $_GET['parametre'] ?? null;
 
-        if ($base_url !== '' && strpos($chemin, $base_url) === 0) {
-            $chemin = substr($chemin, strlen($base_url));
+        // Si pas de module en GET, utiliser l'URI
+        if ($module === null) {
+            $uri = $_SERVER['REQUEST_URI'] ?? '/';
+            $uri = strtok($uri, '?');
+            $base_url = rtrim(BASE_URL, '/');
+            $chemin = $uri;
+
+            if ($base_url !== '' && strpos($chemin, $base_url) === 0) {
+                $chemin = substr($chemin, strlen($base_url));
+            }
+
+            $segments = array_values(array_filter(explode('/', trim($chemin, '/')), function ($segment): bool {
+                return $segment !== '';
+            }));
+
+            $module = $segments[0] ?? 'installation';
+            $action = $segments[1] ?? 'index';
+            $parametre = $segments[2] ?? null;
+        } else {
+            // Par défaut, action est 'index' si non spécifiée
+            $action = $action ?? 'index';
         }
-
-        $segments = array_values(array_filter(explode('/', trim($chemin, '/')), function ($segment): bool {
-            return $segment !== '';
-        }));
-
-        $module = $segments[0] ?? 'installation';
-        $action = $segments[1] ?? 'index';
-        $parametre = $segments[2] ?? null;
 
         $mots_module = explode('-', $module);
         $module_pascal = implode('', array_map('ucfirst', $mots_module));
