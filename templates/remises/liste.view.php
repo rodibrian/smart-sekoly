@@ -23,10 +23,11 @@
         <h1>Remises</h1>
         <p>Liste des remises validées et appliquées aux factures.</p>
 
+        <p><a href="<?= e(BASE_URL . '/remises/nouvelle') ?>">Nouvelle remise</a></p>
+
         <?php if (!empty($donnees['message'])): ?>
             <div class="message"><?= e($donnees['message']) ?></div>
         <?php endif; ?>
-
         <table>
             <thead>
                 <tr>

@@ -20,6 +20,17 @@
 <body>
     <div class="conteneur">
         <h1>Nouveau paiement</h1>
+        <?php if (!empty($donnees['erreurs'])): ?>
+            <div class="message erreur">
+                <strong>Erreurs :</strong>
+                <ul>
+                    <?php foreach ($donnees['erreurs'] as $erreur): ?>
+                        <li><?= e($erreur) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
         <form method="post" action="<?= e(BASE_URL . '/paiements') ?>">
             <input type="hidden" name="token_csrf" value="<?= e($donnees['token_csrf']) ?>">
 

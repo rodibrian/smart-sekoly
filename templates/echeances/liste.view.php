@@ -23,10 +23,11 @@
         <h1>Échéances</h1>
         <p>Suivi des échéances de paiement liées aux factures.</p>
 
+        <p><a href="<?= e(BASE_URL . '/echeances/nouvelle') ?>">Nouvelle échéance</a></p>
+
         <?php if (!empty($donnees['message'])): ?>
             <div class="message"><?= e($donnees['message']) ?></div>
         <?php endif; ?>
-
         <table>
             <thead>
                 <tr>

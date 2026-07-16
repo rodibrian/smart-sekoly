@@ -20,21 +20,32 @@
 <body>
     <div class="conteneur">
         <h1>Nouvelle remise</h1>
+        <?php if (!empty($donnees['erreurs'])): ?>
+            <div class="message erreur">
+                <strong>Erreurs :</strong>
+                <ul>
+                    <?php foreach ($donnees['erreurs'] as $erreur): ?>
+                        <li><?= e($erreur) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
         <form method="post" action="<?= e(BASE_URL . '/remises') ?>">
             <input type="hidden" name="token_csrf" value="<?= e($donnees['token_csrf']) ?>">
 
             <label for="type_remise">Type de remise</label>
             <select id="type_remise" name="type_remise">
                 <?php foreach ($donnees['types'] as $valeur => $libelle): ?>
-                    <option value="<?= e($valeur) ?>"><?= e($libelle) ?></option>
+                    <option value="<?= e($valeur) ?>" <?= isset($donnees['donnees']['type_remise']) && $donnees['donnees']['type_remise'] === $valeur ? 'selected' : '' ?>><?= e($libelle) ?></option>
                 <?php endforeach; ?>
             </select>
 
             <label for="valeur_remise">Valeur</label>
-            <input id="valeur_remise" name="valeur_remise" type="number" step="0.01" required>
+            <input id="valeur_remise" name="valeur_remise" type="number" step="0.01" value="<?= e($donnees['donnees']['valeur_remise'] ?? '') ?>" required>
 
             <label for="motif">Motif</label>
-            <input id="motif" name="motif" type="text" required>
+            <input id="motif" name="motif" type="text" value="<?= e($donnees['donnees']['motif'] ?? '') ?>" required>
 
             <button type="submit">Créer la remise</button>
         </form>

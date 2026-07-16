@@ -25,10 +25,11 @@
         <h1>Factures</h1>
         <p>Liste des factures émises et leur état.</p>
 
+        <p><a href="<?= e(BASE_URL . '/factures/nouvelle') ?>">Nouvelle facture</a></p>
+
         <?php if (!empty($donnees['message'])): ?>
             <div class="message"><?= e($donnees['message']) ?></div>
         <?php endif; ?>
-
         <table>
             <thead>
                 <tr>

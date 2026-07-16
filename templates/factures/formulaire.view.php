@@ -20,24 +20,35 @@
 <body>
     <div class="conteneur">
         <h1>Nouvelle facture</h1>
+        <?php if (!empty($donnees['erreurs'])): ?>
+            <div class="message erreur">
+                <strong>Erreurs :</strong>
+                <ul>
+                    <?php foreach ($donnees['erreurs'] as $erreur): ?>
+                        <li><?= e($erreur) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
         <form method="post" action="<?= e(BASE_URL . '/factures') ?>">
             <input type="hidden" name="token_csrf" value="<?= e($donnees['token_csrf']) ?>">
 
             <label for="eleve">Élève</label>
             <select id="eleve" name="eleve">
                 <?php foreach ($donnees['eleves'] as $eleve): ?>
-                    <option value="<?= e($eleve['id']) ?>"><?= e($eleve['nom']) ?></option>
+                    <option value="<?= e($eleve['id']) ?>" <?= isset($donnees['donnees']['id_eleve']) && $donnees['donnees']['id_eleve'] == $eleve['id'] ? 'selected' : '' ?>><?= e($eleve['nom']) ?></option>
                 <?php endforeach; ?>
             </select>
 
             <label for="numero">Numéro séquentiel</label>
-            <input id="numero" name="numero" type="text" required>
+            <input id="numero" name="numero" type="text" value="<?= e($donnees['donnees']['numero'] ?? '') ?>" required>
 
             <label for="date_emission">Date d'émission</label>
             <input id="date_emission" name="date_emission" type="date" value="<?= e(date('Y-m-d')) ?>" required>
 
             <label for="montant_total">Montant total</label>
-            <input id="montant_total" name="montant_total" type="number" step="0.01" required>
+            <input id="montant_total" name="montant_total" type="number" step="0.01" value="<?= e($donnees['donnees']['montant_total'] ?? '') ?>" required>
 
             <button type="submit">Créer la facture</button>
         </form>

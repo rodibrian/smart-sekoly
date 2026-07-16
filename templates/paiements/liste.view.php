@@ -23,10 +23,11 @@
         <h1>Paiements</h1>
         <p>Liste des paiements enregistrés pour les échéances.</p>
 
+        <p><a href="<?= e(BASE_URL . '/paiements/nouveau') ?>">Nouveau paiement</a></p>
+
         <?php if (!empty($donnees['message'])): ?>
             <div class="message"><?= e($donnees['message']) ?></div>
         <?php endif; ?>
-
         <table>
             <thead>
                 <tr>

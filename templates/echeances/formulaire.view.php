@@ -20,22 +20,33 @@
 <body>
     <div class="conteneur">
         <h1>Nouvelle échéance</h1>
+        <?php if (!empty($donnees['erreurs'])): ?>
+            <div class="message erreur">
+                <strong>Erreurs :</strong>
+                <ul>
+                    <?php foreach ($donnees['erreurs'] as $erreur): ?>
+                        <li><?= e($erreur) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
         <form method="post" action="<?= e(BASE_URL . '/echeances') ?>">
             <input type="hidden" name="token_csrf" value="<?= e($donnees['token_csrf']) ?>">
 
             <label for="id_facture">Facture</label>
-            <input id="id_facture" name="id_facture" type="number" required>
+            <input id="id_facture" name="id_facture" type="number" value="<?= e($donnees['donnees']['id_facture'] ?? '') ?>" required>
 
             <label for="date_echeance">Date d'échéance</label>
-            <input id="date_echeance" name="date_echeance" type="date" required>
+            <input id="date_echeance" name="date_echeance" type="date" value="<?= e($donnees['donnees']['date_echeance'] ?? '') ?>" required>
 
             <label for="montant_prevu">Montant prévu</label>
-            <input id="montant_prevu" name="montant_prevu" type="number" step="0.01" required>
+            <input id="montant_prevu" name="montant_prevu" type="number" step="0.01" value="<?= e($donnees['donnees']['montant_prevu'] ?? '') ?>" required>
 
             <label for="statut_echeance">Statut</label>
             <select id="statut_echeance" name="statut_echeance">
                 <?php foreach ($donnees['statuts'] as $valeur => $libelle): ?>
-                    <option value="<?= e($valeur) ?>"><?= e($libelle) ?></option>
+                    <option value="<?= e($valeur) ?>" <?= isset($donnees['donnees']['statut_echeance']) && $donnees['donnees']['statut_echeance'] === $valeur ? 'selected' : '' ?>><?= e($libelle) ?></option>
                 <?php endforeach; ?>
             </select>
 

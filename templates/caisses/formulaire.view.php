@@ -20,14 +20,25 @@
 <body>
     <div class="conteneur">
         <h1>Nouvelle caisse</h1>
+        <?php if (!empty($donnees['erreurs'])): ?>
+            <div class="message erreur">
+                <strong>Erreurs :</strong>
+                <ul>
+                    <?php foreach ($donnees['erreurs'] as $erreur): ?>
+                        <li><?= e($erreur) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
         <form method="post" action="<?= e(BASE_URL . '/caisses') ?>">
             <input type="hidden" name="token_csrf" value="<?= e($donnees['token_csrf']) ?>">
 
             <label for="date_caisse">Date de caisse</label>
-            <input id="date_caisse" name="date_caisse" type="date" value="<?= e(date('Y-m-d')) ?>" required>
+            <input id="date_caisse" name="date_caisse" type="date" value="<?= e($donnees['donnees']['date_caisse'] ?? date('Y-m-d')) ?>" required>
 
             <label for="fond_de_caisse">Fond de caisse initial</label>
-            <input id="fond_de_caisse" name="fond_de_caisse" type="number" step="0.01" required>
+            <input id="fond_de_caisse" name="fond_de_caisse" type="number" step="0.01" value="<?= e($donnees['donnees']['fond_de_caisse'] ?? '') ?>" required>
 
             <button type="submit">Créer la caisse</button>
         </form>
