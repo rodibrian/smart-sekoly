@@ -42,6 +42,18 @@ class CommunicationController
         };
     }
 
+    private function compter_evenements_carnets(): int
+    {
+        $total = 0;
+        foreach ($_SESSION['carnets'] ?? [] as $evenements) {
+            if (is_array($evenements)) {
+                $total += count($evenements);
+            }
+        }
+
+        return $total;
+    }
+
     private function preparer_index(): array
     {
         $data = [
@@ -51,7 +63,7 @@ class CommunicationController
             'stats' => [
                 'messages' => count($_SESSION['communication']['messages'] ?? []),
                 'annonces' => count($_SESSION['communication']['annonces'] ?? []),
-                'evenements' => count($_SESSION['communication']['evenements'] ?? []),
+                'evenements' => $this->compter_evenements_carnets(),
             ]
         ];
 
@@ -126,6 +138,8 @@ class CommunicationController
             return;
         }
 
+        $id_eleve = (int) ($_POST['id_eleve'] ?? 0);
+
         $annonce = new Annonce([
             'id' => generer_identifiant($_SESSION['communication']['annonces'] ?? [], 'id'),
             'titre' => $titre,
@@ -134,5 +148,18 @@ class CommunicationController
         ]);
 
         $_SESSION['communication']['annonces'][] = $annonce->toArray();
+
+        if ($id_eleve > 0) {
+            $evenement = new AnnonceEvenementCarnet([
+                'id' => generer_identifiant($_SESSION['carnets'][$id_eleve] ?? [], 'id'),
+                'id_eleve' => $id_eleve,
+                'titre' => $titre,
+                'description' => $contenu,
+                'type' => 'info',
+                'date' => date('Y-m-d H:i:s'),
+            ]);
+
+            $_SESSION['carnets'][$id_eleve][] = $evenement->toArray();
+        }
     }
 }

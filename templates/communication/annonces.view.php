@@ -35,6 +35,10 @@
                     <input type="text" id="titre" name="titre" required>
                 </div>
                 <div class="form-group">
+                    <label for="id_eleve">ID élève (optionnel pour tracer dans le carnet)</label>
+                    <input type="number" id="id_eleve" name="id_eleve" min="1" placeholder="Ex : 1">
+                </div>
+                <div class="form-group">
                     <label for="contenu">Contenu</label>
                     <textarea id="contenu" name="contenu" required></textarea>
                 </div>

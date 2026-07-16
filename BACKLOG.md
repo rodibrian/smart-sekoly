@@ -222,10 +222,10 @@
 | V | Créer classe Message.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Message ajoutée |
 | V | Table annonce | ✅ Fait | 2026-07-16 | 2026-07-16 | Table annonces implémentée avec stockage session |
 | V | Créer classe Annonce.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Annonce ajoutée |
-| V | Table annonce_evenement_carnet | ⏳ À faire | | | | 
+| V | Table annonce_evenement_carnet | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe AnnonceEvenementCarnet ajoutée |
 | V | Messagerie interne | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue messages et enregistrement POST implémentés |
 | V | Publication d'annonces collectives | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue annonces et publication POST implémentés |
-| V | Annonces tracées dans les carnets | ⏳ À faire | | | |
+| V | Annonces tracées dans les carnets | ✅ Fait | 2026-07-16 | 2026-07-16 | Publication d'annonces avec traçage dans le carnet élève |
 
 # =====================================================================
 # PRIORITÉ 8 — MODULE XI : BIBLIOTHÈQUE DOCUMENTAIRE

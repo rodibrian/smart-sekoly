@@ -310,13 +310,18 @@ class EleveController
     public function preparer_carnet_suivi(): array
     {
         $id_eleve = (int) ($this->parametre ?? 0);
-        $carnet = new CarnetSuivi($id_eleve);
-        $carnet->ajouter_evenement('Rappel', 'Documents à fournir', 'info');
-        $carnet->ajouter_evenement('Absence', 'Absence non justifiée', 'warning');
+        $evenements = $_SESSION['carnets'][$id_eleve] ?? [];
+
+        if (empty($evenements)) {
+            $carnet = new CarnetSuivi($id_eleve);
+            $carnet->ajouter_evenement('Rappel', 'Documents à fournir', 'info');
+            $carnet->ajouter_evenement('Absence', 'Absence non justifiée', 'warning');
+            $evenements = $carnet->get_evenements();
+        }
 
         return [
             'id_eleve' => $id_eleve,
-            'evenements' => $carnet->get_evenements(),
+            'evenements' => $evenements,
             'module' => $this->module,
             'action' => $this->action,
             'token_csrf' => generer_token_csrf(),
