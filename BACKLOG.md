@@ -39,18 +39,18 @@
 
 | Module | Sous-tâche | Statut | Date début | Date fin | Commentaire |
 |--------|-----------|--------|------------|----------|-------------|
-| II | Créer table personne | ⏳ À faire | | | |
-| II | Créer classe Personne.class.php | ⏳ À faire | | | |
-| II | Créer table eleve | ⏳ À faire | | | |
-| II | Créer classe Eleve.class.php | ⏳ À faire | | | |
+| II | Créer table personne | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée pour la table personne |
+| II | Créer classe Personne.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Personne avec propriétés et helpers de base |
+| II | Créer table eleve | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée pour la table eleve |
+| II | Créer classe Eleve.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Eleve héritant de Personne avec matricule et statut |
 | II | Créer table role | ⏳ À faire | | | |
 | II | Créer classe Role.class.php | ⏳ À faire | | | |
 | II | Créer table personne_role | ⏳ À faire | | | |
-| II | Créer table inscription | ⏳ À faire | | | |
-| II | Créer classe Inscription.class.php | ⏳ À faire | | | |
-| II | Créer table transfert | ⏳ À faire | | | |
-| II | Créer classe Transfert.class.php | ⏳ À faire | | | |
-| II | Formulaire d'inscription élève | ⏳ À faire | | | |
+| II | Créer table inscription | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée avec suppression logique et traçabilité |
+| II | Créer classe Inscription.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe d’inscription avec annulation logique |
+| II | Créer table transfert | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée pour le suivi des transferts |
+| II | Créer classe Transfert.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Transfert avec validation de statut |
+| II | Formulaire d'inscription élève | ✅ Fait | 2026-07-16 | 2026-07-16 | Contrôleur et vue de formulaire d’inscription ajoutés |
 | II | Dossier élève unique (vue consolidée) | ⏳ À faire | | | |
 | II | Génération automatique de matricule | ⏳ À faire | | | |
 | II | Gestion des documents obligatoires élèves | ⏳ À faire | | | |
