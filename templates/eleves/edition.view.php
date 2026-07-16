@@ -31,6 +31,20 @@
             <input name="date_naissance" type="date" value="<?= e($donnees['eleve']['date_naissance'] ?? '') ?>" required>
             <label>Matricule</label>
             <input name="matricule" value="<?= e($donnees['eleve']['matricule'] ?? '') ?>" required>
+
+            <label for="role_id">Rôle</label>
+            <select id="role_id" name="role_id" required>
+                <option value="">Sélectionnez un rôle</option>
+                <?php foreach ($donnees['roles'] ?? [] as $role): ?>
+                    <option value="<?= e($role['id_role']) ?>" <?= (int) ($donnees['role_id'] ?? 0) === (int) $role['id_role'] ? 'selected' : '' ?>>
+                        <?= e($role['libelle']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <?php if (!empty($donnees['erreurs']['role_id'])): ?>
+                <div class="message" style="background:#fef2f2;color:#991b1b; margin-top: 8px;"> <?= e($donnees['erreurs']['role_id']) ?></div>
+            <?php endif; ?>
+
             <button type="submit">Enregistrer les modifications</button>
         </form>
     </div>

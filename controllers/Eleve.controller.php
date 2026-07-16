@@ -29,12 +29,14 @@ class EleveController
                 return;
             }
 
+            $daoRole = new RoleDAO();
             $donnees = [
                 'module' => $this->module,
                 'action' => $this->action,
                 'token_csrf' => generer_token_csrf(),
                 'erreurs' => $resultat['erreurs'],
                 'valeurs' => $resultat['donnees'],
+                'roles' => $daoRole->listerRoles(),
             ];
             require TEMPLATES_PATH . 'eleves/formulaire_inscription.view.php';
             return;
@@ -106,10 +108,16 @@ class EleveController
             return;
         }
 
+        $daoRole = new RoleDAO();
+
         $donnees = [
             'module' => $this->module,
             'action' => $this->action,
             'token_csrf' => generer_token_csrf(),
+            'roles' => $daoRole->listerRoles(),
+            'valeurs' => [
+                'role_id' => 0,
+            ],
         ];
 
         require TEMPLATES_PATH . 'eleves/formulaire_inscription.view.php';
@@ -127,6 +135,11 @@ class EleveController
             'statut_scolaire' => 'actif',
         ]);
 
+        if (!empty($donnees['role_id'])) {
+            $roleDao = new RoleDAO();
+            $roleDao->assignerRoleAPersonne($id_eleve, (int) $donnees['role_id']);
+        }
+
         $_SESSION['dernier_id_eleve'] = $id_eleve;
     }
 
@@ -134,6 +147,7 @@ class EleveController
     {
         $id_eleve = (int) ($this->parametre ?? 0);
         $dao = new EleveDAO();
+        $roleDao = new RoleDAO();
         $eleve = $dao->trouverParId($id_eleve) ?? [
             'id' => $id_eleve,
             'nom' => 'Andriamihaja',
@@ -144,21 +158,35 @@ class EleveController
             'statut' => 'Actif',
         ];
 
+        $roleSelectionne = $roleDao->trouverPremierRolePersonne($id_eleve);
+        $roleId = (int) ($roleSelectionne['id_role'] ?? 0);
+
+        $erreurs = [];
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $eleve['nom'] = nettoyer_chaine($_POST['nom'] ?? $eleve['nom']);
             $eleve['prenom'] = nettoyer_chaine($_POST['prenom'] ?? $eleve['prenom']);
             $eleve['email'] = nettoyer_chaine($_POST['email'] ?? $eleve['email']);
             $eleve['date_naissance'] = nettoyer_chaine($_POST['date_naissance'] ?? $eleve['date_naissance']);
             $eleve['matricule'] = nettoyer_chaine($_POST['matricule'] ?? $eleve['matricule']);
-            $dao->mettreAJour($id_eleve, [
-                'nom' => $eleve['nom'],
-                'prenom' => $eleve['prenom'],
-                'email' => $eleve['email'],
-                'date_naissance' => $eleve['date_naissance'],
-                'matricule' => $eleve['matricule'],
-                'statut_scolaire' => 'actif',
-            ]);
-            $_SESSION['messages']['eleve'] = 'Profil mis à jour.';
+            $roleId = (int) ($_POST['role_id'] ?? $roleId);
+
+            if ($roleId <= 0 || $roleDao->trouverRoleParId($roleId) === null) {
+                $erreurs['role_id'] = 'Le rôle sélectionné est invalide.';
+            }
+
+            if (empty($erreurs)) {
+                $dao->mettreAJour($id_eleve, [
+                    'nom' => $eleve['nom'],
+                    'prenom' => $eleve['prenom'],
+                    'email' => $eleve['email'],
+                    'date_naissance' => $eleve['date_naissance'],
+                    'matricule' => $eleve['matricule'],
+                    'statut_scolaire' => 'actif',
+                ]);
+
+                $roleDao->assignerRoleAPersonne($id_eleve, $roleId);
+                $_SESSION['messages']['eleve'] = 'Profil mis à jour.';
+            }
         }
 
         return [
@@ -167,6 +195,9 @@ class EleveController
             'module' => $this->module,
             'action' => $this->action,
             'token_csrf' => generer_token_csrf(),
+            'roles' => $roleDao->listerRoles(),
+            'role_id' => $roleId,
+            'erreurs' => $erreurs,
         ];
     }
 
@@ -473,6 +504,12 @@ class EleveController
             $erreurs['matricule'] = 'Le matricule est obligatoire.';
         }
 
+        $roleId = (int) ($donnees_formulaire['role_id'] ?? 0);
+        $roleDao = new RoleDAO();
+        if ($roleId <= 0 || $roleDao->trouverRoleParId($roleId) === null) {
+            $erreurs['role_id'] = 'Le rôle sélectionné est invalide.';
+        }
+
         return [
             'valide' => empty($erreurs),
             'erreurs' => $erreurs,
@@ -482,6 +519,7 @@ class EleveController
                 'email' => $email,
                 'date_naissance' => $date_naissance,
                 'matricule' => $matricule,
+                'role_id' => $roleId,
             ],
         ];
     }
