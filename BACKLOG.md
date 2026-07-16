@@ -162,8 +162,8 @@
 | IV | Auto-download ESC/POS après enregistrement (option) | ✅ Fait | 2026-07-16 | | Option pour déclencher automatiquement le téléchargement du fichier .escpos après POST de paiement (configurable) |
 | IV | Compléter intégration DAO pour tous contrôleurs finance | 🔄 En cours | 2026-07-16 | | Finaliser remplacement des écritures directes en session par `FinanceDAO` avec fallback PDO/SESSION |
 | IV | Persistance DB prototype pour Finance | 🔄 En cours | 2026-07-16 | | Concevoir schéma minimal (factures, paiements, caisses, remises) et DAO prototype |
-| IV | Suivi des impayés — détection & relance | ⏳ À faire | | | Détecter échéances impayées, marquer statut, préparer relances automatiques |
-| IV | Rapports financiers (quotidiens, mensuels) — spécification & prototype | ⏳ À faire | | | Spécifier indicateurs, implémenter agrégations et export CSV/HTML |
+| IV | Suivi des impayés — détection & relance | ✅ Fait | 2026-07-16 | | Détection d’échéances impayées et génération de messages de relance prototype ajoutés |
+| IV | Rapports financiers (quotidiens, mensuels) — spécification & prototype | ✅ Fait | 2026-07-16 | | Prototype de rapport financier avec agrégation montant total / nombre d’impayés ajouté |
 
 # =====================================================================
 # PRIORITÉ 6 — MODULE I : TABLEAU DE BORD
