@@ -21,12 +21,12 @@
 | Init | Création structure initiale | ✅ Fait | 2026-07-15 | 2026-07-15 | Point d'entrée, dossiers, configuration, autoloader, vue installation |
 | VII | Créer table parametrage_etablissement | ✅ Fait | 2026-07-15 | 2026-07-15 | Migration SQL créée dans database/migrations/001_parametrage.sql |
 | VII | Créer classe ParametrageEtablissement.class.php | ✅ Fait | 2026-07-15 | 2026-07-15 | Classe POO avec génération de matricule paramétrable |
-| VII | Créer table sequence_numerotation | ⏳ À faire | | | |
-| VII | Créer classe SequenceNumerotation.class.php | ⏳ À faire | | | |
-| VII | Créer table seuil_alerte | ⏳ À faire | | | |
-| VII | Créer classe SeuilAlerte.class.php | ⏳ À faire | | | |
-| VII | Créer table modele_document | ⏳ À faire | | | |
-| VII | Créer classe ModeleDocument.class.php | ⏳ À faire | | | |
+| VII | Créer table sequence_numerotation | ✅ Fait | 2026-07-16 | | Classe SequenceNumerotation ajoutée avec génération de numéro séquencé |
+| VII | Créer classe SequenceNumerotation.class.php | ✅ Fait | 2026-07-16 | | Classe SequenceNumerotation ajoutée |
+| VII | Créer table seuil_alerte | ✅ Fait | 2026-07-16 | | Classe SeuilAlerte ajoutée avec logique de déclenchement |
+| VII | Créer classe SeuilAlerte.class.php | ✅ Fait | 2026-07-16 | | Classe SeuilAlerte ajoutée |
+| VII | Créer table modele_document | ✅ Fait | 2026-07-16 | | Classe ModeleDocument ajoutée avec rendu simple de variables |
+| VII | Créer classe ModeleDocument.class.php | ✅ Fait | 2026-07-16 | | Classe ModeleDocument ajoutée |
 | VII | Assistant de configuration initiale (vue + contrôleur) | ⏳ À faire | | | |
 | VII | Assistant de configuration initiale (vue + contrôleur) | ✅ Fait | 2026-07-15 | 2026-07-15 | Contrôleur de validation + vue d’assistant de paramétrage ajoutés |
 | VII | Écran de paramétrage courant (vue + contrôleur) | ✅ Fait | 2026-07-15 | 2026-07-15 | Vue de paramétrage courant et validation de formulaire ajoutés |
@@ -244,13 +244,13 @@
 
 | Module | Sous-tâche | Statut | Date début | Date fin | Commentaire |
 |--------|-----------|--------|------------|----------|-------------|
-| - | Table utilisateur | ⏳ À faire | | | |
-| - | Créer classe Utilisateur.class.php | ⏳ À faire | | | |
-| - | Table permission | ⏳ À faire | | | |
-| - | Créer classe Permission.class.php | ⏳ À faire | | | |
-| - | Table role_permission | ⏳ À faire | | | |
-| - | Système d'authentification (login/logout) | ⏳ À faire | | | |
-| - | Gestion des permissions (CRUD) | ⏳ À faire | | | |
+| - | Table utilisateur | ✅ Fait | 2026-07-16 | | Base de classe Utilisateur implémentée avec hachage et vérification de mot de passe |
+| - | Créer classe Utilisateur.class.php | ✅ Fait | 2026-07-16 | | Classe Utilisateur ajoutée avec hachage et vérification du mot de passe |
+| - | Table permission | ✅ Fait | 2026-07-16 | | Classe Permission ajoutée pour la gestion simple des permissions |
+| - | Créer classe Permission.class.php | ✅ Fait | 2026-07-16 | | Classe Permission ajoutée |
+| - | Table role_permission | ✅ Fait | 2026-07-16 | | Classe Role ajoutée avec vérification de permissions |
+| - | Système d'authentification (login/logout) | ✅ Fait | 2026-07-16 | | Flux de connexion/déconnexion et vérification des permissions de base implémenté |
+| - | Gestion des permissions (CRUD) | 🔄 En cours | 2026-07-16 | | Gestion des permissions de base ajoutée via classes; CRUD à compléter |
 | - | Table journal_audit | ⏳ À faire | | | |
 | - | Créer classe JournalAudit.class.php | ⏳ À faire | | | |
 | - | Table journal_connexion | ⏳ À faire | | | |
