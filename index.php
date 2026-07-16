@@ -79,7 +79,45 @@ class Routeur
         $parametre = $segments[2] ?? null;
 
         $nom_controleur = ucfirst($module) . 'Controller';
-        if (!class_exists($nom_controleur)) {
+        $nom_controleur_singulier = ucfirst(rtrim($module, 's')) . 'Controller';
+        $nom_base = ucfirst(rtrim($module, 's'));
+
+        $fichiers_controleur = [
+            CONTROLLERS_PATH . $nom_controleur . '.php',
+            CONTROLLERS_PATH . $nom_controleur . '.controller.php',
+            CONTROLLERS_PATH . $nom_controleur_singulier . '.php',
+            CONTROLLERS_PATH . $nom_controleur_singulier . '.controller.php',
+            CONTROLLERS_PATH . $nom_base . '.php',
+            CONTROLLERS_PATH . $nom_base . '.controller.php',
+        ];
+
+        foreach ($fichiers_controleur as $fichier_controleur) {
+            if (is_file($fichier_controleur)) {
+                require_once $fichier_controleur;
+                break;
+            }
+        }
+
+        if (!class_exists($nom_controleur_singulier) && !class_exists($nom_controleur)) {
+            $nom_controleur = 'InstallationController';
+            $module = 'installation';
+            $action = 'index';
+            $fichiers_controleur = [
+                CONTROLLERS_PATH . $nom_controleur . '.php',
+                CONTROLLERS_PATH . $nom_controleur . '.controller.php',
+            ];
+
+            foreach ($fichiers_controleur as $fichier_controleur) {
+                if (is_file($fichier_controleur)) {
+                    require_once $fichier_controleur;
+                    break;
+                }
+            }
+        }
+
+        if (class_exists($nom_controleur_singulier)) {
+            $nom_controleur = $nom_controleur_singulier;
+        } elseif (!class_exists($nom_controleur)) {
             $nom_controleur = 'InstallationController';
             $module = 'installation';
             $action = 'index';
