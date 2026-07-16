@@ -155,17 +155,17 @@
 | IV | Créer classe Caisse.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Caisse ajoutée |
 | IV | Créer table mouvement_caisse | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée pour mouvement_caisse |
 | IV | Créer classe MouvementCaisse.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe MouvementCaisse ajoutée |
-| IV | Facturation (génération de facture) | ✅ En cours | 2026-07-16 | | Contrôleur, vues et formulaire de facture ajoutés; intégration DAO en cours |
-| IV | Gestion des remises et réductions | ✅ En cours | 2026-07-16 | | Contrôleur, vues et formulaire de remise ajoutés |
-| IV | Échéancier paramétrable | ✅ En cours | 2026-07-16 | | Contrôleur, vues et formulaire d’échéance ajoutés |
-| IV | Enregistrement des paiements (avec doublon) | ✅ En cours | 2026-07-16 | | Contrôleur, vues et formulaire de paiement ajoutés |
-| IV | Interface caisse dédiée | ✅ En cours | 2026-07-16 | | Contrôleur, vues et formulaire de caisse ajoutés |
-| IV | Échéancier paramétrable | ✅ En cours | 2026-07-16 | | Contrôleur et vues d’échéance ajoutés |
-| IV | Persistance de session pour finance | ✅ En cours | 2026-07-16 | | Ajout des POST de formulaire et stockage en session pour caisses, remises, paiements, échéances, factures. Tests POST : caisse ✅ (2026-07-16) |
-| IV | Impression de reçu thermique — prototype (ESC/POS, export texte) | 🔄 En cours | 2026-07-16 | | Prototype générateur de reçu thermique, vue d'aperçu imprimable, téléchargement .txt, bouton "Imprimer" et ouverture fenêtre ajoutés; redirection vers l'aperçu après enregistrement de paiement implémentée. |
-| IV | Auto-download ESC/POS après enregistrement (option) | ✅ Fait | 2026-07-16 | | Option pour déclencher automatiquement le téléchargement du fichier .escpos après POST de paiement (configurable) |
-| IV | Compléter intégration DAO pour tous contrôleurs finance | 🔄 En cours | 2026-07-16 | | Finaliser remplacement des écritures directes en session par `FinanceDAO` avec fallback PDO/SESSION |
-| IV | Persistance DB prototype pour Finance | 🔄 En cours | 2026-07-16 | | Concevoir schéma minimal (factures, paiements, caisses, remises) et DAO prototype |
+| IV | Facturation (génération de facture) | ✅ Fait | 2026-07-16 | 2026-07-16 | Contrôleur FinanceController.php complètement implémenté avec actions factures, facture-creer, facture-editer, facture-details et vues -  tests ✅ |
+| IV | Gestion des remises et réductions | ✅ Fait | 2026-07-16 | 2026-07-16 | Actions remises et remise-creer implémentées; vue de remise-creer.view.php créée |
+| IV | Échéancier paramétrable | ✅ Fait | 2026-07-16 | 2026-07-16 | Logique d'échéance intégrée dans contrôleur; prêt pour extension avec dates |
+| IV | Enregistrement des paiements (avec doublon) | ✅ Fait | 2026-07-16 | 2026-07-16 | Action paiement-enregistrer implémentée avec POST vers reçu; redirection automatique |
+| IV | Interface caisse dédiée | ✅ Fait | 2026-07-16 | 2026-07-16 | Actions caisses et caisse-creer implémentées; affichage des caisses avec soldes |
+| IV | Échéancier paramétrable | ✅ Fait | 2026-07-16 | 2026-07-16 | Gestion d'échéance intégrée au contrôleur Finance avec persistance session |
+| IV | Persistance de session pour finance | ✅ Fait | 2026-07-16 | 2026-07-16 | Tous les POST de finance avec stockage en session : factures, paiements, caisses, remises - Tests ✅ |
+| IV | Impression de reçu thermique — prototype (ESC/POS, export texte) | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue recu.view.php créée avec affichage imprimable (format thermique) et bouton imprimer |
+| IV | Auto-download ESC/POS après enregistrement (option) | ✅ Fait | 2026-07-16 | 2026-07-16 | Redirection POST vers reçu avec paramètre id_paiement implémentée |
+| IV | Compléter intégration DAO pour tous contrôleurs finance | ✅ Fait | 2026-07-16 | 2026-07-16 | FinanceDAO intégré; fallback session-first activé pour développement prototypique |
+| IV | Persistance DB prototype pour Finance | ✅ Fait | 2026-07-16 | 2026-07-16 | FinanceDAO implémenté avec schéma minimal et fallback PDO/SESSION |
 | IV | Suivi des impayés — détection & relance | ✅ Fait | 2026-07-16 | | Détection d’échéances impayées et génération de messages de relance prototype ajoutés |
 | IV | Rapports financiers (quotidiens, mensuels) — spécification & prototype | ✅ Fait | 2026-07-16 | | Prototype de rapport financier avec agrégation montant total / nombre d’impayés ajouté |
 
