@@ -43,9 +43,9 @@
 | II | Créer classe Personne.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Personne avec propriétés et helpers de base |
 | II | Créer table eleve | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée pour la table eleve |
 | II | Créer classe Eleve.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Eleve héritant de Personne avec matricule et statut |
-| II | Créer table role | ⏳ À faire | | | |
-| II | Créer classe Role.class.php | ⏳ À faire | | | |
-| II | Créer table personne_role | ⏳ À faire | | | |
+| II | Créer table role | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée dans database/migrations/002_roles.sql |
+| II | Créer classe Role.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Role enrichie avec permissions et serialization |
+| II | Créer table personne_role | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée dans database/migrations/002_roles.sql |
 | II | Créer table inscription | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée avec suppression logique et traçabilité |
 | II | Créer classe Inscription.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe d’inscription avec annulation logique |
 | II | Créer table transfert | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée pour le suivi des transferts |
