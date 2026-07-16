@@ -84,12 +84,12 @@
 | III | Créer classe Enseignant.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Enseignant ajoutée avec génération de matricule et route /enseignants |
 | III | Créer table personnel_administratif | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée dans database/migrations/002_personnel_administratif.sql |
 | III | Créer classe PersonnelAdministratif.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe PersonnelAdministratif ajoutée et test unitaire validé |
-| III | Créer table contrat | ⏳ À faire | | | |
-| III | Créer classe Contrat.class.php | ⏳ À faire | | | |
-| III | Créer table affectation | ⏳ À faire | | | |
-| III | Créer classe Affectation.class.php | ⏳ À faire | | | |
-| III | Créer table conge | ⏳ À faire | | | |
-| III | Créer classe Conge.class.php | ⏳ À faire | | | |
+| III | Créer table contrat | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée dans database/migrations/003_contrat.sql |
+| III | Créer classe Contrat.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Contrat ajoutée avec statut et terminaison validés |
+| III | Créer table affectation | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée dans database/migrations/004_affectation.sql |
+| III | Créer classe Affectation.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Affectation ajoutée avec gestion des statuts |
+| III | Créer table conge | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée dans database/migrations/005_conge.sql |
+| III | Créer classe Conge.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Conge ajoutée avec gestion des statuts de congé |
 | III | Créer table heure_supplementaire | ⏳ À faire | | | |
 | III | Créer classe HeureSupplementaire.class.php | ⏳ À faire | | | |
 | III | Créer table salaire | ⏳ À faire | | | |
