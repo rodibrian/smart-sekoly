@@ -273,7 +273,7 @@
 | - | Table journal_connexion | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration et table de journal de connexion ajoutées |
 | - | Créer classe JournalConnexion.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe JournalConnexion ajoutée |
 | - | Journalisation des actions sensibles | ✅ Fait | 2026-07-16 | 2026-07-16 | Audit d’inscription, modification et demandes RH ajouté |
-| - | Politique de sécurité (mots de passe, verrouillage) | ⏳ À faire | | | |
+| - | Politique de sécurité (mots de passe, verrouillage) | ✅ Fait | 2026-07-16 | 2026-07-16 | Authentification renforcée, verrouillage et changement de mot de passe obligatoires implémentés |
 
 # =====================================================================
 # RÉCAPITULATIF GLOBAL

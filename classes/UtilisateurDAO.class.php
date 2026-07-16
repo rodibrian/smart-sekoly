@@ -106,6 +106,63 @@ class UtilisateurDAO
         return false;
     }
 
+    public function trouverParId(int $id_utilisateur): ?array
+    {
+        if ($this->pdo !== null) {
+            try {
+                $stmt = $this->pdo->prepare('SELECT * FROM utilisateur WHERE id_utilisateur = :id LIMIT 1');
+                $stmt->execute(['id' => $id_utilisateur]);
+                $utilisateur = $stmt->fetch();
+                if ($utilisateur !== false) {
+                    $utilisateur['role'] = $utilisateur['role'] ?? 'admin';
+                    $utilisateur['statut_compte'] = $utilisateur['statut_compte'] ?? 'actif';
+                    $utilisateur['nombre_essais_echoues'] = (int) ($utilisateur['nombre_essais_echoues'] ?? 0);
+                    return $utilisateur;
+                }
+            } catch (Throwable $exception) {
+                error_log('UtilisateurDAO trouverParId failed: ' . $exception->getMessage());
+            }
+        }
+
+        foreach ($_SESSION['utilisateurs'] as $utilisateur) {
+            if ((int) ($utilisateur['id_utilisateur'] ?? 0) === $id_utilisateur) {
+                $utilisateur['role'] = $utilisateur['role'] ?? 'admin';
+                $utilisateur['statut_compte'] = $utilisateur['statut_compte'] ?? 'actif';
+                $utilisateur['nombre_essais_echoues'] = (int) ($utilisateur['nombre_essais_echoues'] ?? 0);
+                return $utilisateur;
+            }
+        }
+
+        return null;
+    }
+
+    public function mettreAJourMotDePasse(int $id_utilisateur, string $mot_de_passe_hash, bool $doit_changer_mdp = false): bool
+    {
+        if ($this->pdo !== null) {
+            try {
+                $sql = 'UPDATE utilisateur SET mot_de_passe_hash = :hash, doit_changer_mdp = :doit_changer_mdp WHERE id_utilisateur = :id';
+                $stmt = $this->pdo->prepare($sql);
+                return $stmt->execute([
+                    'hash' => $mot_de_passe_hash,
+                    'doit_changer_mdp' => $doit_changer_mdp ? 1 : 0,
+                    'id' => $id_utilisateur,
+                ]);
+            } catch (Throwable $exception) {
+                error_log('UtilisateurDAO mettreAJourMotDePasse failed: ' . $exception->getMessage());
+            }
+        }
+
+        foreach ($_SESSION['utilisateurs'] as &$utilisateur) {
+            if ((int) ($utilisateur['id_utilisateur'] ?? 0) === $id_utilisateur) {
+                $utilisateur['mot_de_passe_hash'] = $mot_de_passe_hash;
+                $utilisateur['doit_changer_mdp'] = $doit_changer_mdp ? 1 : 0;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function reinitialiserEssais(int $id_utilisateur): bool
     {
         return $this->mettreAJourTentatives($id_utilisateur, 0, 'actif');

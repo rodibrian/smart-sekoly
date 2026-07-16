@@ -144,6 +144,16 @@ class Routeur
             $action = 'index';
         }
 
+        if (!class_exists('AccessControl')) {
+            require_once CLASSES_PATH . 'AccessControl.class.php';
+        }
+
+        if (!AccessControl::verifierAcces($module, $action)) {
+            http_response_code(403);
+            require_once TEMPLATES_PATH . 'errors/403.view.php';
+            return;
+        }
+
         $controleur = new $nom_controleur($module, $action, $parametre);
         $controleur->executer();
     }

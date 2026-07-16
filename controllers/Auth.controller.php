@@ -21,6 +21,16 @@ class AuthController
             return;
         }
 
+        if ($this->action === 'changer-mot-de-passe') {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $this->traiterChangementMotDePasse();
+                return;
+            }
+
+            $this->afficherFormulaireChangementMotDePasse();
+            return;
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->traiterConnexion();
             return;
@@ -104,6 +114,84 @@ class AuthController
             'email' => $utilisateur['identifiant'],
             'role' => $utilisateur['role'] ?? 'admin',
         ]);
+
+        if (!empty($utilisateur['doit_changer_mdp'])) {
+            header('Location: ' . BASE_URL . '/auth/changer-mot-de-passe');
+            return;
+        }
+
+        header('Location: ' . BASE_URL . '/tableau-de-bord');
+    }
+
+    private function afficherFormulaireChangementMotDePasse(array $erreurs = [], array $valeurs = []): void
+    {
+        $donnees = [
+            'module' => $this->module,
+            'action' => $this->action,
+            'token_csrf' => generer_token_csrf(),
+            'erreurs' => $erreurs,
+            'valeurs' => [
+                'mot_de_passe' => '',
+                'confirmation_mot_de_passe' => '',
+            ],
+        ];
+
+        require TEMPLATES_PATH . 'auth/change_password.view.php';
+    }
+
+    private function traiterChangementMotDePasse(): void
+    {
+        $authService = new AuthService();
+        if (!$authService->estConnecte()) {
+            header('Location: ' . BASE_URL . '/auth/login');
+            return;
+        }
+
+        $donnees = [
+            'mot_de_passe' => $_POST['mot_de_passe'] ?? '',
+            'confirmation_mot_de_passe' => $_POST['confirmation_mot_de_passe'] ?? '',
+            'csrf_token' => $_POST['csrf_token'] ?? '',
+        ];
+
+        $erreurs = [];
+
+        if (empty($donnees['csrf_token']) || !verifier_token_csrf($donnees['csrf_token'])) {
+            $erreurs[] = 'Jeton CSRF invalide.';
+        }
+
+        if (empty($donnees['mot_de_passe'])) {
+            $erreurs[] = 'Le nouveau mot de passe est requis.';
+        }
+
+        if ($donnees['mot_de_passe'] !== $donnees['confirmation_mot_de_passe']) {
+            $erreurs[] = 'La confirmation du mot de passe ne correspond pas.';
+        }
+
+        if (strlen($donnees['mot_de_passe']) < 8) {
+            $erreurs[] = 'Le mot de passe doit contenir au moins 8 caractères.';
+        }
+
+        if (!preg_match('/[A-Z]/', $donnees['mot_de_passe']) || !preg_match('/\d/', $donnees['mot_de_passe'])) {
+            $erreurs[] = 'Le mot de passe doit contenir au moins une majuscule et un chiffre.';
+        }
+
+        if (!empty($erreurs)) {
+            $this->afficherFormulaireChangementMotDePasse($erreurs, $donnees);
+            return;
+        }
+
+        $utilisateur = $authService->getUtilisateurConnecte();
+        if ($utilisateur === null) {
+            header('Location: ' . BASE_URL . '/auth/login');
+            return;
+        }
+
+        $utilisateurDao = new UtilisateurDAO();
+        $utilisateurDao->mettreAJourMotDePasse(
+            (int) $utilisateur['id'],
+            Utilisateur::hacherMotDePasse($donnees['mot_de_passe']),
+            false
+        );
 
         header('Location: ' . BASE_URL . '/tableau-de-bord');
     }
