@@ -78,9 +78,15 @@ class Routeur
         $action = $segments[1] ?? 'index';
         $parametre = $segments[2] ?? null;
 
-        $nom_controleur = ucfirst($module) . 'Controller';
-        $nom_controleur_singulier = ucfirst(rtrim($module, 's')) . 'Controller';
-        $nom_base = ucfirst(rtrim($module, 's'));
+        $mots_module = explode('-', $module);
+        $module_pascal = implode('', array_map('ucfirst', $mots_module));
+        $module_pascal_singulier = implode('', array_map(function ($mot): string {
+            return ucfirst(rtrim($mot, 's'));
+        }, $mots_module));
+
+        $nom_controleur = $module_pascal . 'Controller';
+        $nom_controleur_singulier = $module_pascal_singulier . 'Controller';
+        $nom_base = $module_pascal_singulier;
 
         $fichiers_controleur = [
             CONTROLLERS_PATH . $nom_controleur . '.php',
