@@ -1,7 +1,29 @@
 <?php
 
+if (!function_exists('nettoyer_chaine')) {
+    require_once __DIR__ . '/../includes/fonctions.php';
+}
+
+if (!class_exists('RoleDAO', false)) {
+    require_once __DIR__ . '/RoleDAO.class.php';
+}
+
+if (!class_exists('RolePermissionDAO', false)) {
+    require_once __DIR__ . '/RolePermissionDAO.class.php';
+}
+
 class AuthService
 {
+    private const ACTION_EQUIVALENCES = [
+        'read' => 'lire',
+        'write' => 'modifier',
+        'create' => 'creer',
+        'update' => 'modifier',
+        'delete' => 'supprimer',
+        'validate' => 'valider',
+        'export' => 'exporter',
+    ];
+
     public function connecter(array $utilisateur): void
     {
         $_SESSION['auth_utilisateur'] = [
@@ -53,11 +75,44 @@ class AuthService
             return true;
         }
 
-        $rolesPermissions = [
-            'directeur' => ['eleves.read', 'finance.read', 'reports.read', 'permissions.read'],
-            'enseignant' => ['eleves.read'],
-        ];
+        $permission = $this->normaliserPermission($permission);
 
-        return in_array($permission, $rolesPermissions[$role] ?? [], true);
+        $roleDao = new RoleDAO();
+        $roleData = $roleDao->trouverRoleParLibelle($role);
+        if ($roleData === null) {
+            return false;
+        }
+
+        $rolePermissionDao = new RolePermissionDAO();
+        $permissions = $rolePermissionDao->listerPermissionsRole((int) $roleData['id_role']);
+
+        foreach ($permissions as $permissionEnregistree) {
+            $permissionCode = $permissionEnregistree['module'];
+            if (!empty($permissionEnregistree['sous_module'])) {
+                $permissionCode .= '.' . $permissionEnregistree['sous_module'];
+            }
+            $permissionCode .= '.' . $permissionEnregistree['action'];
+
+            if ($permissionCode === $permission) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function normaliserPermission(string $permission): string
+    {
+        $permission = strtolower(trim($permission));
+        if ($permission === '') {
+            return $permission;
+        }
+
+        $elements = explode('.', $permission);
+        $action = array_pop($elements);
+        $action = self::ACTION_EQUIVALENCES[$action] ?? $action;
+
+        $elements[] = $action;
+        return implode('.', $elements);
     }
 }

@@ -208,12 +208,21 @@ class PermissionDAO
     public function initialiserPermissionsParDefaut(): void
     {
         $permissions = [
+            ['module' => 'tableau-de-bord', 'sous_module' => null, 'action' => 'lire'],
             ['module' => 'finance', 'sous_module' => null, 'action' => 'lire'],
             ['module' => 'finance', 'sous_module' => null, 'action' => 'modifier'],
             ['module' => 'eleves', 'sous_module' => null, 'action' => 'lire'],
             ['module' => 'eleves', 'sous_module' => null, 'action' => 'modifier'],
             ['module' => 'roles', 'sous_module' => null, 'action' => 'lire'],
             ['module' => 'roles', 'sous_module' => null, 'action' => 'modifier'],
+            ['module' => 'permissions', 'sous_module' => null, 'action' => 'lire'],
+            ['module' => 'permissions', 'sous_module' => null, 'action' => 'modifier'],
+            ['module' => 'communication', 'sous_module' => null, 'action' => 'lire'],
+            ['module' => 'bibliotheque', 'sous_module' => null, 'action' => 'lire'],
+            ['module' => 'portails', 'sous_module' => null, 'action' => 'lire'],
+            ['module' => 'parametrage', 'sous_module' => null, 'action' => 'lire'],
+            ['module' => 'rapports', 'sous_module' => null, 'action' => 'lire'],
+            ['module' => 'vie-scolaire', 'sous_module' => null, 'action' => 'lire'],
         ];
 
         if ($this->pdo instanceof PDO) {

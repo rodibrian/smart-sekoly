@@ -34,7 +34,7 @@ class RolePermissionDAO
         }
 
         if (empty($_SESSION['role_permissions'])) {
-            $_SESSION['role_permissions'] = [];
+            $this->initialiserPermissionsRoleParDefaut();
         }
 
         $permissions = [];
@@ -79,7 +79,54 @@ class RolePermissionDAO
             }
         }
 
+        if (empty($_SESSION['role_permissions'])) {
+            $this->initialiserPermissionsRoleParDefaut();
+        }
+
         $_SESSION['role_permissions'][$idRole] = $permissionIds;
         return true;
+    }
+
+    private function initialiserPermissionsRoleParDefaut(): void
+    {
+        if (!isset($_SESSION['role_permissions']) || !is_array($_SESSION['role_permissions'])) {
+            $_SESSION['role_permissions'] = [];
+        }
+
+        $permissionDao = new PermissionDAO();
+        $permissions = $permissionDao->listerPermissions();
+
+        $defaultRoleMap = [
+            'élève' => ['eleves.lire', 'tableau-de-bord.lire'],
+            'enseignant' => ['eleves.lire', 'tableau-de-bord.lire'],
+            'parent' => ['tableau-de-bord.lire'],
+            'directeur' => ['tableau-de-bord.lire', 'finance.lire', 'permissions.lire', 'roles.lire'],
+            'secrétaire' => ['finance.lire', 'eleves.lire'],
+            'comptable' => ['finance.lire', 'finance.modifier', 'tableau-de-bord.lire'],
+            'surveillant' => ['vie-scolaire.lire', 'tableau-de-bord.lire'],
+            'drh' => ['tableau-de-bord.lire', 'permissions.lire'],
+            'caissière' => ['finance.lire', 'finance.modifier'],
+        ];
+
+        $roleDao = new RoleDAO();
+        foreach ($roleDao->listerRoles() as $role) {
+            $libelle = strtolower($role['libelle'] ?? '');
+            $permissionCodes = $defaultRoleMap[$libelle] ?? ['tableau-de-bord.lire'];
+            $permissionIds = [];
+
+            foreach ($permissions as $permission) {
+                $code = $permission['module'];
+                if (!empty($permission['sous_module'])) {
+                    $code .= '.' . $permission['sous_module'];
+                }
+                $code .= '.' . $permission['action'];
+
+                if (in_array($code, $permissionCodes, true)) {
+                    $permissionIds[] = $permission['id_permission'];
+                }
+            }
+
+            $_SESSION['role_permissions'][$role['id_role']] = $permissionIds;
+        }
     }
 }

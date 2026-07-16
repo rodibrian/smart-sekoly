@@ -79,6 +79,10 @@ class RoleDAO
             }
         }
 
+        if (empty($_SESSION['roles'])) {
+            $this->initialiserRolesParDefautSession();
+        }
+
         foreach ($_SESSION['roles'] ?? [] as $role) {
             if (strcasecmp($role['libelle'] ?? '', $libelle) === 0) {
                 return $role;

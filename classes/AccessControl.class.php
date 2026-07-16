@@ -47,46 +47,50 @@ class AccessControl
         }
 
         if ($module === 'tableau-de-bord') {
-            return 'dashboard.read';
+            return 'tableau-de-bord.lire';
         }
 
         if ($module === 'finance') {
-            return self::isEcriture($action) ? 'finance.write' : 'finance.read';
+            return self::isEcriture($action) ? 'finance.modifier' : 'finance.lire';
         }
 
         if ($module === 'eleves') {
-            return self::isEcriture($action) ? 'eleves.write' : 'eleves.read';
+            return self::isEcriture($action) ? 'eleves.modifier' : 'eleves.lire';
         }
 
         if ($module === 'roles') {
-            return self::isEcriture($action) ? 'users.write' : 'users.read';
+            return self::isEcriture($action) ? 'roles.modifier' : 'roles.lire';
+        }
+
+        if ($module === 'permissions') {
+            return self::isEcriture($action) ? 'permissions.modifier' : 'permissions.lire';
         }
 
         if ($module === 'communication') {
-            return 'communication.read';
+            return 'communication.lire';
         }
 
         if ($module === 'bibliotheque') {
-            return 'bibliotheque.read';
+            return 'bibliotheque.lire';
         }
 
         if ($module === 'portails') {
-            return 'portails.read';
+            return 'portails.lire';
         }
 
         if ($module === 'parametrage') {
-            return 'settings.read';
+            return 'parametrage.lire';
         }
 
         if ($module === 'rapports') {
-            return 'reports.read';
+            return 'rapports.lire';
         }
 
         if ($module === 'vie-scolaire') {
-            return 'eleves.read';
+            return 'vie-scolaire.lire';
         }
 
-        return $module . '.read';
+        return $module . '.lire';
     }
 
     private static function isEcriture(string $action): bool
