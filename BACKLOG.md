@@ -202,14 +202,14 @@
 
 | Module | Sous-tâche | Statut | Date début | Date fin | Commentaire |
 |--------|-----------|--------|------------|----------|-------------|
-| X | Table acces_parent_eleve | ⏳ À faire | | | |
-| X | Créer classe AccesParentEleve.class.php | ⏳ À faire | | | |
-| X | Génération de code d'accès sécurisé | ⏳ À faire | | | |
-| X | Portail consultation (notes, bulletins, absences) | ⏳ À faire | | | |
-| X | Portail paiements (parents) | ⏳ À faire | | | |
-| X | Portail emploi du temps | ⏳ À faire | | | |
-| X | Gestion des repas (réservation) | ⏳ À faire | | | |
-| X | Comptes multiples (un parent, plusieurs enfants) | ⏳ À faire | | | |
+| X | Table acces_parent_eleve | ✅ Fait | 2026-07-16 | 2026-07-16 | Contrôleur Portails et classe AccesParentEleve ajoutés |
+| X | Créer classe AccesParentEleve.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe d'accès parent/élève ajoutée |
+| X | Génération de code d'accès sécurisé | ✅ Fait | 2026-07-16 | 2026-07-16 | Génération de code POST dans PortailsController ajoutée |
+| X | Portail consultation (notes, bulletins, absences) | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue de consultation accessible via ?module=portails&action=portail-consultation |
+| X | Portail paiements (parents) | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue paiements accessible via ?module=portails&action=portail-paiements |
+| X | Portail emploi du temps | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue emploi du temps accessible via ?module=portails&action=emplois-du-temps |
+| X | Gestion des repas (réservation) | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue de réservation repas accessible via ?module=portails&action=repas |
+| X | Comptes multiples (un parent, plusieurs enfants) | ✅ Fait | 2026-07-16 | 2026-07-16 | Multi-enfants supporté dans les codes d'accès et réservations |
 | X | Interface responsive smartphone | ⏳ À faire | | | |
 
 # =====================================================================
