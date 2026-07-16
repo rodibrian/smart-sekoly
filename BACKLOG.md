@@ -57,9 +57,9 @@
 | II | Carnet de suivi (table carnet_suivi) | ✅ Fait | 2026-07-16 | 2026-07-16 | Structure de suivi ajoutée dans le module élève |
 | II | Carnet de suivi (classe CarnetSuivi.class.php) | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe CarnetSuivi avec ajout d’événements |
 | II | Carnet de suivi (vue + interface) | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue de carnet de suivi accessible via la route locale |
-| II | Changement de classe en cours d'année | ⏳ À faire | | | |
-| II | Redoublement (proposition + validation) | ⏳ À faire | | | |
-| II | Transfert d'élève (départ/arrivée) | ⏳ À faire | | | |
+| II | Changement de classe en cours d'année | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe ChangementClasse et vue de transition ajoutés |
+| II | Redoublement (proposition + validation) | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Redoublement et vue de décision ajoutés |
+| II | Transfert d'élève (départ/arrivée) | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe TransfertEleve et vue de transfert ajoutés |
 
 # =====================================================================
 # PRIORITÉ 2 — MODULE VIII : IMPORT ET MIGRATION DE DONNÉES

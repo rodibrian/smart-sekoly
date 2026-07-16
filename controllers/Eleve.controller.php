@@ -38,6 +38,24 @@ class EleveController
             return;
         }
 
+        if ($this->action === 'changement-classe') {
+            $donnees = $this->preparer_changement_classe();
+            require TEMPLATES_PATH . 'eleves/changement_classe.view.php';
+            return;
+        }
+
+        if ($this->action === 'redoublement') {
+            $donnees = $this->preparer_redoublement();
+            require TEMPLATES_PATH . 'eleves/redoublement.view.php';
+            return;
+        }
+
+        if ($this->action === 'transfert') {
+            $donnees = $this->preparer_transfert();
+            require TEMPLATES_PATH . 'eleves/transfert.view.php';
+            return;
+        }
+
         $donnees = [
             'module' => $this->module,
             'action' => $this->action,
@@ -109,6 +127,71 @@ class EleveController
         return [
             'id_eleve' => $id_eleve,
             'evenements' => $carnet->get_evenements(),
+            'module' => $this->module,
+            'action' => $this->action,
+            'token_csrf' => generer_token_csrf(),
+        ];
+    }
+
+    public function preparer_changement_classe(): array
+    {
+        $id_eleve = (int) ($this->parametre ?? 0);
+        $changement = new ChangementClasse([
+            'id_eleve' => $id_eleve,
+            'ancienne_classe' => '5e B',
+            'nouvelle_classe' => '6e A',
+        ]);
+        $changement->valider();
+
+        return [
+            'id_eleve' => $id_eleve,
+            'changement' => [
+                'ancienne_classe' => $changement->get_ancienne_classe(),
+                'nouvelle_classe' => $changement->get_nouvelle_classe(),
+                'statut' => $changement->get_statut(),
+            ],
+            'module' => $this->module,
+            'action' => $this->action,
+            'token_csrf' => generer_token_csrf(),
+        ];
+    }
+
+    public function preparer_redoublement(): array
+    {
+        $id_eleve = (int) ($this->parametre ?? 0);
+        $redoublement = new Redoublement(['id_eleve' => $id_eleve]);
+        $redoublement->proposer('Faible progression');
+        $redoublement->valider();
+
+        return [
+            'id_eleve' => $id_eleve,
+            'redoublement' => [
+                'motif' => $redoublement->get_motif(),
+                'decision' => $redoublement->get_decision(),
+            ],
+            'module' => $this->module,
+            'action' => $this->action,
+            'token_csrf' => generer_token_csrf(),
+        ];
+    }
+
+    public function preparer_transfert(): array
+    {
+        $id_eleve = (int) ($this->parametre ?? 0);
+        $transfert = new TransfertEleve([
+            'id_eleve' => $id_eleve,
+            'type' => 'depart',
+            'destination' => 'Lycée Moderne',
+        ]);
+        $transfert->valider();
+
+        return [
+            'id_eleve' => $id_eleve,
+            'transfert' => [
+                'type' => $transfert->get_type(),
+                'destination' => $transfert->get_destination(),
+                'statut' => $transfert->get_statut(),
+            ],
             'module' => $this->module,
             'action' => $this->action,
             'token_csrf' => generer_token_csrf(),
