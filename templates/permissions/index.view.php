@@ -30,20 +30,39 @@
             <div class="alerte success"><?= e($donnees['message']) ?></div>
         <?php endif; ?>
 
-        <form method="post" action="<?= e(BASE_URL . '/permissions/ajouter') ?>">
-            <input type="hidden" name="csrf_token" value="<?= e($donnees['token_csrf']) ?>">
+        <?php if (!empty($donnees['permission'])): ?>
+            <h2>Modifier la permission</h2>
+            <form method="post" action="<?= e(BASE_URL . '/permissions/modifier/' . $donnees['permission']['id_permission']) ?>">
+                <input type="hidden" name="csrf_token" value="<?= e($donnees['token_csrf']) ?>">
 
-            <label for="module">Module</label>
-            <input id="module" name="module" placeholder="ex. finance" required>
+                <label for="module">Module</label>
+                <input id="module" name="module" value="<?= e($donnees['permission']['module']) ?>" required>
 
-            <label for="sous_module">Sous-module</label>
-            <input id="sous_module" name="sous_module" placeholder="ex. factures">
+                <label for="sous_module">Sous-module</label>
+                <input id="sous_module" name="sous_module" value="<?= e($donnees['permission']['sous_module'] ?? '') ?>">
 
-            <label for="action">Action</label>
-            <input id="action" name="action" placeholder="ex. lire" required>
+                <label for="action">Action</label>
+                <input id="action" name="action" value="<?= e($donnees['permission']['action']) ?>" required>
 
-            <button type="submit">Ajouter la permission</button>
-        </form>
+                <button type="submit">Mettre à jour la permission</button>
+            </form>
+            <p><a href="<?= e(BASE_URL . '/permissions/index') ?>">Retour à la liste des permissions</a></p>
+        <?php else: ?>
+            <form method="post" action="<?= e(BASE_URL . '/permissions/ajouter') ?>">
+                <input type="hidden" name="csrf_token" value="<?= e($donnees['token_csrf']) ?>">
+
+                <label for="module">Module</label>
+                <input id="module" name="module" placeholder="ex. finance" required>
+
+                <label for="sous_module">Sous-module</label>
+                <input id="sous_module" name="sous_module" placeholder="ex. factures">
+
+                <label for="action">Action</label>
+                <input id="action" name="action" placeholder="ex. lire" required>
+
+                <button type="submit">Ajouter la permission</button>
+            </form>
+        <?php endif; ?>
 
         <h2>Permissions existantes</h2>
         <table>
@@ -53,6 +72,7 @@
                     <th>Module</th>
                     <th>Sous-module</th>
                     <th>Action</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -62,6 +82,13 @@
                         <td><?= e($permission['module']) ?></td>
                         <td><?= e($permission['sous_module'] ?? '-') ?></td>
                         <td><?= e($permission['action']) ?></td>
+                        <td>
+                            <a href="<?= e(BASE_URL . '/permissions/modifier/' . $permission['id_permission']) ?>">Modifier</a>
+                            <form method="post" action="<?= e(BASE_URL . '/permissions/supprimer/' . $permission['id_permission']) ?>" style="display:inline-block; margin:0;">
+                                <input type="hidden" name="csrf_token" value="<?= e($donnees['token_csrf']) ?>">
+                                <button type="submit" style="background:none;border:none;color:#2563eb;cursor:pointer;padding:0;">Supprimer</button>
+                            </form>
+                        </td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

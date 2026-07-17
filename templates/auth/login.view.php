@@ -23,10 +23,10 @@
     <div class="page">
         <div class="carte">
             <h1>Connexion</h1>
-            <?php if (!empty($data['erreurs'])): ?>
+            <?php if (!empty($donnees['erreurs'])): ?>
                 <div class="erreur">
                     <ul>
-                        <?php foreach ($data['erreurs'] as $erreur): ?>
+                        <?php foreach ($donnees['erreurs'] as $erreur): ?>
                             <li><?= e($erreur) ?></li>
                         <?php endforeach ?>
                     </ul>
@@ -34,9 +34,9 @@
             <?php endif ?>
 
             <form method="post" action="<?= e(BASE_URL . '/auth/login') ?>">
-                <input type="hidden" name="csrf_token" value="<?= e($data['token_csrf']) ?>">
+                <input type="hidden" name="csrf_token" value="<?= e($donnees['token_csrf']) ?>">
                 <label for="identifiant">Identifiant</label>
-                <input id="identifiant" name="identifiant" type="text" value="<?= e($data['valeurs']['identifiant'] ?? '') ?>" required>
+                <input id="identifiant" name="identifiant" type="text" value="<?= e($donnees['valeurs']['identifiant'] ?? '') ?>" required>
 
                 <label for="mot_de_passe">Mot de passe</label>
                 <input id="mot_de_passe" name="mot_de_passe" type="password" required>

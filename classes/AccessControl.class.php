@@ -15,6 +15,14 @@ class AccessControl
             return true;
         }
 
+        if (in_array($module, ['bibliotheque', 'communication', 'portails'], true)) {
+            return true;
+        }
+
+        if ($module === 'eleves' && in_array($action, ['inscription', 'liste'], true)) {
+            return true;
+        }
+
         return false;
     }
 
