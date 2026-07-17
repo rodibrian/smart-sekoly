@@ -59,6 +59,9 @@
 # =====================================================================
 # Rien en aval n'est vérifiable sans ces deux fondations. À traiter
 # en premier, avant de retoucher le moindre module métier.
+#
+# NOTE : les tâches de Phase 0 sont référencées ici dans BACKLOG_v3_COMPLET.md.
+# BACKLOG.md conserve les 144 tâches historiques et n’inclut plus ces éléments de fondation.
 
 ## 0.A — Jeu de données de test (seed)
 

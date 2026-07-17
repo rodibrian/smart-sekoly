@@ -2,52 +2,41 @@
 /**
  * Vue de changement de mot de passe obligatoire.
  */
-?><!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?= e(BASE_URL . '/assets/css/responsive.css') ?>">
-    <title><?= e(APP_NAME) ?> — Changer le mot de passe</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #f3f4f6; margin: 0; }
-        .page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
-        .carte { width: 100%; max-width: 480px; background: #ffffff; padding: 32px; border-radius: 16px; box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08); }
-        h1 { margin-top: 0; color: #111827; }
-        label { display: block; margin-top: 18px; margin-bottom: 8px; color: #334155; font-weight: 700; }
-        input { width: 100%; padding: 12px 14px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 1rem; }
-        button { width: 100%; margin-top: 22px; padding: 12px 16px; border: none; border-radius: 10px; background: #2563eb; color: white; font-size: 1rem; cursor: pointer; }
-        .erreur { margin-bottom: 16px; padding: 12px 14px; background: #fee2e2; border: 1px solid #fecaca; border-radius: 10px; color: #b91c1c; }
-        .note { margin-bottom: 16px; padding: 12px 14px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; color: #1e3a8a; }
-    </style>
-</head>
-<body>
-    <div class="page">
-        <div class="carte">
-            <h1>Changer le mot de passe</h1>
-            <div class="note">Vous devez changer votre mot de passe avant de continuer.</div>
-            <?php if (!empty($donnees['erreurs'])): ?>
-                <div class="erreur">
-                    <ul>
-                        <?php foreach ($donnees['erreurs'] as $erreur): ?>
-                            <li><?= e($erreur) ?></li>
-                        <?php endforeach ?>
-                    </ul>
-                </div>
-            <?php endif ?>
-
-            <form method="post" action="<?= e(BASE_URL . '/auth/changer-mot-de-passe') ?>">
-                <input type="hidden" name="csrf_token" value="<?= e($donnees['token_csrf']) ?>">
-
-                <label for="mot_de_passe">Nouveau mot de passe</label>
-                <input id="mot_de_passe" name="mot_de_passe" type="password" required>
-
-                <label for="confirmation_mot_de_passe">Confirmer le mot de passe</label>
-                <input id="confirmation_mot_de_passe" name="confirmation_mot_de_passe" type="password" required>
-
-                <button type="submit">Valider</button>
-            </form>
+$pageTitle = APP_NAME . ' — Changer le mot de passe';
+require TEMPLATES_PATH . 'layout/header.php';
+?>
+<div class="min-h-[calc(100vh-5rem)] flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-lg card p-8">
+        <h1 class="text-2xl font-semibold text-slate-900">Changer le mot de passe</h1>
+        <div class="mt-3 rounded-xl bg-slate-50 p-4 text-slate-700">
+            Vous devez changer votre mot de passe avant de continuer.
         </div>
+
+        <?php if (!empty($donnees['erreurs'])): ?>
+            <div class="mt-6 rounded-xl border border-rose-200 bg-rose-50 p-4 text-rose-800">
+                <ul class="list-disc space-y-1 pl-5">
+                    <?php foreach ($donnees['erreurs'] as $erreur): ?>
+                        <li><?= e($erreur) ?></li>
+                    <?php endforeach ?>
+                </ul>
+            </div>
+        <?php endif ?>
+
+        <form class="mt-6 space-y-5" method="post" action="<?= e(BASE_URL . '/auth/changer-mot-de-passe') ?>">
+            <input type="hidden" name="csrf_token" value="<?= e($donnees['token_csrf']) ?>">
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700" for="mot_de_passe">Nouveau mot de passe</label>
+                <input id="mot_de_passe" name="mot_de_passe" type="password" required class="mt-2 w-full rounded-xl border border-slate-300 bg-surface px-4 py-3 text-base text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700" for="confirmation_mot_de_passe">Confirmer le mot de passe</label>
+                <input id="confirmation_mot_de_passe" name="confirmation_mot_de_passe" type="password" required class="mt-2 w-full rounded-xl border border-slate-300 bg-surface px-4 py-3 text-base text-slate-900 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20" />
+            </div>
+
+            <button type="submit" class="btn-primary w-full">Valider</button>
+        </form>
     </div>
-</body>
-</html>
+</div>
+<?php require TEMPLATES_PATH . 'layout/footer.php';

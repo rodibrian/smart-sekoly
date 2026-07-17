@@ -13,16 +13,8 @@
 # ❌ Annulé
 
 # =====================================================================
-# PHASE 0 — AUDIT ET FONDATIONS
-# =====================================================================
-| Module | Sous-tâche | Statut | Date début | Date fin | Commentaire |
-|--------|-----------|--------|------------|----------|-------------|
-| 0 | Phase 0.A — Jeu de données de test / seed réel | ⚠️ Bloqué | 2026-07-17 | | Audit Phase 0 révèle absence du dossier `database/seeds/` et dépendance au fallback session.
-| 0 | Phase 0.B — Design system Tailwind / layout Dashboard réel | ⚠️ Bloqué | 2026-07-17 | | Audit Phase 0 révèle absence de stack front-end (Tailwind, build, layout, composants). |
-| 0 | Audit Phase 0 réalisé | ✅ Fait | 2026-07-17 | 2026-07-17 | Audit documenté dans `docs/AUDIT_BACKLOG_v3.md` et écart confirmé avec les statuts existants.
-
-# =====================================================================
 # PRIORITÉ 1 — MODULE VII : PARAMÉTRAGE ET CONFIGURATION INITIALE
+# =====================================================================
 # =====================================================================
 
 | Module | Sous-tâche | Statut | Date début | Date fin | Commentaire |
@@ -290,7 +282,6 @@
 
 | Priorité | Module | Nombre de tâches | Statut global |
 |----------|--------|------------------|---------------|
-| 0 | Phase 0 — Fondations (seed + design system) | 3 | ⚠️ Bloqué |
 | 1 | VII — Paramétrage | 11 | 0% |
 | 2 | II — Élèves | 20 | 0% |
 | 2 | VIII — Import | 4 | 0% |
