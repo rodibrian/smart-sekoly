@@ -27,7 +27,7 @@
 | VII | Créer classe SeuilAlerte.class.php | ✅ Fait | 2026-07-16 | | Classe SeuilAlerte ajoutée |
 | VII | Créer table modele_document | ✅ Fait | 2026-07-16 | | Classe ModeleDocument ajoutée avec rendu simple de variables |
 | VII | Créer classe ModeleDocument.class.php | ✅ Fait | 2026-07-16 | | Classe ModeleDocument ajoutée |
-| VII | Assistant de configuration initiale (vue + contrôleur) | ⏳ À faire | | | |
+| VII | Assistant de configuration initiale (vue + contrôleur) | ✅ Fait | 2026-07-15 | 2026-07-15 | Contrôleur et vue d’installation initiale ajoutés, accessible via /installation |
 | VII | Assistant de configuration initiale (vue + contrôleur) | ✅ Fait | 2026-07-15 | 2026-07-15 | Contrôleur de validation + vue d’assistant de paramétrage ajoutés |
 | VII | Écran de paramétrage courant (vue + contrôleur) | ✅ Fait | 2026-07-15 | 2026-07-15 | Vue de paramétrage courant et validation de formulaire ajoutés |
 | VII | Interface de gestion des thèmes (clair/sombre) | ✅ Fait | 2026-07-16 | 2026-07-16 | Thème clair/sombre configurable via vue et session |
@@ -55,7 +55,7 @@
 | II | Liste des élèves | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue de liste, recherche par nom/prénom/matricule et route /eleves/liste ajoutées |
 | II | Dossier élève unique (vue consolidée) | ✅ Fait | 2026-07-16 | 2026-07-16 | Contrôleur, vue de dossier élève, actions rapides et édition de profil ajoutés |
 | II | Édition du profil élève | ✅ Fait | 2026-07-16 | 2026-07-16 | Formulaire d’édition et mise à jour en session/DAO ajoutés |
-| II | Persistance réelle des élèves | 🔄 En cours | 2026-07-16 | | Intégration du DAO élèves avec fallback session et premières opérations CRUD |
+| II | Persistance réelle des élèves | ✅ Fait | 2026-07-16 | 2026-07-16 | EleveDAO intégré avec fallback session et opérations CRUD en place |
 | II | Génération automatique de matricule | ✅ Fait | 2026-07-16 | 2026-07-16 | Fonction utilitaire de génération de matricule ajoutée et utilisée dans l’inscription |
 | II | Gestion des documents obligatoires élèves | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe DocumentObligatoire, vue de suivi des pièces et formulaire de mise à jour ajoutés |
 | II | Carnet de suivi (table carnet_suivi) | ✅ Fait | 2026-07-16 | 2026-07-16 | Structure de suivi ajoutée dans le module élève |
@@ -84,7 +84,7 @@
 
 | Module | Sous-tâche | Statut | Date début | Date fin | Commentaire |
 |--------|-----------|--------|------------|----------|-------------|
-| III | Créer table enseignant | ⏳ À faire | | | |
+| III | Créer table enseignant | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée dans database/migrations/002_enseignant.sql |
 | III | Créer classe Enseignant.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Enseignant ajoutée avec génération de matricule et route /enseignants |
 | III | Créer table personnel_administratif | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée dans database/migrations/002_personnel_administratif.sql |
 | III | Créer classe PersonnelAdministratif.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe PersonnelAdministratif ajoutée et test unitaire validé |
@@ -94,8 +94,8 @@
 | III | Créer classe Affectation.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Affectation ajoutée avec gestion des statuts |
 | III | Créer table conge | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée dans database/migrations/005_conge.sql |
 | III | Créer classe Conge.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Conge ajoutée avec gestion des statuts de congé |
-| III | Créer table heure_supplementaire | ⏳ À faire | | | |
-| III | Créer classe HeureSupplementaire.class.php | ⏳ À faire | | | |
+| III | Créer table heure_supplementaire | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée dans database/migrations/006_heure_supplementaire.sql |
+| III | Créer classe HeureSupplementaire.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe HeureSupplementaire ajoutée dans classes/HeureSupplementaire.class.php |
 | III | Créer table salaire | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration SQL ajoutée dans database/migrations/007_salaire.sql |
 | III | Créer classe Salaire.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe Salaire ajoutée avec validation et paiement |
 | III | Dossier enseignant (vue consolidée) | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue dossier enseignant consolidé ajoutée |
@@ -210,7 +210,7 @@
 | X | Portail emploi du temps | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue emploi du temps accessible via ?module=portails&action=emplois-du-temps |
 | X | Gestion des repas (réservation) | ✅ Fait | 2026-07-16 | 2026-07-16 | Vue de réservation repas accessible via ?module=portails&action=repas |
 | X | Comptes multiples (un parent, plusieurs enfants) | ✅ Fait | 2026-07-16 | 2026-07-16 | Multi-enfants supporté dans les codes d'accès et réservations |
-| X | Interface responsive smartphone | ⏳ À faire | | | |
+| X | Interface responsive smartphone | ✅ Fait | 2026-07-17 | 2026-07-17 | Liens CSS responsive globaux ajoutés à 98 vues et styles mobiles appliqués |
 
 # =====================================================================
 # PRIORITÉ 8 — MODULE V : COMMUNICATION INTERNE
@@ -251,9 +251,9 @@
 | QA | Journal de suivi opérationnel | ✅ Fait | 2026-07-16 | 2026-07-16 | Journal de suivi ajouté dans logs/journal_suivi.log |
 | QA | Résumé automatique du backlog | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe SuiviProjet ajoutée pour synthétiser les statuts |
 | QA | Tests de validation par module | ✅ Fait | 2026-07-16 | 2026-07-16 | Tests unitaires ajoutés pour import, élèves, suivi et backlog |
-| QA | Documentation de déploiement local | ⏳ À faire | | | |
-| QA | Checklist de validation avant livraison | ⏳ À faire | | | |
-| QA | Rapport d’avancement hebdomadaire | ⏳ À faire | | | |
+| QA | Documentation de déploiement local | ✅ Fait | 2026-07-17 | 2026-07-17 | Instructions d’installation locale ajoutées dans README.md |
+| QA | Checklist de validation avant livraison | ✅ Fait | 2026-07-17 | 2026-07-17 | Document de checklist créé dans docs/checklist_validation_avant_livraison.md |
+| QA | Rapport d’avancement hebdomadaire | ✅ Fait | 2026-07-17 | 2026-07-17 | Rapport créé dans docs/rapport_avancement_hebdomadaire.md |
 
 # =====================================================================
 # MODULES TRANSVERSAUX (DÉPENDANCES)
@@ -267,7 +267,7 @@
 | - | Créer classe Permission.class.php | ✅ Fait | 2026-07-16 | | Classe Permission ajoutée |
 | - | Table role_permission | ✅ Fait | 2026-07-16 | | Classe Role ajoutée avec vérification de permissions |
 | - | Système d'authentification (login/logout) | ✅ Fait | 2026-07-16 | | Flux de connexion/déconnexion et vérification des permissions de base implémenté |
-| - | Gestion des permissions (CRUD) | 🔄 En cours | 2026-07-16 | | Gestion des permissions de base ajoutée via classes; CRUD à compléter |
+| - | Gestion des permissions (CRUD) | ✅ Fait | 2026-07-16 | 2026-07-16 | Contrôleur, vue, DAO et tests CRUD des permissions opérationnels |
 | - | Table journal_audit | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration et table de journal d’audit ajoutées |
 | - | Créer classe JournalAudit.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe JournalAudit ajoutée |
 | - | Table journal_connexion | ✅ Fait | 2026-07-16 | 2026-07-16 | Migration et table de journal de connexion ajoutées |

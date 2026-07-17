@@ -10,6 +10,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="<?= e(BASE_URL . '/assets/css/responsive.css') ?>">
     <title><?= e(APP_NAME) ?> — Installation</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 0; background: #f5f7fb; color: #1f2937; }

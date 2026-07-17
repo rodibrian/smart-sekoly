@@ -11,6 +11,7 @@ $theme_actuel = $donnees['theme_actuel'] ?? 'clair';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="<?= e(BASE_URL . '/assets/css/responsive.css') ?>">
     <title><?= e(APP_NAME) ?> — Thèmes</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: <?= $theme_actuel === 'sombre' ? '#0f172a' : '#f8fafc' ?>; color: <?= $theme_actuel === 'sombre' ? '#f8fafc' : '#0f172a' ?>; }

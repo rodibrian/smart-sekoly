@@ -7,6 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="<?= e(BASE_URL . '/assets/css/responsive.css') ?>">
     <title><?= e(APP_NAME) ?> — Tableau de bord RH</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 0; background: #f8fafc; color: #0f172a; }

@@ -1,0 +1,126 @@
+/* Smart-Sekoly responsive global stylesheet */
+html {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #0f172a;
+    background: #f8fafc;
+}
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: #f8fafc;
+    color: #0f172a;
+}
+img, video, iframe {
+    max-width: 100%;
+    height: auto;
+}
+button, input, select, textarea {
+    font: inherit;
+}
+.page, .conteneur, .carte, .bloc {
+    width: min(100%, 1200px);
+    margin: 0 auto;
+    padding: 1.25rem;
+}
+.page {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+.bouton, .btn, .action, button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.85rem 1.2rem;
+    border-radius: 0.75rem;
+    border: none;
+    cursor: pointer;
+    background: #2563eb;
+    color: #ffffff;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+.bouton:hover, .btn:hover, .action:hover, button:hover {
+    background: #1d4ed8;
+}
+.card, .carte, .indicateur, .tableau, .formulaire, .conteneur {
+    background: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+.grid, .grille, .cartes, .actions, .stats, .table-responsive, .form-row {
+    display: grid;
+    gap: 1rem;
+}
+.grid-auto, .grille-auto, .actions, .stats {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+.table-responsive {
+    overflow-x: auto;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+th, td {
+    padding: 0.85rem 0.9rem;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+th {
+    background: #f8fafc;
+    color: #475569;
+    font-weight: 700;
+}
+.form-row {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 700;
+    color: #334155;
+}
+input, select, textarea {
+    width: 100%;
+    padding: 0.95rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #0f172a;
+}
+textarea {
+    min-height: 140px;
+}
+.alert {
+    padding: 1rem 1.2rem;
+    border-radius: 0.85rem;
+    margin-bottom: 1rem;
+}
+.alert-success {
+    background: #ecfdf5;
+    color: #166534;
+}
+.alert-error, .alert-danger {
+    background: #fee2e2;
+    color: #991b1b;
+}
+@media (max-width: 640px) {
+    html { font-size: 15px; }
+    .page, .conteneur, .carte, .bloc { padding: 1rem; }
+    .bouton, .btn, .action, button { width: 100%; }
+    .grille, .grid, .cartes, .actions, .stats, .form-row { gap: 0.85rem; }
+    th, td { padding: 0.75rem 0.8rem; }
+}
+@media (max-width: 480px) {
+    html { font-size: 14px; }
+    .page, .conteneur, .carte, .bloc { padding: 0.85rem; }
+    .bouton, .btn, .action, button { padding: 0.9rem 1rem; }
+}
