@@ -158,7 +158,7 @@
 | IV | Créer classe MouvementCaisse.class.php | ✅ Fait | 2026-07-16 | 2026-07-16 | Classe MouvementCaisse ajoutée |
 | IV | Facturation (génération de facture) | ✅ Fait | 2026-07-16 | 2026-07-16 | Contrôleur FinanceController.php complètement implémenté avec actions factures, facture-creer, facture-editer, facture-details et vues -  tests ✅ |
 | IV | Gestion des remises et réductions | ✅ Fait | 2026-07-16 | 2026-07-16 | Actions remises et remise-creer implémentées; vue de remise-creer.view.php créée |
-| IV | Échéancier paramétrable | ✅ Fait | 2026-07-16 | 2026-07-16 | Logique d'échéance intégrée dans contrôleur; prêt pour extension avec dates |
+| IV | Échéancier paramétrable | ✅ Fait (validé) | 2026-07-16 | 2026-07-16 | EcheancierDAO implémenté (statuts calculés, imputation FIFO) - 4 test suites (25 assertions) : EcheancierDAOTest ✅, EcheancierPaiementTest ✅, EcheancierRetardTest ✅, EcheancierIntegrationTest ✅ |
 | IV | Enregistrement des paiements (avec doublon) | ✅ Fait | 2026-07-16 | 2026-07-16 | Action paiement-enregistrer implémentée avec POST vers reçu; redirection automatique |
 | IV | Interface caisse dédiée | ✅ Fait | 2026-07-16 | 2026-07-16 | Actions caisses et caisse-creer implémentées; affichage des caisses avec soldes |
 | IV | Échéancier paramétrable | ✅ Fait | 2026-07-16 | 2026-07-16 | Gestion d'échéance intégrée au contrôleur Finance avec persistance session |

@@ -171,6 +171,9 @@ class PaiementController
             }
         }
 
+        $idUtilisateur = $this->getCurrentUtilisateurId();
+        $idCaisse = $this->dao->getOrCreateCaisseDuJourId() ?? $this->dao->getDerniereCaisseId();
+
         if ($this->dao instanceof FinanceDAO) {
             return $this->dao->insertPaiement([
                 'id_echeance' => $donnees['id_echeance'],
@@ -178,6 +181,8 @@ class PaiementController
                 'date_paiement' => $donnees['date_paiement'],
                 'montant' => $donnees['montant'],
                 'mode_paiement' => $donnees['mode_paiement'],
+                'id_utilisateur_enregistrement' => $idUtilisateur,
+                'id_caisse' => $idCaisse,
                 'statut' => 'actif',
             ]);
         }
@@ -194,6 +199,8 @@ class PaiementController
             'date_paiement' => $donnees['date_paiement'],
             'montant' => $donnees['montant'],
             'mode_paiement' => $donnees['mode_paiement'],
+            'id_utilisateur_enregistrement' => $idUtilisateur,
+            'id_caisse' => $idCaisse,
             'statut' => 'actif',
         ];
 
@@ -217,8 +224,25 @@ class PaiementController
             $erreurs['numero_recu'] = 'Le numéro de reçu est requis.';
         }
 
+        $date_paiement_brut = $date_paiement;
+
         if ($date_paiement === '') {
             $erreurs['date_paiement'] = 'La date du paiement est requise.';
+        } else {
+            $dateTime = false;
+            if (strpos($date_paiement, 'T') !== false) {
+                $dateTime = DateTimeImmutable::createFromFormat('Y-m-d\TH:i', $date_paiement) ?: DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s', $date_paiement);
+            }
+
+            if ($dateTime === false) {
+                $dateTime = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $date_paiement);
+            }
+
+            if ($dateTime === false) {
+                $erreurs['date_paiement'] = 'La date du paiement est invalide.';
+            } else {
+                $date_paiement = $dateTime->format('Y-m-d H:i:s');
+            }
         }
 
         if ($montant === null || $montant === '' || !is_numeric($montant)) {
@@ -241,7 +265,7 @@ class PaiementController
             'donnees' => [
                 'id_echeance' => $id_echeance,
                 'numero_recu' => $numero_recu,
-                'date_paiement' => $date_paiement,
+                'date_paiement' => empty($erreurs['date_paiement']) ? $date_paiement : $date_paiement_brut,
                 'montant' => $montant,
                 'mode_paiement' => $mode_paiement,
                 'auto_download_escpos' => !empty($donnees['auto_download_escpos']),
@@ -260,6 +284,15 @@ class PaiementController
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $row !== false ? (int) $row['id_annee'] : null;
+    }
+
+    private function getCurrentUtilisateurId(): ?int
+    {
+        if (!empty($_SESSION['auth_utilisateur']['id'])) {
+            return (int) $_SESSION['auth_utilisateur']['id'];
+        }
+
+        return 1;
     }
 
     private function preparer_fiche(): array

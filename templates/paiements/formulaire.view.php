@@ -42,15 +42,21 @@
             <input id="numero_recu" name="numero_recu" type="text" value="<?= e($donnees['donnees']['numero_recu'] ?? '') ?>" required>
 
             <label for="date_paiement">Date et heure</label>
-            <input id="date_paiement" name="date_paiement" type="datetime-local" value="<?= e($donnees['donnees']['date_paiement'] ?? date('Y-m-d\TH:i')) ?>" required>
+            <?php
+                $datePaiementValue = $donnees['donnees']['date_paiement'] ?? date('Y-m-d\TH:i');
+                if (strpos($datePaiementValue, ' ') !== false) {
+                    $datePaiementValue = str_replace(' ', 'T', $datePaiementValue);
+                }
+            ?>
+            <input id="date_paiement" name="date_paiement" type="datetime-local" value="<?= e($datePaiementValue) ?>" required>
 
             <label for="montant">Montant</label>
-            <input id="montant" name="montant" type="number" step="0.01" required>
+            <input id="montant" name="montant" type="number" step="0.01" value="<?= e($donnees['donnees']['montant'] ?? '') ?>" required>
 
             <label for="mode_paiement">Mode de paiement</label>
             <select id="mode_paiement" name="mode_paiement">
                 <?php foreach ($donnees['modes'] as $valeur => $libelle): ?>
-                    <option value="<?= e($valeur) ?>"><?= e($libelle) ?></option>
+                    <option value="<?= e($valeur) ?>" <?= isset($donnees['donnees']['mode_paiement']) && $donnees['donnees']['mode_paiement'] === $valeur ? 'selected' : '' ?>><?= e($libelle) ?></option>
                 <?php endforeach; ?>
             </select>
 
