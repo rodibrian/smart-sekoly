@@ -20,25 +20,39 @@ if ($sql === false) {
     exit(1);
 }
 
-$statements = preg_split('/;\s*\n/', $sql);
+$sql = str_replace(["\r\n", "\r"], "\n", $sql);
 
 try {
-    $pdo->beginTransaction();
+    $database = DB_NAME;
+    $tables = $pdo->query("SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = '" . addslashes($database) . "'")->fetchAll(PDO::FETCH_COLUMN);
 
+    if (!empty($tables)) {
+        $pdo->exec('SET FOREIGN_KEY_CHECKS = 0');
+        foreach ($tables as $table) {
+            $pdo->exec('DROP TABLE IF EXISTS `' . $table . '`');
+        }
+        $pdo->exec('SET FOREIGN_KEY_CHECKS = 1');
+    }
+
+    $statements = preg_split('/;\s*\n+/', $sql);
     foreach ($statements as $statement) {
-        $statement = trim($statement);
-        if ($statement === '' || str_starts_with($statement, '--')) {
+        $lines = preg_split('/\n/', trim($statement));
+        $lines = array_filter($lines, function ($line) {
+            $line = trim($line);
+            return $line !== '' && !str_starts_with($line, '--') && !str_starts_with($line, '#');
+        });
+
+        if (empty($lines)) {
             continue;
         }
 
+        $statement = implode("\n", $lines);
         $pdo->exec($statement);
     }
 
-    $pdo->commit();
     echo "Réinitialisation de la base terminée avec succès.\n";
     echo "Vous pouvez ensuite exécuter `php database/seeds/seed_etablissement.php` pour charger les données initiales.\n";
 } catch (Throwable $exception) {
-    $pdo->rollBack();
     echo "Erreur lors de la réinitialisation de la base : " . $exception->getMessage() . "\n";
     exit(1);
 }

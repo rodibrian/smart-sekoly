@@ -31,19 +31,45 @@
             <input type="hidden" name="csrf_token" value="<?= e($donnees['token_csrf']) ?>">
 
             <label for="nom_etablissement">Nom de l’établissement</label>
-            <input id="nom_etablissement" name="nom_etablissement" value="" required>
+            <input id="nom_etablissement" name="nom_etablissement" value="<?= e($donnees['parametrage']['nom_etablissement'] ?? '') ?>" required>
 
             <label for="format_matricule">Format du matricule</label>
-            <input id="format_matricule" name="format_matricule" value="{PREFIXE}-{ANNEE}-{NUMERO_SEQUENTIEL}" required>
+            <input id="format_matricule" name="format_matricule" value="<?= e($donnees['parametrage']['format_matricule'] ?? '{PREFIXE}-{ANNEE}-{NUMERO_SEQUENTIEL}') ?>" required>
 
             <label for="prefixe_matricule">Préfixe du matricule</label>
-            <input id="prefixe_matricule" name="prefixe_matricule" value="EL" required>
+            <input id="prefixe_matricule" name="prefixe_matricule" value="<?= e($donnees['parametrage']['prefixe_matricule'] ?? 'EL') ?>" required>
 
             <label for="annee_courante">Année scolaire</label>
-            <input id="annee_courante" name="annee_courante" value="2026" required>
+            <input id="annee_courante" name="annee_courante" value="<?= e($donnees['parametrage']['annee_courante'] ?? '') ?>" required>
 
             <button type="submit">Enregistrer</button>
         </form>
+
+        <hr style="margin:20px 0">
+
+        <div>
+            <button id="btn-generer" type="button">Générer un matricule de test</button>
+            <div id="result-generer" style="margin-top:12px; font-weight:700"></div>
+        </div>
+
+        <script>
+            document.getElementById('btn-generer').addEventListener('click', function () {
+                const out = document.getElementById('result-generer');
+                out.textContent = 'Génération en cours...';
+                fetch('<?= e(BASE_URL . '/parametrage/generer_matricule') ?>')
+                    .then(resp => resp.json())
+                    .then(data => {
+                        if (data.success) {
+                            out.textContent = 'Matricule généré : ' + data.formatte + ' (n°' + data.numero + ')';
+                        } else {
+                            out.textContent = 'Erreur : ' + (data.error || 'inconnue');
+                        }
+                    })
+                    .catch(err => {
+                        out.textContent = 'Erreur réseau: ' + err.message;
+                    });
+            });
+        </script>
 
         <div class="message">
             Le format du matricule reste entièrement paramétrable et peut être modifié sans toucher au code.

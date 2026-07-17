@@ -67,7 +67,7 @@
 
 | Tâche | Statut | Réf. CDC | Commentaire |
 |-------|--------|----------|-------------|
-| Script `database/seeds/seed_etablissement.php` : établissement, année scolaire active, calendrier scolaire | ⏳ À faire | §5, §5.1 | Prérequis absolu — sans année scolaire active, aucune inscription n'est possible (§22.3) |
+| Script `database/seeds/seed_etablissement.php` : établissement, année scolaire active, calendrier scolaire | ✅ Fait (validé) | §5, §5.1 | Script testé après `reset.php` et données pédagogiques générées. |
 | Seed structure pédagogique : cycles → niveaux → séries → classes (10-15 classes avec effectif max et salle) | ⏳ À faire | §7 | Primaire + Collège + Lycée avec séries |
 | Seed matières et programmes par classe (coefficients, volume horaire) | ⏳ À faire | §7.1 | |
 | Seed 50-100 élèves réalistes avec inscriptions actives | ⏳ À faire | §6, Module II | Matricules générés via le format paramétré, pas codés en dur |
@@ -77,16 +77,16 @@
 | Seed types de frais, factures, paiements partiels et impayés | ⏳ À faire | §11.2, §11.3, §11.4 | Inclure des cas de doublon volontaires pour tester la détection |
 | Seed absences, retards, sanctions, incidents sur un échantillon d'élèves | ⏳ À faire | Module IX | Pour peupler carnets de suivi et tableau de bord |
 | Seed utilisateurs et rôles (un compte par profil : Directeur, Comptable, Enseignant, Secrétaire, Surveillant, DRH, Caissière) | ⏳ À faire | §13.1 | Nécessaire pour tester les permissions réellement |
-| Script de réinitialisation complète de la base (`database/seeds/reset.php`) | ⏳ À faire | — | Pour rejouer les tests de recette autant que nécessaire |
+| Script de réinitialisation complète de la base (`database/seeds/reset.php`) | ✅ Fait (validé) | — | Import du schéma et suppression/recréation testés et automatisés. |
 
 ## 0.B — Design system réel (CDC section 18, intégralement absent)
 
 | Tâche | Statut | Réf. CDC | Commentaire |
 |-------|--------|----------|-------------|
 | Définir la charte graphique (3-4 couleurs, typographie, logo temporaire) | ⏳ À faire | §18.5 | Prérequis mentionné dans le guide de développement §1 — non fait |
-| Intégrer Tailwind CSS via build réel (pas de CDN statique seul) + config `tailwind.config.js` avec les couleurs de la charte | ⏳ À faire | §2, §18.2 | |
+| Intégrer Tailwind CSS via build réel (pas de CDN statique seul) + config `tailwind.config.js` avec les couleurs de la charte | ✅ Fait (build validé) | §2, §18.2 | `assets/css/app.css` généré via `npm run build:css`. |
 | Mettre en place les variables CSS (custom properties) pour thèmes Clair/Sombre + Contraste élevé | ⏳ À faire | §18.6, décision #39 | Actuellement configurable en session (v1) mais sans variables CSS ni rendu visuel réel |
-| Construire le layout SaaS Dashboard : sidebar rétractable + navbar (recherche globale, notifications, sélecteur de thème) + breadcrumb | ⏳ À faire | §18.3 | `templates/layout/header.php` / `footer.php` à reconstruire |
+| Construire le layout SaaS Dashboard : sidebar rétractable + navbar (recherche globale, notifications, sélecteur de thème) + breadcrumb | 🔄 En cours (header/footer intégrés) | §18.3 | `templates/layout/header.php` et `footer.php` ajoutés et utilisés par les vues; design system à compléter. |
 | Créer le composant "carte statistique" réutilisable (icône, titre, valeur, tendance) | ⏳ À faire | §18.4 | Utilisé par Tableau de bord (I.1) et Vision Directeur (I.8) |
 | Créer le composant "tableau de données" socle commun (recherche insensible casse/accents, filtres par colonne, tri par défaut, pagination 20/50/100/tout, export Excel en un clic, sélection multiple, adaptatif au thème) | ⏳ À faire | §18.4, §40 | Actuellement `templates/partials/_tableau.php` existe mais sans ces fonctionnalités réelles — DataTables/Grid.js à intégrer |
 | Intégrer Chart.js (+ ApexCharts pour graphiques avancés) sur données réelles | ⏳ À faire | §18.2 | Comparatif inter-annuel (I.9), rapports financiers (VI.2), tableau de bord RH |

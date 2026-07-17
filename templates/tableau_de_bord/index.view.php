@@ -2,74 +2,56 @@
 /**
  * Vue du tableau de bord avec indicateurs clés.
  */
-?><!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?= e(BASE_URL . '/assets/css/responsive.css') ?>">
-    <title><?= e(APP_NAME) ?> — Tableau de bord</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; background: #f8fafc; color: #0f172a; }
-        .page { max-width: 1200px; margin: 32px auto; padding: 24px; }
-        h1 { margin-top: 0; }
-        .grille { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px; }
-        .indicateur { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-        .indicateur h3 { margin: 0 0 10px 0; color: #64748b; font-size: 14px; font-weight: 600; text-transform: uppercase; }
-        .indicateur .valeur { font-size: 32px; font-weight: 700; color: #0f172a; }
-        .indicateur .sous-texte { font-size: 12px; color: #94a3b8; margin-top: 8px; }
-        .actions { margin-top: 20px; }
-        .bouton { display: inline-block; padding: 10px 16px; background: #2563eb; color: #fff; text-decoration: none; border-radius: 6px; margin-right: 10px; }
-        .bouton:hover { background: #1d4ed8; }
-    </style>
-</head>
-<body>
-    <div class="page">
-        <h1>Tableau de bord</h1>
-        <p>Vue d'ensemble des indicateurs clés de l'établissement.</p>
+$pageTitle = APP_NAME . ' — Tableau de bord';
+require TEMPLATES_PATH . 'layout/header.php';
+?>
+<div class="space-y-8">
+    <section class="space-y-3">
+        <h1 class="text-3xl font-semibold text-slate-900">Tableau de bord</h1>
+        <p class="text-slate-600">Vue d'ensemble des indicateurs clés de l'établissement.</p>
+    </section>
 
-        <div class="grille">
-            <div class="indicateur">
-                <h3>Élèves</h3>
-                <div class="valeur"><?= $donnees['indicateurs']['total_eleves'] ?></div>
-                <div class="sous-texte">Nombre total d'élèves inscrits</div>
-            </div>
+    <div class="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+        <article class="card p-6">
+            <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Élèves</h3>
+            <div class="mt-4 text-4xl font-bold text-slate-900"><?= e($donnees['indicateurs']['total_eleves']) ?></div>
+            <p class="mt-3 text-slate-600">Nombre total d'élèves inscrits</p>
+        </article>
 
-            <div class="indicateur">
-                <h3>Enseignants</h3>
-                <div class="valeur"><?= $donnees['indicateurs']['total_enseignants'] ?></div>
-                <div class="sous-texte">Nombre total d'enseignants</div>
-            </div>
+        <article class="card p-6">
+            <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Enseignants</h3>
+            <div class="mt-4 text-4xl font-bold text-slate-900"><?= e($donnees['indicateurs']['total_enseignants']) ?></div>
+            <p class="mt-3 text-slate-600">Nombre total d'enseignants</p>
+        </article>
 
-            <div class="indicateur">
-                <h3>Absences (mois)</h3>
-                <div class="valeur"><?= $donnees['indicateurs']['absences_mois'] ?></div>
-                <div class="sous-texte">Absences enregistrées ce mois</div>
-            </div>
+        <article class="card p-6">
+            <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Absences (mois)</h3>
+            <div class="mt-4 text-4xl font-bold text-primary"><?= e($donnees['indicateurs']['absences_mois']) ?></div>
+            <p class="mt-3 text-slate-600">Absences enregistrées ce mois</p>
+        </article>
 
-            <div class="indicateur">
-                <h3>Taux de présence</h3>
-                <div class="valeur"><?= number_format($donnees['indicateurs']['taux_presence'], 1) ?>%</div>
-                <div class="sous-texte">Taux de présence global</div>
-            </div>
+        <article class="card p-6">
+            <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Taux de présence</h3>
+            <div class="mt-4 text-4xl font-bold text-secondary"><?= e(number_format($donnees['indicateurs']['taux_presence'], 1)) ?>%</div>
+            <p class="mt-3 text-slate-600">Taux de présence global</p>
+        </article>
 
-            <div class="indicateur">
-                <h3>Paiements (mois)</h3>
-                <div class="valeur"><?= $donnees['indicateurs']['paiements_mois'] ?></div>
-                <div class="sous-texte">Transactions enregistrées</div>
-            </div>
-        </div>
-
-        <div class="actions">
-            <a href="<?= e(BASE_URL . '/tableau-de-bord/agenda') ?>" class="bouton">Voir l'agenda</a>
-            <a href="<?= e(BASE_URL . '/tableau-de-bord/actualites') ?>" class="bouton">Voir les actualités</a>
-            <a href="<?= e(BASE_URL . '/eleves/liste') ?>" class="bouton">Gestion des élèves</a>
-            <a href="<?= e(BASE_URL . '/enseignants/liste') ?>" class="bouton">Gestion des enseignants</a>
-            <a href="?module=rapports&action=index" class="bouton">Rapports et statistiques</a>
-            <a href="?module=portails&action=index" class="bouton">Portails Élève / Parent</a>
-            <a href="?module=communication&action=index" class="bouton">Communication interne</a>
-            <a href="<?= e(BASE_URL . '/bibliotheque/index') ?>" class="bouton">Bibliothèque documentaire</a>
-        </div>
+        <article class="card p-6">
+            <h3 class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">Paiements (mois)</h3>
+            <div class="mt-4 text-4xl font-bold text-accent"><?= e($donnees['indicateurs']['paiements_mois']) ?></div>
+            <p class="mt-3 text-slate-600">Transactions enregistrées</p>
+        </article>
     </div>
-</body>
-</html>
+
+    <div class="grid gap-4 lg:grid-cols-2">
+        <a href="<?= e(BASE_URL . '/tableau-de-bord/agenda') ?>" class="btn-primary">Voir l'agenda</a>
+        <a href="<?= e(BASE_URL . '/tableau-de-bord/actualites') ?>" class="btn-primary">Voir les actualités</a>
+        <a href="<?= e(BASE_URL . '/eleves/liste') ?>" class="btn-primary">Gestion des élèves</a>
+        <a href="<?= e(BASE_URL . '/enseignants/liste') ?>" class="btn-primary">Gestion des enseignants</a>
+        <a href="?module=rapports&action=index" class="btn-primary">Rapports et statistiques</a>
+        <a href="?module=portails&action=index" class="btn-primary">Portails Élève / Parent</a>
+        <a href="?module=communication&action=index" class="btn-primary">Communication interne</a>
+        <a href="<?= e(BASE_URL . '/bibliotheque/index') ?>" class="btn-primary">Bibliothèque documentaire</a>
+    </div>
+</div>
+<?php require TEMPLATES_PATH . 'layout/footer.php';

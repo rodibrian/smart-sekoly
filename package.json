@@ -19,7 +19,6 @@
     "chart.js": "^4.4.0",
     "flatpickr": "^4.6.13",
     "notyf": "^3.10.0",
-    "sheetjs": "^0.20.0",
     "sweetalert2": "^11.10.0",
     "tom-select": "^2.2.2"
   }
