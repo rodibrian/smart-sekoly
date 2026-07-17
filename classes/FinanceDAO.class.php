@@ -182,12 +182,18 @@ class FinanceDAO
             try {
                 $table = $this->resolveTableName('facture');
                 $stmt = $this->pdo->prepare('INSERT INTO ' . $table . ' (numero_sequentiel, id_eleve, date_emission, montant_total, statut) VALUES (:numero_sequentiel, :id_eleve, :date_emission, :montant_total, :statut)');
+                $status = $data['statut'] ?? 'active';
+                $allowedStatuts = ['active', 'annulee'];
+                if (!in_array($status, $allowedStatuts, true)) {
+                    $status = 'active';
+                }
+
                 $stmt->execute([
                     ':numero_sequentiel' => $data['numero'] ?? $data['numero_sequentiel'] ?? '',
                     ':id_eleve' => $data['id_eleve'] ?? null,
                     ':date_emission' => $data['date_emission'],
                     ':montant_total' => $data['montant_total'] ?? 0.00,
-                    ':statut' => $data['statut'] ?? 'brouillon',
+                    ':statut' => $status,
                 ]);
 
                 $id = (int) $this->pdo->lastInsertId();
@@ -308,6 +314,20 @@ class FinanceDAO
                 $this->synchroniser_session($this->getSessionKey('caisse'), array_merge(['id_caisse' => $id], $data));
                 return $id;
             } catch (Throwable $e) {
+                if (strpos($e->getMessage(), 'Duplicate entry') !== false) {
+                    try {
+                        $table = $this->resolveTableName('caisse');
+                        $stmt = $this->pdo->prepare('SELECT id_caisse FROM ' . $table . ' WHERE date_caisse = :date LIMIT 1');
+                        $stmt->execute([':date' => $data['date_caisse']]);
+                        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                        if ($row !== false && !empty($row['id_caisse'])) {
+                            return (int) $row['id_caisse'];
+                        }
+                    } catch (Throwable $inner) {
+                        error_log('FinanceDAO insertCaisse duplicate key handler failed: ' . $inner->getMessage());
+                    }
+                }
+
                 error_log('FinanceDAO insertCaisse PDO failed, falling back to session: ' . $e->getMessage());
             }
         }
