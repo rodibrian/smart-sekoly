@@ -108,7 +108,7 @@
 | Vérifier que `ParametrageEtablissement` lit/écrit réellement en base (pas de valeur par défaut codée en dur) | ✅ Fait (validé) | §14, décision #16 | Lecture/écriture DB implémentées et testées (hardening des clés). |
 | Assistant de configuration initiale : implémenter les 19 étapes réelles (§22.1), chacune persistée | ✅ Fait (backend) | §22.1, VII.1 | Étapes 1–19 persistées en base, audit d’étape créé et validé par `tests/integration/test_assistant_flow.php`. Reste l’UI d’assistant et l’automatisation complète de la sauvegarde. |
 | Génération de matricule réellement paramétrable `{PREFIXE}-{ANNEE}-{NUMERO_SEQUENTIEL}` testée avec changement de format à chaud | ✅ Fait (validé) | décision #16 | Format dynamique et padding opérationnels (tests CLI réussis). |
-| Numérotation séquentielle des reçus/factures par année scolaire, non réutilisable après annulation | 🔄 En cours | décision #14 | Initialisation transactionnelle des séquences ajoutée et vérifiée par tests; intégration complète à la caisse et règles d'annulation à finaliser. |
+| Numérotation séquentielle des reçus/factures par année scolaire, non réutilisable après annulation | ✅ Fait (validé) | décision #14 | Initialisation transactionnelle des séquences, génération auto lors de création facture/paiement, tests POST CLI validés (FacturePostTest.php, PaiementPostTest.php). |
 | Seuils d'alerte réellement configurables (absences, notes) et utilisés par le moteur d'alerte (§10.6) | 🔄 En cours | §14 | Persistance des clés `seuil_*` ajoutée et testée; intégration au moteur d'alerte à faire. |
 | Modèles de documents (bulletins, reçus, attestations, billets) réellement paramétrables avec rendu dynamique | 🔄 En cours | §14, §21 | Persistance `modele_*` ajoutée (stockage JSON validé); rendu PDF dynamique à implémenter. |
 | Historique des modifications de paramétrage (paramétrage courant) | 🔄 En cours | VII.2 | `JournalAudit` activé ; les entrées d'audit sont créées pour chaque étape et vérifiées par le test d'intégration. |
@@ -192,14 +192,14 @@
 
 | Tâche | Statut | Réf. CDC | Commentaire |
 |-------|--------|----------|-------------|
-| Types de frais réellement paramétrables (scolarité, cantine, transport, uniforme, inscription, activités) | ⏳ À faire | §11.2 | |
-| Facturation : facture réelle générée à partir des types de frais applicables à l'élève/sa classe | ⏳ À faire | §11.3 | |
+| Types de frais réellement paramétrables (scolarité, cantine, transport, uniforme, inscription, activités) | ✅ Fait (validé) | §11.2 | Implémentée via `TypeFraisDAO` avec CRUD complet, création/lecture/archivage, montant par défaut paramétrable, tests unitaires et intégration passants (TypeFraisDAOTest.php, TypeFraisIntegrationTest.php). |
+| Facturation : facture réelle générée à partir des types de frais applicables à l'élève/sa classe | ✅ Fait (validé) | §11.3 | Implémentée via `FactureDAO::creerFacture()` : génère factures en base avec lignes associées aux types de frais, numérotation séquentielle via `SequenceNumerotation::getNext()`, montant total calculé automatiquement, persistence réelle en tables `facture` et `ligne_facture`. Tests passants : FactureDAOTest.php (CRUD + annulation), FactureIntegrationTest.php (end-to-end avec seed données). Migration schéma (`migrate_parametrage.php`) appliquée pour colonnes manquantes. |
 | Remises : application réelle (pourcentage ou montant fixe) avec motif et validation obligatoire par un responsable AVANT application | ⏳ À faire | décision #13 | Vérifier le blocage tant que non validé |
 | Échéancier paramétrable : facture réglable en plusieurs échéances (dates/montants), suivi individualisé (payée/partielle/en retard) calculé réellement | ⏳ À faire | décision #23, §11.4 | |
 | Paiement : enregistrement réel avec date, montant, mode (espèce/banque/mobile money), utilisateur | ⏳ À faire | §11.4 | |
 | Contrôle de doublon RÉEL à la saisie (même élève, même type de frais, même montant, même jour) avec confirmation explicite obligatoire | ⏳ À faire | décision #24 | Critère de test PHPUnit prioritaire — actuellement probablement absent en vrai |
 | Paiements groupés (plusieurs enfants d'une famille, ou groupe d'élèves au même tarif) en une seule transaction | ⏳ À faire | §11.4 | |
-| Numérotation séquentielle réelle des reçus/factures par année scolaire (REC-2026-000123), jamais réutilisée | ⏳ À faire | décision #14 | |
+| Numérotation séquentielle réelle des reçus/factures par année scolaire (REC-2026-000123), jamais réutilisée | ✅ Fait (validé) | décision #14 | Implémentée via `SequenceNumerotation::getNext()`, format paramétrable {PREFIXE}-{ANNEE}-{NUMERO_SEQUENTIEL}, intégré aux contrôleurs Facture et Paiement. |
 | Caisse : entrées/sorties réelles, suivi quotidien, historique complet, état consolidé | ⏳ À faire | §11.6 | |
 | Interface caisse dédiée : saisie par matricule, calcul automatique de la monnaie à rendre, suivi du fond de caisse, historique rapide des derniers paiements d'un élève | ⏳ À faire | §11.6, décision #48 | |
 | Impression de reçu thermique réelle (format 80mm) en plus du PDF A4 | ⏳ À faire | §11.6, §21.2 | |
@@ -304,6 +304,7 @@
 
 | Tâche | Statut | Réf. CDC |
 |-------|--------|----------|
+| Tests de persévérance POST de finance (CLI) : FacturePostTest.php, PaiementPostTest.php, CaissePostTest.php validés | ✅ Fait (validé) | IV.1 | AccessControl blindée pour CLI, redirects désactivées en CLI pour inspection de session, DAO synchronisé avec $_SESSION. |
 | Pour chaque module : toutes les fonctionnalités listées sont opérationnelles avec données réelles | ⏳ À faire | §20.1 |
 | Pour chaque module : cas d'usage principaux testés et validés manuellement | ⏳ À faire | §20.1 |
 | Pour chaque module : messages d'erreur clairs et explicites en français | ⏳ À faire | §20.1 |

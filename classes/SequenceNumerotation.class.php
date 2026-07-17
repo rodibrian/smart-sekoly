@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/ParametrageEtablissement.class.php';
 
 class SequenceNumerotation
 {

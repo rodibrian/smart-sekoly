@@ -695,7 +695,10 @@ CREATE TABLE parametrage_etablissement (
   monnaie                     VARCHAR(10)  NOT NULL DEFAULT 'MGA',
   langue_par_defaut           VARCHAR(10)  NOT NULL DEFAULT 'fr',
   theme_par_defaut            VARCHAR(50)  NULL,
-  chemin_stockage_documents   VARCHAR(255) NOT NULL
+  chemin_stockage_documents   VARCHAR(255) NOT NULL,
+  format_matricule            VARCHAR(100) NOT NULL DEFAULT '{PREFIXE}-{ANNEE}-{NUMERO_SEQUENTIEL}',
+  prefixe_matricule           VARCHAR(10)  NOT NULL DEFAULT 'ELV',
+  annee_courante              VARCHAR(20)  NULL DEFAULT '2025-2026'
 ) ENGINE=InnoDB COMMENT='décision #2 — table unique dans cette version, prête pour évolution multi-établissement';
 
 CREATE TABLE modele_document (

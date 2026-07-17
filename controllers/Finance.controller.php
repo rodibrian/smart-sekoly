@@ -35,6 +35,7 @@ class FinanceController
             'rapports' => $this->afficher_rapports(),
             'impayés' => $this->afficher_impayés(),
             'reçu' => $this->afficher_recu(),
+            'types-frais' => $this->gerer_types_frais(),
             default => $this->afficher_accueil(),
         };
     }
@@ -83,16 +84,24 @@ class FinanceController
             return;
         }
 
+        // Récupérer les types de frais depuis la DB (réel, pas codé en dur)
+        $typeFraisDAO = new TypeFraisDAO();
+        $types_db = $typeFraisDAO->lister();
+        // Reformater pour compatibilité front (ancien schema avec 'nom_type')
+        $types_frais = array_map(function ($type) {
+            return [
+                'id_type_frais' => $type['id_type_frais'],
+                'nom_type' => $type['libelle'],  // Ancienne colonne devient nom_type
+                'montant_default' => $type['montant_defaut'],
+            ];
+        }, $types_db);
+
         $donnees = [
             'module' => $this->module,
             'action' => 'facture-creer',
             'token_csrf' => generer_token_csrf(),
             'eleves' => $_SESSION['eleves'] ?? [],
-            'types_frais' => $_SESSION['types_frais'] ?? [
-                ['id_type_frais' => 1, 'nom_type' => 'Frais de scolarité', 'montant_default' => 50000],
-                ['id_type_frais' => 2, 'nom_type' => 'Frais d\'inscription', 'montant_default' => 5000],
-                ['id_type_frais' => 3, 'nom_type' => 'Frais de cantine', 'montant_default' => 2000],
-            ],
+            'types_frais' => $types_frais,
         ];
 
         require $this->templatePath() . 'finance/facture-creer.view.php';
@@ -501,6 +510,56 @@ class FinanceController
                 'montant_impayé' => $this->calculer_montant_impayé(),
             ],
         ];
+    }
+
+    /**
+     * Gérer les types de frais paramétrables.
+     * Routes: finance/types-frais?action=lister | action=creer_type
+     */
+    private function gerer_types_frais(): void
+    {
+        $dao = new TypeFraisDAO();
+        $action = $_GET['action'] ?? 'lister';
+
+        if ($action === 'creer_type' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Créer un nouveau type de frais
+            $libelle = nettoyer_chaine($_POST['libelle'] ?? '');
+            $montant = max(0, (float) ($_POST['montant_defaut'] ?? 0));
+
+            if (empty($libelle)) {
+                $_SESSION['erreur'] = 'Le libellé est obligatoire.';
+            } else {
+                $id = $dao->creer([
+                    'libelle' => $libelle,
+                    'montant_defaut' => $montant,
+                ]);
+
+                if ($id) {
+                    $_SESSION['succes'] = "Type de frais « $libelle » créé avec succès.";
+                    // Redirect vers lister (GET)
+                    if (PHP_SAPI !== 'cli') {
+                        header('Location: /smart-sekoly/finance/types-frais?action=lister');
+                        exit;
+                    }
+                } else {
+                    $_SESSION['erreur'] = 'Erreur lors de la création du type de frais.';
+                }
+            }
+        }
+
+        // Afficher la liste
+        $donnees = [
+            'module' => $this->module,
+            'action' => 'types-frais',
+            'token_csrf' => generer_token_csrf(),
+            'types_frais' => $dao->lister(),
+            'succes' => $_SESSION['succes'] ?? null,
+            'erreur' => $_SESSION['erreur'] ?? null,
+        ];
+
+        unset($_SESSION['succes'], $_SESSION['erreur']);
+
+        require $this->templatePath() . 'finance/types-frais.view.php';
     }
 
     private function templatePath(): string
