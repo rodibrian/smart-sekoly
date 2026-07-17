@@ -34,6 +34,17 @@ class ParametrageEtablissement
         $this->annee_courante = $donnees['annee_courante'] ?? date('Y');
     }
 
+    public function get_logo()
+    {
+        return $this->logo;
+    }
+
+    public function set_logo($logo)
+    {
+        $this->logo = $logo;
+        return $this;
+    }
+
     public function get_id_parametrage()
     {
         return $this->id_parametrage;
@@ -144,6 +155,9 @@ class ParametrageEtablissement
         if (isset($data['monnaie'])) {
             $this->set_monnaie($data['monnaie']);
         }
+        if (isset($data['logo'])) {
+            $this->set_logo($data['logo']);
+        }
         if (isset($data['langue_par_defaut'])) {
             $this->set_langue_par_defaut($data['langue_par_defaut']);
         }
@@ -188,16 +202,16 @@ class ParametrageEtablissement
         }
 
         return new self([
-            'id_parametrage' => $row['id_parametrage'],
-            'nom_etablissement' => $row['nom_etablissement'],
-            'logo' => $row['logo'],
-            'monnaie' => $row['monnaie'],
-            'langue_par_defaut' => $row['langue_par_defaut'],
-            'theme_par_defaut' => $row['theme_par_defaut'],
-            'chemin_stockage_documents' => $row['chemin_stockage_documents'],
-            'format_matricule' => $row['format_matricule'],
-            'prefixe_matricule' => $row['prefixe_matricule'],
-            'annee_courante' => $row['annee_courante'],
+            'id_parametrage' => $row['id_parametrage'] ?? null,
+            'nom_etablissement' => $row['nom_etablissement'] ?? null,
+            'logo' => $row['logo'] ?? null,
+            'monnaie' => $row['monnaie'] ?? null,
+            'langue_par_defaut' => $row['langue_par_defaut'] ?? null,
+            'theme_par_defaut' => $row['theme_par_defaut'] ?? null,
+            'chemin_stockage_documents' => $row['chemin_stockage_documents'] ?? null,
+            'format_matricule' => $row['format_matricule'] ?? null,
+            'prefixe_matricule' => $row['prefixe_matricule'] ?? null,
+            'annee_courante' => $row['annee_courante'] ?? null,
             'date_creation' => $row['date_creation'] ?? null,
             'date_modification' => $row['date_modification'] ?? null,
         ]);
@@ -222,16 +236,16 @@ class ParametrageEtablissement
         }
 
         return new self([
-            'id_parametrage' => $row['id_parametrage'],
-            'nom_etablissement' => $row['nom_etablissement'],
-            'logo' => $row['logo'],
-            'monnaie' => $row['monnaie'],
-            'langue_par_defaut' => $row['langue_par_defaut'],
-            'theme_par_defaut' => $row['theme_par_defaut'],
-            'chemin_stockage_documents' => $row['chemin_stockage_documents'],
-            'format_matricule' => $row['format_matricule'],
-            'prefixe_matricule' => $row['prefixe_matricule'],
-            'annee_courante' => $row['annee_courante'],
+            'id_parametrage' => $row['id_parametrage'] ?? null,
+            'nom_etablissement' => $row['nom_etablissement'] ?? null,
+            'logo' => $row['logo'] ?? null,
+            'monnaie' => $row['monnaie'] ?? null,
+            'langue_par_defaut' => $row['langue_par_defaut'] ?? null,
+            'theme_par_defaut' => $row['theme_par_defaut'] ?? null,
+            'chemin_stockage_documents' => $row['chemin_stockage_documents'] ?? null,
+            'format_matricule' => $row['format_matricule'] ?? null,
+            'prefixe_matricule' => $row['prefixe_matricule'] ?? null,
+            'annee_courante' => $row['annee_courante'] ?? null,
             'date_creation' => $row['date_creation'] ?? null,
             'date_modification' => $row['date_modification'] ?? null,
         ]);

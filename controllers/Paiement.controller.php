@@ -25,7 +25,7 @@ class PaiementController
             if ($resultat['valide']) {
                 $insertedId = $this->enregistrer_paiement($resultat['donnees']);
                 // Redirect to ESC/POS download if requested, otherwise to receipt preview
-                if (!headers_sent() && $insertedId) {
+                if (!headers_sent() && $insertedId && PHP_SAPI !== 'cli' && php_sapi_name() !== 'cli') {
                     if (!empty($resultat['donnees']['auto_download_escpos'])) {
                         header('Location: ' . BASE_URL . '/paiements/recu/' . $insertedId . '?format=escpos');
                         exit;
@@ -95,7 +95,7 @@ class PaiementController
             $defaultAuto = (bool) $_SESSION['parametrage']['auto_download_escpos'];
         }
 
-        $defaults = [
+        $donnees = array_merge([
             'module' => $this->module,
             'action' => $this->action,
             'token_csrf' => generer_token_csrf(),
@@ -103,9 +103,21 @@ class PaiementController
             'donnees' => [
                 'auto_download_escpos' => $defaultAuto,
             ],
-        ];
+        ], $resultat);
 
-        return array_merge($defaults, $resultat);
+        if (empty($donnees['donnees']['numero_recu'])) {
+            $anneeId = $this->getActiveSchoolYearId();
+            if ($anneeId !== null) {
+                try {
+                    $sequence = SequenceNumerotation::getNext('recu', $anneeId, 'REC-{ANNEE}-{NUMERO_SEQUENTIEL}');
+                    $donnees['donnees']['numero_recu'] = $sequence['formatte'];
+                } catch (Throwable $e) {
+                    // leave blank and validate on submit if necessary
+                }
+            }
+        }
+
+        return $donnees;
     }
 
     private function preparer_liste(array $resultat = []): array
@@ -151,6 +163,14 @@ class PaiementController
 
     private function enregistrer_paiement(array $donnees): int
     {
+        if (empty($donnees['numero_recu'])) {
+            $anneeId = $this->getActiveSchoolYearId();
+            if ($anneeId !== null) {
+                $sequence = SequenceNumerotation::getNext('recu', $anneeId, 'REC-{ANNEE}-{NUMERO_SEQUENTIEL}');
+                $donnees['numero_recu'] = $sequence['formatte'];
+            }
+        }
+
         if ($this->dao instanceof FinanceDAO) {
             return $this->dao->insertPaiement([
                 'id_echeance' => $donnees['id_echeance'],
@@ -227,6 +247,19 @@ class PaiementController
                 'auto_download_escpos' => !empty($donnees['auto_download_escpos']),
             ],
         ];
+    }
+
+    private function getActiveSchoolYearId(): ?int
+    {
+        $pdo = get_connexion_base_donnees();
+        if (!$pdo instanceof PDO) {
+            return null;
+        }
+
+        $stmt = $pdo->query("SELECT id_annee FROM annee_scolaire WHERE etat = 'active' LIMIT 1");
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $row !== false ? (int) $row['id_annee'] : null;
     }
 
     private function preparer_fiche(): array

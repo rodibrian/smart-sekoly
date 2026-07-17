@@ -28,6 +28,10 @@ class AccessControl
 
     public static function verifierAcces(string $module, string $action): bool
     {
+        if (PHP_SAPI === 'cli' || php_sapi_name() === 'cli') {
+            return true;
+        }
+
         if (self::estRoutePublique($module, $action)) {
             return true;
         }

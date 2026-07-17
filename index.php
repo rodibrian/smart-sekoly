@@ -9,7 +9,9 @@
  */
 declare(strict_types=1);
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 define('ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
 define('CONFIG_PATH', ROOT_PATH . 'config' . DIRECTORY_SEPARATOR);

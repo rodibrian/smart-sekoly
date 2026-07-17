@@ -82,8 +82,20 @@ class SequenceNumerotation
             $anneeLabel = $rowAn['libelle'];
         }
 
-        $formatted = $param->generer_matricule_padder($param->get_prefixe_matricule(), $next, $anneeLabel ?? $param->get_annee_courante(), 6);
+        $formatted = self::formatSequence($usedFormat, $param, $next, $anneeLabel ?? $param->get_annee_courante());
 
         return ['numero' => $next, 'formatte' => $formatted];
+    }
+
+    private static function formatSequence(string $format, ParametrageEtablissement $param, int $sequence, string $annee): string
+    {
+        $numero = str_pad((string) $sequence, 6, '0', STR_PAD_LEFT);
+        $prefix = $param->get_prefixe_matricule();
+
+        return str_replace(
+            ['{PREFIXE}', '{ANNEE}', '{NUMERO_SEQUENTIEL}'],
+            [strtoupper($prefix), $annee, $numero],
+            $format
+        );
     }
 }

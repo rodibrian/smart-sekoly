@@ -24,7 +24,7 @@ class FactureController
 
             if ($resultat['valide']) {
                 $insertedId = $this->enregistrer_facture($resultat['donnees']);
-                if (!headers_sent() && $insertedId) {
+                if (!headers_sent() && $insertedId && PHP_SAPI !== 'cli' && php_sapi_name() !== 'cli') {
                     header('Location: ' . BASE_URL . '/factures/fiche/' . $insertedId);
                     exit;
                 }
@@ -57,7 +57,7 @@ class FactureController
 
     private function preparer_formulaire(array $resultat = []): array
     {
-        return array_merge([
+        $donnees = array_merge([
             'module' => $this->module,
             'action' => $this->action,
             'token_csrf' => generer_token_csrf(),
@@ -66,6 +66,20 @@ class FactureController
                 ['id' => 2, 'nom' => 'Rakoto Jean'],
             ],
         ], $resultat);
+
+        if (empty($donnees['donnees']['numero'])) {
+            $anneeId = $this->getActiveSchoolYearId();
+            if ($anneeId !== null) {
+                try {
+                    $sequence = SequenceNumerotation::getNext('facture', $anneeId);
+                    $donnees['donnees']['numero'] = $sequence['formatte'];
+                } catch (Throwable $e) {
+                    // keep empty and let save-time generation handle it
+                }
+            }
+        }
+
+        return $donnees;
     }
 
     private function preparer_liste(array $resultat = []): array
@@ -112,6 +126,14 @@ class FactureController
 
     private function enregistrer_facture(array $donnees): int
     {
+        if (empty($donnees['numero'])) {
+            $anneeId = $this->getActiveSchoolYearId();
+            if ($anneeId !== null) {
+                $sequence = SequenceNumerotation::getNext('facture', $anneeId);
+                $donnees['numero'] = $sequence['formatte'];
+            }
+        }
+
         if ($this->dao instanceof FinanceDAO) {
             return $this->dao->insertFacture([
                 'id_eleve' => $donnees['id_eleve'],
@@ -151,10 +173,6 @@ class FactureController
             $erreurs['eleve'] = 'L’élève est requis.';
         }
 
-        if ($numero === '') {
-            $erreurs['numero'] = 'Le numéro de facture est requis.';
-        }
-
         if ($date_emission === '') {
             $erreurs['date_emission'] = 'La date d’émission est requise.';
         }
@@ -179,6 +197,19 @@ class FactureController
                 'montant_total' => $montant_total,
             ],
         ];
+    }
+
+    private function getActiveSchoolYearId(): ?int
+    {
+        $pdo = get_connexion_base_donnees();
+        if (!$pdo instanceof PDO) {
+            return null;
+        }
+
+        $stmt = $pdo->query("SELECT id_annee FROM annee_scolaire WHERE etat = 'active' LIMIT 1");
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $row !== false ? (int) $row['id_annee'] : null;
     }
 
     private function preparer_fiche(): array

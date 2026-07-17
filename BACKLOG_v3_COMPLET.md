@@ -105,16 +105,16 @@
 
 | Tâche | Statut | Réf. CDC | Commentaire |
 |-------|--------|----------|-------------|
-| Vérifier que `ParametrageEtablissement` lit/écrit réellement en base (pas de valeur par défaut codée en dur) | ⏳ À faire | §14, décision #16 | |
-| Assistant de configuration initiale : implémenter les 19 étapes réelles (§22.1), chacune persistée | ⏳ À faire | §22.1, VII.1 | v1 a une vue mais probablement pas les 19 écrans réels |
-| Génération de matricule réellement paramétrable `{PREFIXE}-{ANNEE}-{NUMERO_SEQUENTIEL}` testée avec changement de format à chaud | ⏳ À faire | décision #16 | Critère d'acceptation du guide de dev — à vérifier concrètement |
-| Numérotation séquentielle des reçus/factures par année scolaire, non réutilisable après annulation | ⏳ À faire | décision #14 | Vérifier avec cas réel d'annulation |
-| Seuils d'alerte réellement configurables (absences, notes) et utilisés par le moteur d'alerte (§10.6) | ⏳ À faire | §14 | `SeuilAlerte` doit déclencher une vraie alerte visible, pas juste stocker une valeur |
-| Modèles de documents (bulletins, reçus, attestations, billets) réellement paramétrables avec rendu dynamique | ⏳ À faire | §14, §21 | `ModeleDocument` doit produire le PDF réel, pas un texte statique |
-| Historique des modifications de paramétrage (paramétrage courant) | ⏳ À faire | VII.2 | |
-| Sauvegarde automatique réelle : dump SQL horodaté exécuté selon fréquence/heure paramétrées | ⏳ À faire | §13.5, décision #7 | v1 a probablement une interface sans exécution réelle du dump |
+| Vérifier que `ParametrageEtablissement` lit/écrit réellement en base (pas de valeur par défaut codée en dur) | ✅ Fait (validé) | §14, décision #16 | Lecture/écriture DB implémentées et testées (hardening des clés). |
+| Assistant de configuration initiale : implémenter les 19 étapes réelles (§22.1), chacune persistée | ✅ Fait (backend) | §22.1, VII.1 | Étapes 1–19 persistées en base, audit d’étape créé et validé par `tests/integration/test_assistant_flow.php`. Reste l’UI d’assistant et l’automatisation complète de la sauvegarde. |
+| Génération de matricule réellement paramétrable `{PREFIXE}-{ANNEE}-{NUMERO_SEQUENTIEL}` testée avec changement de format à chaud | ✅ Fait (validé) | décision #16 | Format dynamique et padding opérationnels (tests CLI réussis). |
+| Numérotation séquentielle des reçus/factures par année scolaire, non réutilisable après annulation | 🔄 En cours | décision #14 | Initialisation transactionnelle des séquences ajoutée et vérifiée par tests; intégration complète à la caisse et règles d'annulation à finaliser. |
+| Seuils d'alerte réellement configurables (absences, notes) et utilisés par le moteur d'alerte (§10.6) | 🔄 En cours | §14 | Persistance des clés `seuil_*` ajoutée et testée; intégration au moteur d'alerte à faire. |
+| Modèles de documents (bulletins, reçus, attestations, billets) réellement paramétrables avec rendu dynamique | 🔄 En cours | §14, §21 | Persistance `modele_*` ajoutée (stockage JSON validé); rendu PDF dynamique à implémenter. |
+| Historique des modifications de paramétrage (paramétrage courant) | 🔄 En cours | VII.2 | `JournalAudit` activé ; les entrées d'audit sont créées pour chaque étape et vérifiées par le test d'intégration. |
+| Sauvegarde automatique réelle : dump SQL horodaté exécuté selon fréquence/heure paramétrées | 🔄 En cours | §13.5, décision #7 | Configuration de sauvegarde persistée (session/table) ; exécution/planification des dumps et tests de restauration à implémenter. |
 | Test de restauration à partir d'une sauvegarde générée | ⏳ À faire | §23.2 (scénario panne serveur) | |
-| Thème par défaut au niveau établissement appliqué réellement à tous les comptes sans préférence individuelle | ⏳ À faire | §18.6 | |
+| Thème par défaut au niveau établissement appliqué réellement à tous les comptes sans préférence individuelle | ⏳ À faire | §18.6 | Application centrale du thème à valider et propager aux comptes. |
 
 # =====================================================================
 # PRIORITÉ 2 — MODULE II : GESTION DES ÉLÈVES (implémentation réelle)

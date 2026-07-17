@@ -18,6 +18,15 @@ class FinanceDAO
         return generer_identifiant($_SESSION[$key], $cle_id);
     }
 
+    private function synchroniser_session(string $key, array $donnees): void
+    {
+        if (!isset($_SESSION[$key]) || !is_array($_SESSION[$key])) {
+            $_SESSION[$key] = [];
+        }
+
+        $_SESSION[$key][] = $donnees;
+    }
+
     public function insertFacture(array $data): int
     {
         if ($this->pdo instanceof PDO) {
@@ -31,7 +40,9 @@ class FinanceDAO
                     ':statut' => $data['statut'] ?? 'brouillon',
                 ]);
 
-                return (int) $this->pdo->lastInsertId();
+                $id = (int) $this->pdo->lastInsertId();
+                $this->synchroniser_session('factures', array_merge(['id_facture' => $id], $data));
+                return $id;
             } catch (Throwable $e) {
                 error_log('FinanceDAO insertFacture PDO failed, falling back to session: ' . $e->getMessage());
                 // fall through to session fallback
@@ -43,7 +54,8 @@ class FinanceDAO
         }
 
         $id = $this->generer_id_session('factures', 'id_facture');
-        $_SESSION['factures'][] = array_merge(['id_facture' => $id], $data);
+        $dataWithId = array_merge(['id_facture' => $id], $data);
+        $_SESSION['factures'][] = $dataWithId;
 
         return $id;
     }
@@ -88,7 +100,9 @@ class FinanceDAO
                     ':statut' => $data['statut'] ?? 'actif',
                 ]);
 
-                return (int) $this->pdo->lastInsertId();
+                $id = (int) $this->pdo->lastInsertId();
+                $this->synchroniser_session('paiements', array_merge(['id_paiement' => $id], $data));
+                return $id;
             } catch (Throwable $e) {
                 error_log('FinanceDAO insertPaiement PDO failed, falling back to session: ' . $e->getMessage());
             }
@@ -99,7 +113,8 @@ class FinanceDAO
         }
 
         $id = $this->generer_id_session('paiements', 'id_paiement');
-        $_SESSION['paiements'][] = array_merge(['id_paiement' => $id], $data);
+        $dataWithId = array_merge(['id_paiement' => $id], $data);
+        $_SESSION['paiements'][] = $dataWithId;
 
         return $id;
     }
@@ -114,7 +129,9 @@ class FinanceDAO
                     ':fond_de_caisse' => $data['fond_de_caisse'],
                 ]);
 
-                return (int) $this->pdo->lastInsertId();
+                $id = (int) $this->pdo->lastInsertId();
+                $this->synchroniser_session('caisses', array_merge(['id_caisse' => $id], $data));
+                return $id;
             } catch (Throwable $e) {
                 error_log('FinanceDAO insertCaisse PDO failed, falling back to session: ' . $e->getMessage());
             }
@@ -125,7 +142,8 @@ class FinanceDAO
         }
 
         $id = $this->generer_id_session('caisses', 'id_caisse');
-        $_SESSION['caisses'][] = array_merge(['id_caisse' => $id], $data);
+        $dataWithId = array_merge(['id_caisse' => $id], $data);
+        $_SESSION['caisses'][] = $dataWithId;
 
         return $id;
     }
@@ -142,7 +160,9 @@ class FinanceDAO
                     ':id_utilisateur_validation' => $data['id_utilisateur_validation'] ?? null,
                 ]);
 
-                return (int) $this->pdo->lastInsertId();
+                $id = (int) $this->pdo->lastInsertId();
+                $this->synchroniser_session('remises', array_merge(['id_remise' => $id], $data));
+                return $id;
             } catch (Throwable $e) {
                 error_log('FinanceDAO insertRemise PDO failed, falling back to session: ' . $e->getMessage());
             }
@@ -153,7 +173,8 @@ class FinanceDAO
         }
 
         $id = $this->generer_id_session('remises', 'id_remise');
-        $_SESSION['remises'][] = array_merge(['id_remise' => $id], $data);
+        $dataWithId = array_merge(['id_remise' => $id], $data);
+        $_SESSION['remises'][] = $dataWithId;
 
         return $id;
     }
@@ -170,7 +191,9 @@ class FinanceDAO
                     ':statut_echeance' => $data['statut_echeance'] ?? 'payee',
                 ]);
 
-                return (int) $this->pdo->lastInsertId();
+                $id = (int) $this->pdo->lastInsertId();
+                $this->synchroniser_session('echeances', array_merge(['id_echeance' => $id], $data));
+                return $id;
             } catch (Throwable $e) {
                 error_log('FinanceDAO insertEcheance PDO failed, falling back to session: ' . $e->getMessage());
             }
@@ -181,7 +204,8 @@ class FinanceDAO
         }
 
         $id = $this->generer_id_session('echeances', 'id_echeance');
-        $_SESSION['echeances'][] = array_merge(['id_echeance' => $id], $data);
+        $dataWithId = array_merge(['id_echeance' => $id], $data);
+        $_SESSION['echeances'][] = $dataWithId;
 
         return $id;
     }
