@@ -57,14 +57,30 @@ class FactureController
 
     private function preparer_formulaire(array $resultat = []): array
     {
+        $eleves = [
+            ['id' => 1, 'nom' => 'Mira Rajaonarivony', 'matricule' => 'ELEVE-001'],
+            ['id' => 2, 'nom' => 'Jean Rakoto', 'matricule' => 'ELEVE-002'],
+        ];
+
+        if ($this->dao instanceof FinanceDAO) {
+            $eleveDao = new EleveDAO();
+            $dbEleves = $eleveDao->listerEleves();
+            if (!empty($dbEleves)) {
+                $eleves = array_map(function ($eleve) {
+                    return [
+                        'id' => $eleve['id'] ?? $eleve['id_eleve'] ?? null,
+                        'nom' => trim(($eleve['prenom'] ?? '') . ' ' . ($eleve['nom'] ?? '')),
+                        'matricule' => $eleve['matricule'] ?? '',
+                    ];
+                }, $dbEleves);
+            }
+        }
+
         $donnees = array_merge([
             'module' => $this->module,
             'action' => $this->action,
             'token_csrf' => generer_token_csrf(),
-            'eleves' => [
-                ['id' => 1, 'nom' => 'Rajaonarivony Mira'],
-                ['id' => 2, 'nom' => 'Rakoto Jean'],
-            ],
+            'eleves' => $eleves,
         ], $resultat);
 
         if (empty($donnees['donnees']['numero'])) {
@@ -106,22 +122,7 @@ class FactureController
 
     private function recuperer_factures(): array
     {
-        // Prefer DAO (DB) when available
-        if ($this->dao instanceof FinanceDAO) {
-            $factures = $this->dao->all('factures');
-            if (!empty($factures)) {
-                return $factures;
-            }
-        }
-
-        if (!empty($_SESSION['factures']) && is_array($_SESSION['factures'])) {
-            return $_SESSION['factures'];
-        }
-
-        return [
-            ['id_facture' => 1, 'id_eleve' => 1, 'numero_sequentiel' => 'FAC-2026-001', 'date_emission' => '2026-09-01', 'montant_total' => 210000.00, 'statut' => 'active'],
-            ['id_facture' => 2, 'id_eleve' => 2, 'numero_sequentiel' => 'FAC-2026-002', 'date_emission' => '2026-09-05', 'montant_total' => 175000.00, 'statut' => 'annulee'],
-        ];
+        return $this->dao->all('factures');
     }
 
     private function enregistrer_facture(array $donnees): int
@@ -215,18 +216,25 @@ class FactureController
     private function preparer_fiche(): array
     {
         $id = (int) ($this->parametre ?? 1);
+        $factureDao = new FactureDAO();
+        $data = $factureDao->trouverParId($id);
 
-        // Try to get facture from DAO first
-        if ($this->dao instanceof FinanceDAO) {
-            $f = $this->dao->getFacture($id);
-            if (!empty($f)) {
-                $facture = new Facture([
-                    'id_facture' => $f['id_facture'] ?? $f['id'] ?? $id,
-                    'id_eleve' => $f['id_eleve'] ?? 1,
-                    'numero_sequentiel' => $f['numero_sequentiel'] ?? ($f['numero'] ?? 'FAC-000'),
-                    'date_emission' => $f['date_emission'] ?? '',
-                    'statut' => $f['statut'] ?? 'active',
-                ]);
+        if (!empty($data)) {
+            $facture = new Facture([
+                'id_facture' => $data['id_facture'] ?? $id,
+                'id_eleve' => $data['id_eleve'] ?? 1,
+                'numero_sequentiel' => $data['numero_sequentiel'] ?? 'FAC-000',
+                'date_emission' => $data['date_emission'] ?? '',
+                'statut' => $data['statut'] ?? 'active',
+            ]);
+
+            foreach ($data['lignes'] ?? [] as $ligne) {
+                $facture->ajouter_ligne(new LigneFacture([
+                    'id_ligne_facture' => $ligne['id_ligne_facture'] ?? 0,
+                    'id_facture' => $ligne['id_facture'] ?? $id,
+                    'id_type_frais' => $ligne['id_type_frais'] ?? 0,
+                    'montant_ligne' => $ligne['montant_ligne'] ?? 0.0,
+                ]));
             }
         }
 
@@ -238,28 +246,28 @@ class FactureController
                 'date_emission' => '2026-09-01',
                 'statut' => 'active',
             ]);
+
+            $facture->ajouter_ligne(new LigneFacture([
+                'id_ligne_facture' => 1,
+                'id_facture' => $id,
+                'id_type_frais' => 1,
+                'montant_ligne' => 120000.00,
+            ]));
+            $facture->ajouter_ligne(new LigneFacture([
+                'id_ligne_facture' => 2,
+                'id_facture' => $id,
+                'id_type_frais' => 2,
+                'montant_ligne' => 90000.00,
+            ]));
+
+            $facture->ajouter_remise(new Remise([
+                'id_remise' => 1,
+                'type_remise' => 'pourcentage',
+                'valeur_remise' => 10.0,
+                'motif' => 'Bourse sociale',
+                'id_utilisateur_validation' => 1,
+            ]));
         }
-
-        $facture->ajouter_ligne(new LigneFacture([
-            'id_ligne_facture' => 1,
-            'id_facture' => $id,
-            'id_type_frais' => 1,
-            'montant_ligne' => 120000.00,
-        ]));
-        $facture->ajouter_ligne(new LigneFacture([
-            'id_ligne_facture' => 2,
-            'id_facture' => $id,
-            'id_type_frais' => 2,
-            'montant_ligne' => 90000.00,
-        ]));
-
-        $facture->ajouter_remise(new Remise([
-            'id_remise' => 1,
-            'type_remise' => 'pourcentage',
-            'valeur_remise' => 10.0,
-            'motif' => 'Bourse sociale',
-            'id_utilisateur_validation' => 1,
-        ]));
 
         return [
             'module' => $this->module,

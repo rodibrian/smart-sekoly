@@ -218,24 +218,50 @@ class FinanceDAO
 
     public function getFacture(int $id): ?array
     {
+        return $this->getById('facture', $id);
+    }
+
+    public function getById(string $tableAlias, int $id): ?array
+    {
+        $idColumns = [
+            'factures' => 'id_facture',
+            'facture' => 'id_facture',
+            'paiements' => 'id_paiement',
+            'paiement' => 'id_paiement',
+            'caisses' => 'id_caisse',
+            'caisse' => 'id_caisse',
+            'echeances' => 'id_echeance',
+            'echeance' => 'id_echeance',
+            'remises' => 'id_remise',
+            'remise' => 'id_remise',
+        ];
+
+        if (!isset($idColumns[$tableAlias])) {
+            return null;
+        }
+
+        $idColumn = $idColumns[$tableAlias];
+
         if ($this->pdo instanceof PDO) {
             try {
-                $table = $this->resolveTableName('facture');
-                $stmt = $this->pdo->prepare('SELECT * FROM ' . $table . ' WHERE id_facture = :id');
-                $stmt->execute([':id' => $id]);
-                $row = $stmt->fetch();
+                $actualTable = $this->resolveTableName($tableAlias);
+                if ($actualTable !== null) {
+                    $stmt = $this->pdo->prepare('SELECT * FROM ' . $actualTable . ' WHERE ' . $idColumn . ' = :id LIMIT 1');
+                    $stmt->execute([':id' => $id]);
+                    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                return $row ?: null;
+                    return $row ?: null;
+                }
             } catch (Throwable $e) {
-                error_log('FinanceDAO getFacture PDO failed, falling back to session: ' . $e->getMessage());
-                // fall through to session fallback
+                error_log('FinanceDAO getById PDO failed for ' . $tableAlias . ': ' . $e->getMessage());
             }
         }
 
-        if (!empty($_SESSION['factures']) && is_array($_SESSION['factures'])) {
-            foreach ($_SESSION['factures'] as $f) {
-                if ((int) ($f['id_facture'] ?? 0) === $id) {
-                    return $f;
+        $sessionKey = $this->getSessionKey($tableAlias);
+        if (!empty($_SESSION[$sessionKey]) && is_array($_SESSION[$sessionKey])) {
+            foreach ($_SESSION[$sessionKey] as $item) {
+                if ((int) ($item[$idColumn] ?? 0) === $id) {
+                    return $item;
                 }
             }
         }

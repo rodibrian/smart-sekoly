@@ -143,22 +143,7 @@ class PaiementController
 
     private function recuperer_paiements(): array
     {
-        // Prefer DAO (DB) when available
-        if ($this->dao instanceof FinanceDAO) {
-            $paiements = $this->dao->all('paiements');
-            if (!empty($paiements)) {
-                return $paiements;
-            }
-        }
-
-        if (!empty($_SESSION['paiements']) && is_array($_SESSION['paiements'])) {
-            return $_SESSION['paiements'];
-        }
-
-        return [
-            ['id_paiement' => 1, 'id_echeance' => 1, 'numero_recu' => 'REC-2026-001', 'date_paiement' => '2026-10-01 09:00:00', 'montant' => 50000.00, 'mode_paiement' => 'espece', 'statut' => 'actif'],
-            ['id_paiement' => 2, 'id_echeance' => 2, 'numero_recu' => 'REC-2026-002', 'date_paiement' => '2026-10-02 11:15:00', 'montant' => 75000.00, 'mode_paiement' => 'mobile_money', 'statut' => 'actif'],
-        ];
+        return $this->dao->all('paiements');
     }
 
     private function enregistrer_paiement(array $donnees): int
@@ -298,15 +283,21 @@ class PaiementController
     private function preparer_fiche(): array
     {
         $id = (int) ($this->parametre ?? 1);
-        $paiement = new Paiement([
-            'id_paiement' => $id,
-            'id_echeance' => 1,
-            'numero_recu' => 'REC-2026-001',
-            'date_paiement' => '2026-10-01 09:00:00',
-            'montant' => 50000.00,
-            'mode_paiement' => 'espece',
-            'statut' => 'actif',
-        ]);
+        $data = $this->dao->getById('paiement', $id);
+
+        if (!empty($data)) {
+            $paiement = new Paiement($data);
+        } else {
+            $paiement = new Paiement([
+                'id_paiement' => $id,
+                'id_echeance' => 1,
+                'numero_recu' => 'REC-2026-001',
+                'date_paiement' => '2026-10-01 09:00:00',
+                'montant' => 50000.00,
+                'mode_paiement' => 'espece',
+                'statut' => 'actif',
+            ]);
+        }
 
         return [
             'module' => $this->module,
@@ -326,20 +317,10 @@ class PaiementController
     private function preparer_recu(): array
     {
         $id = (int) ($this->parametre ?? 0);
-
-        // find paiement raw data
-        $paiements = $this->recuperer_paiements();
-        $paiement = null;
-        foreach ($paiements as $p) {
-            $pid = (int) ($p['id_paiement'] ?? $p['id'] ?? 0);
-            if ($pid === $id) {
-                $paiement = $p;
-                break;
-            }
-        }
+        $paiement = $this->dao->getById('paiement', $id);
 
         if ($paiement === null) {
-            // fallback to first
+            $paiements = $this->recuperer_paiements();
             $paiement = $paiements[0] ?? [];
         }
 

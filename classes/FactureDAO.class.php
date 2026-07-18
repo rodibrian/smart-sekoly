@@ -199,6 +199,46 @@ class FactureDAO
         }
     }
 
+    public function mettreAJourFacture(int $id_facture, array $data): bool
+    {
+        if (!$this->pdo instanceof PDO) {
+            return false;
+        }
+
+        $fields = [];
+        $params = [':id' => $id_facture];
+
+        if (array_key_exists('montant_total', $data)) {
+            $fields[] = 'montant_total = :montant_total';
+            $params[':montant_total'] = (float) $data['montant_total'];
+        }
+
+        if (array_key_exists('statut', $data)) {
+            $statut = $data['statut'];
+            if (!in_array($statut, ['active', 'annulee'], true)) {
+                $statut = 'active';
+            }
+            $fields[] = 'statut = :statut';
+            $params[':statut'] = $statut;
+            if ($statut === 'annulee') {
+                $fields[] = 'date_annulation = :date_annulation';
+                $params[':date_annulation'] = date('Y-m-d H:i:s');
+            }
+        }
+
+        if (empty($fields)) {
+            return false;
+        }
+
+        try {
+            $stmt = $this->pdo->prepare('UPDATE facture SET ' . implode(', ', $fields) . ' WHERE id_facture = :id');
+            return $stmt->execute($params);
+        } catch (Throwable $e) {
+            error_log('FactureDAO::mettreAJourFacture() erreur : ' . $e->getMessage());
+            return false;
+        }
+    }
+
     /**
      * Calcule le total d'une facture à partir de ses lignes.
      * Utilisé pour vérification/validation.

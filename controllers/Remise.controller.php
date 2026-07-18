@@ -89,22 +89,7 @@ class RemiseController
 
     private function recuperer_remises(): array
     {
-        // Prefer DAO when available
-        if ($this->dao instanceof FinanceDAO) {
-            $rows = $this->dao->all('remises');
-            if (!empty($rows)) {
-                return $rows;
-            }
-        }
-
-        if (!empty($_SESSION['remises']) && is_array($_SESSION['remises'])) {
-            return $_SESSION['remises'];
-        }
-
-        return [
-            ['id_remise' => 1, 'type_remise' => 'pourcentage', 'valeur_remise' => 10.0, 'motif' => 'Bourse sociale', 'id_utilisateur_validation' => 1],
-            ['id_remise' => 2, 'type_remise' => 'montant_fixe', 'valeur_remise' => 15000.00, 'motif' => 'Remise fidélité', 'id_utilisateur_validation' => 2],
-        ];
+        return $this->dao->all('remises');
     }
 
     private function enregistrer_remise(array $donnees): int
@@ -163,13 +148,19 @@ class RemiseController
     private function preparer_fiche(): array
     {
         $id = (int) ($this->parametre ?? 1);
-        $remise = new Remise([
-            'id_remise' => $id,
-            'type_remise' => 'pourcentage',
-            'valeur_remise' => 10.0,
-            'motif' => 'Bourse sociale',
-            'id_utilisateur_validation' => 1,
-        ]);
+        $data = $this->dao->getById('remise', $id);
+
+        if (!empty($data)) {
+            $remise = new Remise($data);
+        } else {
+            $remise = new Remise([
+                'id_remise' => $id,
+                'type_remise' => 'pourcentage',
+                'valeur_remise' => 10.0,
+                'motif' => 'Bourse sociale',
+                'id_utilisateur_validation' => 1,
+            ]);
+        }
 
         return [
             'module' => $this->module,

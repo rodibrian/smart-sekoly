@@ -194,8 +194,82 @@ class EcheancierDAO
 
         try {
             $this->pdo->beginTransaction();
+            $success = $this->impurerPaiementSansTransaction($id_facture, $montant);
+            if (!$success) {
+                $this->pdo->rollBack();
+                return false;
+            }
+            $this->pdo->commit();
+            return true;
+        } catch (Throwable $e) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+            error_log('EcheancierDAO::impurerPaiement() : ' . $e->getMessage());
+            return false;
+        }
+    }
 
-            // Récupérer les échéances non soldées, ordonnées par date
+    public function appliquerPaiementAEcheance(int $id_echeance, float $montant): bool
+    {
+        if (!$this->pdo instanceof PDO || $id_echeance <= 0 || $montant <= 0) {
+            error_log('EcheancierDAO::appliquerPaiementAEcheance() : PDO ou montant invalide');
+            return false;
+        }
+
+        try {
+            $this->pdo->beginTransaction();
+
+            $stmt = $this->pdo->prepare('SELECT id_facture, montant_prevu, montant_paye FROM echeance WHERE id_echeance = :id FOR UPDATE');
+            $stmt->execute([':id' => $id_echeance]);
+            $echeance = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$echeance) {
+                $this->pdo->rollBack();
+                return false;
+            }
+
+            $montant_prevu = (float) $echeance['montant_prevu'];
+            $montant_paye = (float) $echeance['montant_paye'];
+            $id_facture = (int) $echeance['id_facture'];
+            $restant_echeance = max(0, $montant_prevu - $montant_paye);
+            $aImputer = min($montant, $restant_echeance);
+            $reste = $montant - $aImputer;
+
+            if ($aImputer > 0) {
+                $stmt_update = $this->pdo->prepare('UPDATE echeance SET montant_paye = montant_paye + :impute WHERE id_echeance = :id');
+                $stmt_update->execute([
+                    ':impute' => $aImputer,
+                    ':id' => $id_echeance,
+                ]);
+                $this->recalculerStatut($id_echeance);
+            }
+
+            if ($reste > 0) {
+                if (!$this->impurerPaiementSansTransaction($id_facture, $reste)) {
+                    $this->pdo->rollBack();
+                    return false;
+                }
+            }
+
+            $this->pdo->commit();
+            return true;
+        } catch (Throwable $e) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+            error_log('EcheancierDAO::appliquerPaiementAEcheance() : ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    private function impurerPaiementSansTransaction(int $id_facture, float $montant): bool
+    {
+        if ($montant <= 0) {
+            return true;
+        }
+
+        try {
             $stmt_echances = $this->pdo->prepare(
                 'SELECT id_echeance, montant_prevu, montant_paye, numero_ordre
                  FROM echeance 
@@ -215,14 +289,13 @@ class EcheancierDAO
                 $id_echeance = $ech['id_echeance'];
                 $montant_prevu = (float) $ech['montant_prevu'];
                 $montant_paye = (float) $ech['montant_paye'];
-
-                // Capacité restante pour cette échéance
                 $capacite = $montant_prevu - $montant_paye;
-
-                // Imputer le minimum entre capacité et restant
                 $impute = min($capacite, $restant);
 
-                // Mettre à jour montant_paye
+                if ($impute <= 0) {
+                    continue;
+                }
+
                 $stmt_update = $this->pdo->prepare(
                     'UPDATE echeance SET montant_paye = montant_paye + :impute WHERE id_echeance = :id'
                 );
@@ -232,16 +305,12 @@ class EcheancierDAO
                 ]);
 
                 $restant -= $impute;
-
-                // Recalculer le statut de l'échéance
                 $this->recalculerStatut($id_echeance);
             }
 
-            $this->pdo->commit();
             return true;
         } catch (Throwable $e) {
-            $this->pdo->rollBack();
-            error_log('EcheancierDAO::impurerPaiement() : ' . $e->getMessage());
+            error_log('EcheancierDAO::impurerPaiementSansTransaction() : ' . $e->getMessage());
             return false;
         }
     }

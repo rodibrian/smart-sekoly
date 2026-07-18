@@ -42,18 +42,22 @@ class FinanceController
 
     private function afficher_accueil(): void
     {
+        $factures = $this->recuperer_items('factures');
+        $paiementsBruts = $this->recuperer_items('paiements');
+        $paiements = $this->enrichirPaiements($paiementsBruts);
+
         $donnees = [
             'module' => $this->module,
             'action' => $this->action,
             'token_csrf' => generer_token_csrf(),
             'stats' => [
-                'total_factures' => count($_SESSION['factures'] ?? []),
-                'total_paiements' => count($_SESSION['paiements'] ?? []),
-                'montant_collecte' => $this->calculer_montant_total('paiements'),
-                'montant_impayé' => $this->calculer_montant_impayé(),
+                'total_factures' => count($factures),
+                'total_paiements' => count($paiements),
+                'montant_collecte' => $this->calculer_montant_total($paiements),
+                'montant_impayé' => $this->calculer_montant_impayé($factures, $paiements),
             ],
-            'dernieres_factures' => array_slice($_SESSION['factures'] ?? [], -3),
-            'derniers_paiements' => array_slice($_SESSION['paiements'] ?? [], -3),
+            'dernieres_factures' => array_slice($factures, -3),
+            'derniers_paiements' => array_slice($paiements, -3),
         ];
 
         require $this->templatePath() . 'finance/index.view.php';
@@ -70,7 +74,7 @@ class FinanceController
             'module' => $this->module,
             'action' => $this->action,
             'token_csrf' => generer_token_csrf(),
-            'factures' => $_SESSION['factures'] ?? [],
+            'factures' => $this->recuperer_items('factures'),
         ];
 
         require $this->templatePath() . 'finance/factures.view.php';
@@ -96,11 +100,27 @@ class FinanceController
             ];
         }, $types_db);
 
+        $eleves = [];
+        $eleveDao = new EleveDAO();
+        $dbEleves = $eleveDao->listerEleves();
+        if (!empty($dbEleves)) {
+            $eleves = array_map(function ($eleve) {
+                return [
+                    'id_eleve' => $eleve['id'] ?? $eleve['id_eleve'] ?? null,
+                    'nom' => $eleve['nom'] ?? '',
+                    'prenom' => $eleve['prenom'] ?? '',
+                    'matricule' => $eleve['matricule'] ?? '',
+                ];
+            }, $dbEleves);
+        } elseif (!empty($_SESSION['eleves'])) {
+            $eleves = $_SESSION['eleves'];
+        }
+
         $donnees = [
             'module' => $this->module,
             'action' => 'facture-creer',
             'token_csrf' => generer_token_csrf(),
-            'eleves' => $_SESSION['eleves'] ?? [],
+            'eleves' => $eleves,
             'types_frais' => $types_frais,
         ];
 
@@ -109,16 +129,8 @@ class FinanceController
 
     private function editer_facture(): void
     {
-        $id = $this->parametre;
-        $factures = $_SESSION['factures'] ?? [];
-        $facture = null;
-
-        foreach ($factures as $f) {
-            if ($f['id_facture'] === $id) {
-                $facture = $f;
-                break;
-            }
-        }
+        $id = (int) $this->parametre;
+        $facture = $this->dao->getById('facture', $id);
 
         if (!$facture) {
             echo "Facture introuvable.";
@@ -130,12 +142,15 @@ class FinanceController
             return;
         }
 
+        $typeFraisDAO = new TypeFraisDAO();
+        $typesFrais = $typeFraisDAO->lister();
+
         $donnees = [
             'module' => $this->module,
             'action' => 'facture-editer',
             'token_csrf' => generer_token_csrf(),
             'facture' => $facture,
-            'types_frais' => $_SESSION['types_frais'] ?? [],
+            'types_frais' => $typesFrais,
         ];
 
         require $this->templatePath() . 'finance/facture-editer.view.php';
@@ -143,16 +158,8 @@ class FinanceController
 
     private function details_facture(): void
     {
-        $id = $this->parametre;
-        $factures = $_SESSION['factures'] ?? [];
-        $facture = null;
-
-        foreach ($factures as $f) {
-            if ($f['id_facture'] === $id) {
-                $facture = $f;
-                break;
-            }
-        }
+        $id = (int) $this->parametre;
+        $facture = $this->dao->getById('facture', $id);
 
         if (!$facture) {
             echo "Facture introuvable.";
@@ -171,11 +178,13 @@ class FinanceController
 
     private function afficher_paiements(): void
     {
+        $paiementsBruts = $this->dao->all('paiements');
+
         $donnees = [
             'module' => $this->module,
             'action' => $this->action,
             'token_csrf' => generer_token_csrf(),
-            'paiements' => $_SESSION['paiements'] ?? [],
+            'paiements' => $this->enrichirPaiements($paiementsBruts),
         ];
 
         require $this->templatePath() . 'finance/paiements.view.php';
@@ -192,8 +201,14 @@ class FinanceController
             'module' => $this->module,
             'action' => 'paiement-enregistrer',
             'token_csrf' => generer_token_csrf(),
-            'factures' => $_SESSION['factures'] ?? [],
-            'methodes_paiement' => ['Espèces', 'Chèque', 'Virement', 'Carte bancaire'],
+            'echeances' => $this->recuperer_items('echeances'),
+            'methodes_paiement' => [
+                'espece' => 'Espèces',
+                'banque' => 'Banque',
+                'mobile_money' => 'Mobile money',
+            ],
+            'date_paiement' => date('Y-m-d\TH:i'),
+            'numero_recu' => $this->genererNumeroRecu(),
         ];
 
         require $this->templatePath() . 'finance/paiement-enregistrer.view.php';
@@ -205,7 +220,7 @@ class FinanceController
             'module' => $this->module,
             'action' => $this->action,
             'token_csrf' => generer_token_csrf(),
-            'caisses' => $_SESSION['caisses'] ?? [],
+            'caisses' => $this->dao->all('caisses'),
         ];
 
         require $this->templatePath() . 'finance/caisses.view.php';
@@ -233,7 +248,7 @@ class FinanceController
             'module' => $this->module,
             'action' => $this->action,
             'token_csrf' => generer_token_csrf(),
-            'remises' => $_SESSION['remises'] ?? [],
+            'remises' => $this->dao->all('remises'),
         ];
 
         require $this->templatePath() . 'finance/remises.view.php';
@@ -250,7 +265,7 @@ class FinanceController
             'module' => $this->module,
             'action' => 'remise-creer',
             'token_csrf' => generer_token_csrf(),
-            'factures' => $_SESSION['factures'] ?? [],
+            'factures' => $this->recuperer_items('factures'),
             'eleves' => $_SESSION['eleves'] ?? [],
         ];
 
@@ -283,16 +298,8 @@ class FinanceController
 
     private function afficher_recu(): void
     {
-        $id_paiement = $this->parametre;
-        $paiements = $_SESSION['paiements'] ?? [];
-        $paiement = null;
-
-        foreach ($paiements as $p) {
-            if ($p['id_paiement'] === $id_paiement) {
-                $paiement = $p;
-                break;
-            }
-        }
+        $id_paiement = (int) $this->parametre;
+        $paiement = $this->dao->getById('paiement', $id_paiement);
 
         if (!$paiement) {
             echo "Paiement introuvable.";
@@ -303,7 +310,7 @@ class FinanceController
             'module' => $this->module,
             'action' => 'reçu',
             'token_csrf' => generer_token_csrf(),
-            'paiement' => $paiement,
+            'paiement' => $this->enrichirPaiement($paiement),
         ];
 
         require $this->templatePath() . 'finance/recu.view.php';
@@ -317,13 +324,11 @@ class FinanceController
             return;
         }
 
-        $_SESSION['factures'] = $_SESSION['factures'] ?? [];
-
-        // Exemple : supprimer une facture
+        // Exemple : annuler une facture existante
         if (isset($_POST['supprimer']) && isset($_POST['id_facture'])) {
-            $_SESSION['factures'] = array_filter($_SESSION['factures'], function ($f) {
-                return $f['id_facture'] !== $_POST['id_facture'];
-            });
+            $factureDao = new FactureDAO();
+            $idFacture = (int) $_POST['id_facture'];
+            $factureDao->annuler($idFacture, $_SESSION['auth_utilisateur']['id'] ?? 1);
         }
     }
 
@@ -333,32 +338,13 @@ class FinanceController
             return;
         }
 
-        $_SESSION['factures'] = $_SESSION['factures'] ?? [];
-
-        $facture = [
-            'id_facture' => 'FACT-' . count($_SESSION['factures']) + 1,
-            'id_eleve' => $_POST['id_eleve'] ?? '',
-            'numero_sequentiel' => count($_SESSION['factures']) + 1,
+        $this->dao->insertFacture([
+            'id_eleve' => $_POST['id_eleve'] ?? null,
+            'numero' => $_POST['numero'] ?? '',
             'date_emission' => date('Y-m-d'),
             'montant_total' => (float) ($_POST['montant_total'] ?? 0),
             'statut' => 'active',
-            'lignes' => [],
-        ];
-
-        // Ajouter les lignes de facture
-        if (isset($_POST['type_frais']) && is_array($_POST['type_frais'])) {
-            foreach ($_POST['type_frais'] as $idx => $type) {
-                if (!empty($type)) {
-                    $facture['lignes'][] = [
-                        'type_frais' => $type,
-                        'montant' => (float) ($_POST['montant_ligne'][$idx] ?? 0),
-                        'quantite' => (int) ($_POST['quantite'][$idx] ?? 1),
-                    ];
-                }
-            }
-        }
-
-        $_SESSION['factures'][] = $facture;
+        ]);
     }
 
     private function traiter_edition_facture($id): void
@@ -367,13 +353,25 @@ class FinanceController
             return;
         }
 
-        $_SESSION['factures'] = $_SESSION['factures'] ?? [];
+        $montant_total = (float) ($_POST['montant_total'] ?? 0);
+        $statut = $_POST['statut'] ?? 'active';
+        if ($statut === 'cancelled') {
+            $statut = 'annulee';
+        }
 
-        foreach ($_SESSION['factures'] as &$f) {
-            if ($f['id_facture'] === $id) {
-                $f['montant_total'] = (float) ($_POST['montant_total'] ?? $f['montant_total']);
-                $f['statut'] = $_POST['statut'] ?? $f['statut'];
-                break;
+        $factureDao = new FactureDAO();
+        if (!$factureDao->mettreAJourFacture($id, [
+            'montant_total' => $montant_total,
+            'statut' => $statut,
+        ])) {
+            $_SESSION['factures'] = $_SESSION['factures'] ?? [];
+
+            foreach ($_SESSION['factures'] as &$f) {
+                if ($f['id_facture'] === $id) {
+                    $f['montant_total'] = $montant_total;
+                    $f['statut'] = $statut;
+                    break;
+                }
             }
         }
     }
@@ -384,22 +382,33 @@ class FinanceController
             return;
         }
 
-        $_SESSION['paiements'] = $_SESSION['paiements'] ?? [];
+        $idEcheance = (int) ($_POST['id_echeance'] ?? 0);
+        $montant = (float) ($_POST['montant'] ?? 0);
+        $datePaiement = $_POST['date_paiement'] ?? date('Y-m-d H:i:s');
+        $modePaiement = nettoyer_chaine($_POST['mode_paiement'] ?? 'espece');
+        $numeroRecu = nettoyer_chaine($_POST['numero_recu'] ?? $this->genererNumeroRecu());
 
-        $paiement = [
-            'id_paiement' => 'PAY-' . count($_SESSION['paiements']) + 1,
-            'id_facture' => $_POST['id_facture'] ?? '',
-            'montant_paye' => (float) ($_POST['montant_paye'] ?? 0),
-            'methode_paiement' => $_POST['methode_paiement'] ?? 'Espèces',
-            'date_paiement' => date('Y-m-d'),
-            'reference' => $_POST['reference'] ?? '',
-        ];
+        if ($idEcheance <= 0 || $montant <= 0 || !in_array($modePaiement, ['espece', 'banque', 'mobile_money'], true)) {
+            return;
+        }
 
-        $_SESSION['paiements'][] = $paiement;
+        $paiementId = $this->dao->insertPaiement([
+            'id_echeance' => $idEcheance,
+            'numero_recu' => $numeroRecu,
+            'date_paiement' => $datePaiement,
+            'montant' => $montant,
+            'mode_paiement' => $modePaiement,
+            'id_utilisateur_enregistrement' => $_SESSION['auth_utilisateur']['id'] ?? 1,
+            'id_caisse' => $this->dao->getOrCreateCaisseDuJourId() ?? $this->dao->getDerniereCaisseId(),
+            'statut' => 'actif',
+        ]);
 
-        // Rediriger vers le reçu
-        header('Location: ?module=finance&action=reçu&parametre=' . $paiement['id_paiement']);
-        exit;
+        if ($paiementId) {
+            $echeancierDAO = new EcheancierDAO();
+            $echeancierDAO->appliquerPaiementAEcheance($idEcheance, $montant);
+            header('Location: ?module=finance&action=reçu&parametre=' . $paiementId);
+            exit;
+        }
     }
 
     private function traiter_creation_caisse(): void
@@ -408,17 +417,10 @@ class FinanceController
             return;
         }
 
-        $_SESSION['caisses'] = $_SESSION['caisses'] ?? [];
-
-        $caisse = [
-            'id_caisse' => 'CAISSE-' . count($_SESSION['caisses']) + 1,
-            'nom_caisse' => $_POST['nom_caisse'] ?? '',
-            'solde_initial' => (float) ($_POST['solde_initial'] ?? 0),
-            'solde_actuel' => (float) ($_POST['solde_initial'] ?? 0),
-            'date_creation' => date('Y-m-d'),
-        ];
-
-        $_SESSION['caisses'][] = $caisse;
+        $this->dao->insertCaisse([
+            'date_caisse' => $_POST['date_caisse'] ?? date('Y-m-d'),
+            'fond_de_caisse' => (float) ($_POST['fond_de_caisse'] ?? 0),
+        ]);
     }
 
     private function traiter_creation_remise(): void
@@ -427,24 +429,88 @@ class FinanceController
             return;
         }
 
-        $_SESSION['remises'] = $_SESSION['remises'] ?? [];
-
-        $remise = [
-            'id_remise' => 'REM-' . count($_SESSION['remises']) + 1,
-            'id_facture' => $_POST['id_facture'] ?? '',
-            'pourcentage' => (float) ($_POST['pourcentage'] ?? 0),
+        $this->dao->insertRemise([
+            'type_remise' => $_POST['type_remise'] ?? 'pourcentage',
+            'valeur_remise' => (float) ($_POST['valeur_remise'] ?? 0),
             'motif' => $_POST['motif'] ?? '',
-            'date_application' => date('Y-m-d'),
-        ];
-
-        $_SESSION['remises'][] = $remise;
+            'id_utilisateur_validation' => $_SESSION['auth_utilisateur']['id'] ?? 1,
+        ]);
     }
 
     // === UTILITAIRES ===
 
-    private function calculer_montant_total($key): float
+    private function recuperer_items(string $tableAlias): array
     {
-        $items = $_SESSION[$key] ?? [];
+        return $this->dao->all($tableAlias);
+    }
+
+    private function recuperer_echeances(): array
+    {
+        return $this->dao->all('echeances');
+    }
+
+    private function genererNumeroRecu(): string
+    {
+        try {
+            $anneeId = $this->getActiveSchoolYearId();
+            if ($anneeId !== null) {
+                $sequence = SequenceNumerotation::getNext('recu', $anneeId, 'REC-{ANNEE}-{NUMERO_SEQUENTIEL}');
+                return $sequence['formatte'] ?? '';
+            }
+        } catch (Throwable $e) {
+            error_log('FinanceController::genererNumeroRecu() : ' . $e->getMessage());
+        }
+
+        return 'REC-' . date('YmdHis');
+    }
+
+    private function getActiveSchoolYearId(): ?int
+    {
+        $pdo = get_connexion_base_donnees();
+        if (!$pdo instanceof PDO) {
+            return null;
+        }
+
+        $stmt = $pdo->query("SELECT id_annee FROM annee_scolaire WHERE etat = 'active' LIMIT 1");
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $row !== false ? (int) $row['id_annee'] : null;
+    }
+
+    private function enrichirPaiement(array $paiement): array
+    {
+        $echeanceId = (int) ($paiement['id_echeance'] ?? $paiement['id'] ?? 0);
+        $idFacture = null;
+
+        if ($echeanceId > 0) {
+            $echeanceDAO = new EcheancierDAO();
+            $echeance = $echeanceDAO->trouverParId($echeanceId);
+            $idFacture = $echeance['id_facture'] ?? null;
+        }
+
+        $montant = $paiement['montant'] ?? $paiement['montant_paye'] ?? 0;
+
+        return [
+            'id_paiement' => $paiement['id_paiement'] ?? $paiement['id'] ?? null,
+            'id_facture' => $idFacture,
+            'id_echeance' => $echeanceId,
+            'numero_recu' => $paiement['numero_recu'] ?? $paiement['recu'] ?? '',
+            'date_paiement' => $paiement['date_paiement'] ?? $paiement['date'] ?? '',
+            'montant' => $montant,
+            'montant_paye' => $montant,
+            'mode_paiement' => $paiement['mode_paiement'] ?? $paiement['methode_paiement'] ?? '',
+            'statut' => $paiement['statut'] ?? '',
+            'reference' => $paiement['reference'] ?? '',
+        ];
+    }
+
+    private function enrichirPaiements(array $paiements): array
+    {
+        return array_map([$this, 'enrichirPaiement'], $paiements);
+    }
+
+    private function calculer_montant_total(array $items): float
+    {
         $total = 0;
 
         foreach ($items as $item) {
@@ -460,21 +526,19 @@ class FinanceController
         return $total;
     }
 
-    private function calculer_montant_impayé(): float
+    private function calculer_montant_impayé(array $factures, array $paiements): float
     {
-        $factures = $_SESSION['factures'] ?? [];
-        $paiements = $_SESSION['paiements'] ?? [];
         $montant_total_factures = 0;
         $montant_paye = 0;
 
         foreach ($factures as $f) {
-            if ($f['statut'] === 'active') {
+            if (($f['statut'] ?? '') === 'active') {
                 $montant_total_factures += (float) ($f['montant_total'] ?? 0);
             }
         }
 
         foreach ($paiements as $p) {
-            $montant_paye += (float) ($p['montant_paye'] ?? 0);
+            $montant_paye += (float) ($p['montant_paye'] ?? $p['montant'] ?? 0);
         }
 
         return max(0, $montant_total_factures - $montant_paye);
@@ -482,17 +546,29 @@ class FinanceController
 
     private function calculer_impayés(): array
     {
-        $factures = $_SESSION['factures'] ?? [];
-        $paiements = $_SESSION['paiements'] ?? [];
-        $factures_payees = [];
+        $factures = $this->recuperer_items('factures');
+        $paiements = $this->recuperer_items('paiements');
+        $echeances = $this->recuperer_items('echeances');
 
+        $echeanceVersFacture = [];
+        foreach ($echeances as $echeance) {
+            if (!empty($echeance['id_echeance']) && !empty($echeance['id_facture'])) {
+                $echeanceVersFacture[(int) $echeance['id_echeance']] = (int) $echeance['id_facture'];
+            }
+        }
+
+        $factures_payees = [];
         foreach ($paiements as $p) {
-            $factures_payees[$p['id_facture']] = true;
+            $factureId = (int) ($p['id_facture'] ?? $echeanceVersFacture[(int) ($p['id_echeance'] ?? 0)] ?? 0);
+            if ($factureId > 0) {
+                $factures_payees[$factureId] = true;
+            }
         }
 
         $impayés = [];
         foreach ($factures as $f) {
-            if (!isset($factures_payees[$f['id_facture']]) && $f['statut'] === 'active') {
+            $idFacture = (int) ($f['id_facture'] ?? 0);
+            if ($idFacture > 0 && !isset($factures_payees[$idFacture]) && ($f['statut'] ?? '') === 'active') {
                 $impayés[] = $f;
             }
         }
@@ -502,12 +578,15 @@ class FinanceController
 
     private function generer_rapports(): array
     {
+        $factures = $this->recuperer_items('factures');
+        $paiements = $this->recuperer_items('paiements');
+
         return [
             [
                 'periode' => 'Juillet 2026',
-                'montant_factures' => $this->calculer_montant_total('factures'),
-                'montant_paiements' => $this->calculer_montant_total('paiements'),
-                'montant_impayé' => $this->calculer_montant_impayé(),
+                'montant_factures' => $this->calculer_montant_total($factures),
+                'montant_paiements' => $this->calculer_montant_total($paiements),
+                'montant_impayé' => $this->calculer_montant_impayé($factures, $paiements),
             ],
         ];
     }

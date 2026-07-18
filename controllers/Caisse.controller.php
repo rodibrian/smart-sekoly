@@ -86,22 +86,7 @@ class CaisseController
 
     private function recuperer_caisses(): array
     {
-        // Prefer DAO (DB) when available, otherwise fallback to session or sample data
-        if ($this->dao instanceof FinanceDAO) {
-            $caisses = $this->dao->all('caisses');
-            if (!empty($caisses)) {
-                return $caisses;
-            }
-        }
-
-        if (!empty($_SESSION['caisses']) && is_array($_SESSION['caisses'])) {
-            return $_SESSION['caisses'];
-        }
-
-        return [
-            ['id_caisse' => 1, 'date_caisse' => '2026-10-01', 'fond_de_caisse' => 150000.00],
-            ['id_caisse' => 2, 'date_caisse' => '2026-10-02', 'fond_de_caisse' => 125000.00],
-        ];
+        return $this->dao->all('caisses');
     }
 
     private function enregistrer_caisse(array $donnees): int
@@ -160,7 +145,13 @@ class CaisseController
     private function preparer_fiche(): array
     {
         $id = (int) ($this->parametre ?? 1);
-        $caisse = new Caisse(['id_caisse' => $id, 'date_caisse' => '2026-10-01', 'fond_de_caisse' => 150000.00]);
+        $data = $this->dao->getById('caisse', $id);
+
+        if (!empty($data)) {
+            $caisse = new Caisse($data);
+        } else {
+            $caisse = new Caisse(['id_caisse' => $id, 'date_caisse' => '2026-10-01', 'fond_de_caisse' => 150000.00]);
+        }
 
         return [
             'module' => $this->module,

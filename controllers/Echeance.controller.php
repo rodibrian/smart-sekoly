@@ -87,22 +87,7 @@ class EcheanceController
 
     private function recuperer_echeances(): array
     {
-        // Prefer DAO when available
-        if ($this->dao instanceof FinanceDAO) {
-            $rows = $this->dao->all('echeances');
-            if (!empty($rows)) {
-                return $rows;
-            }
-        }
-
-        if (!empty($_SESSION['echeances']) && is_array($_SESSION['echeances'])) {
-            return $_SESSION['echeances'];
-        }
-
-        return [
-            ['id_echeance' => 1, 'id_facture' => 1, 'date_echeance' => '2026-10-01', 'montant_prevu' => 70000.00, 'statut_echeance' => 'payee'],
-            ['id_echeance' => 2, 'id_facture' => 1, 'date_echeance' => '2026-11-01', 'montant_prevu' => 70000.00, 'statut_echeance' => 'en_retard'],
-        ];
+        return $this->dao->all('echeances');
     }
 
     private function enregistrer_echeance(array $donnees): int
@@ -172,13 +157,19 @@ class EcheanceController
     private function preparer_fiche(): array
     {
         $id = (int) ($this->parametre ?? 1);
-        $echeance = new Echeance([
-            'id_echeance' => $id,
-            'id_facture' => 1,
-            'date_echeance' => '2026-10-01',
-            'montant_prevu' => 70000.00,
-            'statut_echeance' => 'payee',
-        ]);
+        $data = $this->dao->getById('echeance', $id);
+
+        if (!empty($data)) {
+            $echeance = new Echeance($data);
+        } else {
+            $echeance = new Echeance([
+                'id_echeance' => $id,
+                'id_facture' => 1,
+                'date_echeance' => '2026-10-01',
+                'montant_prevu' => 70000.00,
+                'statut_echeance' => 'payee',
+            ]);
+        }
 
         return [
             'module' => $this->module,

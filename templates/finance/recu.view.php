@@ -36,8 +36,16 @@
                     <strong><?php echo htmlspecialchars($donnees['paiement']['id_paiement']); ?></strong>
                 </div>
                 <div class="line">
+                    <span>Numéro reçu:</span>
+                    <strong><?php echo htmlspecialchars($donnees['paiement']['numero_recu']); ?></strong>
+                </div>
+                <div class="line">
                     <span>Facture:</span>
                     <strong><?php echo htmlspecialchars($donnees['paiement']['id_facture']); ?></strong>
+                </div>
+                <div class="line">
+                    <span>Échéance:</span>
+                    <strong><?php echo htmlspecialchars($donnees['paiement']['id_echeance']); ?></strong>
                 </div>
             </div>
 
