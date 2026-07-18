@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?= e(BASE_URL . '/assets/css/responsive.css') ?>">
-    <title>Créer Facture - Finance</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+<?php
+$pageTitle = 'Créer Facture - Finance';
+$pageStyles = <<<'STYLES'
+* { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; }
         .container { max-width: 600px; margin: 20px auto; padding: 0 20px; }
         h1 { color: #333; margin-bottom: 20px; }
@@ -16,10 +11,10 @@
         input:focus, select:focus { outline: none; border-color: #007bff; }
         .btn { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
         .btn:hover { background: #0056b3; }
-    </style>
-</head>
-<body>
-    <div class="container">
+STYLES;
+require TEMPLATES_PATH . 'layout/header.php';
+?>
+<div class="container">
         <h1>Créer une Facture</h1>
 
         <form method="POST">
@@ -58,5 +53,4 @@
             <button type="submit" class="btn">✓ Créer la facture</button>
         </form>
     </div>
-</body>
-</html>
+<?php require TEMPLATES_PATH . 'layout/footer.php';

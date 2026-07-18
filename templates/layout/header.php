@@ -15,6 +15,7 @@ if (!defined('BASE_URL')) {
     <title><?= e($pageTitle ?? APP_NAME) ?></title>
     <link rel="stylesheet" href="<?= e(BASE_URL . '/assets/css/dist/app.css') ?>">
     <script src="<?= e(BASE_URL . '/assets/js/app.js') ?>" defer></script>
+    <?= $pageStyles ?? '' ?>
 </head>
 <body class="bg-background text-slate-900">
     <header class="border-b border-slate-200 bg-surface/80 backdrop-blur-xl">

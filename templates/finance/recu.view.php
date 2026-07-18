@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?= e(BASE_URL . '/assets/css/responsive.css') ?>">
-    <title>Reçu de Paiement - Finance</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+<?php
+$pageTitle = 'Reçu de Paiement - Finance';
+$pageStyles = <<<'STYLES'
+* { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Courier New', Courier, monospace; background: #f5f5f5; }
         .container { max-width: 400px; margin: 20px auto; padding: 0; }
         .receipt { background: white; padding: 20px; border: 1px solid #ddd; }
@@ -21,10 +16,10 @@
         @media print {
             .btn-container { display: none; }
         }
-    </style>
-</head>
-<body>
-    <div class="container">
+STYLES;
+require TEMPLATES_PATH . 'layout/header.php';
+?>
+<div class="container">
         <div class="receipt">
             <div class="header">
                 <h1>REÇU DE PAIEMENT</h1>
@@ -84,5 +79,4 @@
             <a href="?module=finance&action=index" class="btn">← Retour</a>
         </div>
     </div>
-</body>
-</html>
+<?php require TEMPLATES_PATH . 'layout/footer.php';

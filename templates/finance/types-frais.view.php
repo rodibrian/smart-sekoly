@@ -1,4 +1,8 @@
 <?php
+$pageTitle = 'Types de frais - Finance';
+require TEMPLATES_PATH . 'layout/header.php';
+?>
+<?php
 /**
  * Template : Gestion des types de frais paramétrables
  * View: templates/finance/types-frais.view.php
@@ -76,3 +80,4 @@
         </div>
     </div>
 </div>
+<?php require TEMPLATES_PATH . 'layout/footer.php';

@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?= e(BASE_URL . '/assets/css/responsive.css') ?>">
-    <title>Caisses - Finance</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+<?php
+$pageTitle = 'Caisses - Finance';
+$pageStyles = <<<'STYLES'
+* { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; }
         .container { max-width: 1000px; margin: 20px auto; padding: 0 20px; }
         h1 { color: #333; margin-bottom: 20px; }
@@ -15,10 +10,10 @@
         .card-title { color: #333; font-weight: bold; margin-bottom: 10px; }
         .card-value { font-size: 20px; color: #007bff; margin-bottom: 10px; }
         .card-meta { color: #999; font-size: 12px; }
-    </style>
-</head>
-<body>
-    <div class="container">
+STYLES;
+require TEMPLATES_PATH . 'layout/header.php';
+?>
+<div class="container">
         <h1>Caisses</h1>
         <p>Gestion des caisses de l'établissement.</p>
 
@@ -37,5 +32,4 @@
             </div>
         <?php endif; ?>
     </div>
-</body>
-</html>
+<?php require TEMPLATES_PATH . 'layout/footer.php';
